@@ -81,7 +81,7 @@ body{
     font-family:'Big Shoulders Display', sans-serif;
     font-weight:800;
     font-size:clamp(4.6rem, 20vw, 15rem);
-    line-height:0.85;
+    line-height:1.02;
     letter-spacing:-0.01em;
     text-transform:uppercase;
     margin:0 0 1.6rem;
@@ -414,15 +414,30 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .t2-court.visible{ opacity:1; }
 #sec-t1t2 .spacer{ height:30vh; }
 
-/* ---------- separador entre tramos (placeholder de transición) ---------- */
-.tramo-divider{
-  display:flex; align-items:center; gap:1rem;
-  max-width:640px; margin:0 auto; padding:3.5rem 1.5rem;
+/* ---------- transición entre tramos: un punto que crece hasta tapar la pantalla ---------- */
+.dot-transition{ position:relative; height:200vh; }
+.dot-transition-sticky{
+  position:sticky; top:0; height:100vh; width:100%;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
 }
-.tramo-divider-line{ flex:1; height:1px; background:rgba(27,54,84,0.25); }
-.tramo-divider-label{
-  font-family:'Martian Mono', monospace; font-size:0.7rem; letter-spacing:0.12em;
-  text-transform:uppercase; color:var(--rojo); white-space:nowrap;
+.dot-transition-circle{
+  position:absolute; width:60px; height:60px; border-radius:50%;
+  background:var(--azul);
+  transform:scale(var(--dot-scale, 0));
+}
+.dot-transition-label{
+  position:relative; z-index:1; text-align:center; padding:0 1.5rem;
+  opacity:var(--dot-label, 0);
+}
+.dot-transition-label .eyebrow{
+  display:block; font-family:'Martian Mono', monospace; font-size:0.8rem;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--naranja); margin:0 0 0.9rem;
+}
+.dot-transition-title{
+  display:block; font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+  font-size:clamp(2.2rem, 6.5vw, 4.4rem); line-height:1; text-transform:uppercase;
+  color:var(--papel); max-width:16ch; margin:0 auto;
 }
 
 #sec-t3-line{ --muted:#8a97a8; }
@@ -486,7 +501,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     font-size:clamp(1.6rem, 4vw, 2.3rem); line-height:1; text-transform:uppercase;
     margin:0; color:var(--azul);
   }
-#sec-t3-draft .bars-scroll{ overflow-x:auto; padding-bottom:0.5rem; }
+#sec-t3-draft .bars-scroll{ overflow-x:auto; max-width:100%; padding-bottom:0.5rem; }
 #sec-t3-draft .bars-columns{
     display:flex; align-items:flex-end; gap:10px;
     padding:0 4px; width:max-content; margin:0 auto;
@@ -681,7 +696,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t4 .tramo-header h1{
     font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-    font-size:clamp(3.4rem, 14vw, 9rem); line-height:0.87; text-transform:uppercase;
+    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.04; text-transform:uppercase;
     letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
   }
 #sec-t4 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
@@ -766,7 +781,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t5 .tramo-header h1{
     font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-    font-size:clamp(3.4rem, 14vw, 9rem); line-height:0.87; text-transform:uppercase;
+    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.04; text-transform:uppercase;
     letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
   }
 #sec-t5 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
@@ -1037,10 +1052,14 @@ svg{ width:100%; height:auto; overflow:visible; }
 </div>
 
 
-<div class="tramo-divider halftone">
-  <span class="tramo-divider-line"></span>
-  <span class="tramo-divider-label">Tramo 3 — Curry rompe la escala</span>
-  <span class="tramo-divider-line"></span>
+<div class="dot-transition halftone">
+  <div class="dot-transition-sticky">
+    <div class="dot-transition-circle"></div>
+    <div class="dot-transition-label">
+      <span class="eyebrow">Tramo 3</span>
+      <span class="dot-transition-title">Curry rompe la escala</span>
+    </div>
+  </div>
 </div>
 
 
@@ -1165,10 +1184,14 @@ svg{ width:100%; height:auto; overflow:visible; }
 </div>
 
 
-<div class="tramo-divider halftone">
-  <span class="tramo-divider-line"></span>
-  <span class="tramo-divider-label">Tramo 4 — Hasta los pívots tiran de afuera</span>
-  <span class="tramo-divider-line"></span>
+<div class="dot-transition halftone">
+  <div class="dot-transition-sticky">
+    <div class="dot-transition-circle"></div>
+    <div class="dot-transition-label">
+      <span class="eyebrow">Tramo 4</span>
+      <span class="dot-transition-title">Hasta los pívots tiran de afuera</span>
+    </div>
+  </div>
 </div>
 
 
@@ -1234,10 +1257,14 @@ svg{ width:100%; height:auto; overflow:visible; }
 </div>
 
 
-<div class="tramo-divider halftone">
-  <span class="tramo-divider-line"></span>
-  <span class="tramo-divider-label">Tramo 5 — ¿Se rompió el juego?</span>
-  <span class="tramo-divider-line"></span>
+<div class="dot-transition halftone">
+  <div class="dot-transition-sticky">
+    <div class="dot-transition-circle"></div>
+    <div class="dot-transition-label">
+      <span class="eyebrow">Tramo 5</span>
+      <span class="dot-transition-title">¿Se rompió el juego?</span>
+    </div>
+  </div>
 </div>
 
 
@@ -1321,6 +1348,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   function clamp01(v){ return Math.max(0, Math.min(1, v)); }
 
   const kineticTitles = Array.from(document.querySelectorAll('.kinetic-title'));
+  const dotTransitions = Array.from(document.querySelectorAll('.dot-transition'));
 
   const scrubParagraphs = Array.from(document.querySelectorAll('.scrub-text')).map(p => {
     const words = p.textContent.split(/(\s+)/);
@@ -1345,6 +1373,17 @@ svg{ width:100%; height:auto; overflow:visible; }
       const progress = clamp01((start - r.top) / ((start - end) + r.height));
       const litCount = Math.round(progress * spans.length);
       spans.forEach((s, i) => s.classList.toggle('lit', i < litCount));
+    });
+
+    dotTransitions.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const scrollable = r.height - vh;               // recorrido real mientras el punto queda "pegado"
+      const t = clamp01(scrollable > 0 ? -r.top / scrollable : 0);
+      const growT = clamp01(t / 0.7);                  // el punto termina de crecer al 70% del recorrido
+      const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 60 * 0.6;
+      el.style.setProperty('--dot-scale', (growT * maxScale).toFixed(2));
+      const labelT = clamp01((t - 0.55) / 0.35);       // el título del tramo siguiente aparece al final
+      el.style.setProperty('--dot-label', labelT.toFixed(2));
     });
   }
 
@@ -2105,7 +2144,10 @@ function positionLopezCard(){
   const scale = svgEl.getBoundingClientRect().width / width;
   const px = x(2008) * scale;
   const py = y(2.60) * scale;
-  lopezCard.style.left = (px + 30*scale) + "px";
+  const containerWidth = lopezCard.parentElement.clientWidth;
+  const cardWidth = lopezCard.offsetWidth || 170;
+  const left = Math.min(Math.max(px + 30*scale, 8), containerWidth - cardWidth - 8);
+  lopezCard.style.left = left + "px";
   lopezCard.style.top = (py - 70*scale) + "px";
 }
 
