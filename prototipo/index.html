@@ -30,38 +30,38 @@ body{
     font-family:'Public Sans', sans-serif;
   }
 
-/* ---------- título cinético: el relleno pasa de color sólido a una foto, atado al scroll ---------- */
-.kinetic-title{ position:relative; }
-.kinetic-title .kt-layer{ display:block; margin:0; }
-.kinetic-title .kt-photo{
-    position:absolute; inset:0;
-    background-size:cover; background-position:center;
-    -webkit-background-clip:text; background-clip:text;
-    -webkit-text-fill-color:transparent; color:transparent;
-    -webkit-text-stroke: 0 transparent;
-    filter:grayscale(1) contrast(1.15) brightness(0.9);
-    opacity:var(--kt-reveal, 0);
-    pointer-events:none;
-  }
-
 /* ---------- texto que se ilumina palabra por palabra a medida que se lee ---------- */
 .scrub-text span{ color:var(--muted); opacity:0.4; transition:color 0.2s ease, opacity 0.2s ease; }
 .scrub-text span.lit{ color:inherit; opacity:1; }
+
+/* ---------- título menor: una pelota se desliza a la derecha y revela el texto ---------- */
+.ball-slide-title{ position:relative; display:inline-block; }
+.ball-slide-title .bst-text{
+  display:block;
+  clip-path: inset(0 calc(100% - (var(--bst-progress, 0) * 100%)) 0 0);
+}
+.ball-slide-title .bst-ball{
+  position:absolute; top:52%; left:calc(var(--bst-progress, 0) * 100%);
+  width:0.62em; height:0.62em; transform:translate(-50%, -50%);
+  background-image:url('../inspo_datos/ball.png');
+  background-size:cover; background-position:center; border-radius:50%;
+  box-shadow:0 0 0 2px rgba(27,54,84,0.15);
+  opacity:var(--bst-ball-opacity, 0);
+  pointer-events:none;
+}
 
 #sec-t1t2 .halftone{
     background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
     background-size: 9px 9px;
   }
-#sec-t1t2 .masthead{
+#sec-t1t2 .masthead-tail{
     position:relative;
-    min-height:78vh;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
     text-align:center;
     padding: 3rem 1.5rem 2.5rem;
-    overflow:hidden;
   }
 #sec-t1t2 .court-lines{
     position:absolute; inset:0; width:100%; height:100%; z-index:0;
@@ -81,7 +81,7 @@ body{
     font-family:'Big Shoulders Display', sans-serif;
     font-weight:800;
     font-size:clamp(4.6rem, 20vw, 15rem);
-    line-height:1.02;
+    line-height:1.22;
     letter-spacing:-0.01em;
     text-transform:uppercase;
     margin:0 0 1.6rem;
@@ -414,16 +414,18 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .t2-court.visible{ opacity:1; }
 #sec-t1t2 .spacer{ height:30vh; }
 
-/* ---------- transición entre tramos: un punto que crece hasta tapar la pantalla ---------- */
-.dot-transition{ position:relative; height:200vh; }
+/* ---------- transición entre tramos: una pelota que crece hasta tapar la pantalla ---------- */
+.dot-transition{ position:relative; height:220vh; }
 .dot-transition-sticky{
   position:sticky; top:0; height:100vh; width:100%;
   display:flex; align-items:center; justify-content:center;
   overflow:hidden;
 }
 .dot-transition-circle{
-  position:absolute; width:60px; height:60px; border-radius:50%;
-  background:var(--azul);
+  position:absolute; width:90px; height:90px; border-radius:50%;
+  background-image:url('../inspo_datos/ball.png');
+  background-size:cover; background-position:center;
+  box-shadow:0 0 0 2px rgba(27,54,84,0.15);
   transform:scale(var(--dot-scale, 0));
 }
 .dot-transition-label{
@@ -432,12 +434,12 @@ svg{ width:100%; height:auto; overflow:visible; }
 }
 .dot-transition-label .eyebrow{
   display:block; font-family:'Martian Mono', monospace; font-size:0.8rem;
-  letter-spacing:0.14em; text-transform:uppercase; color:var(--naranja); margin:0 0 0.9rem;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--azul); margin:0 0 0.9rem;
 }
 .dot-transition-title{
   display:block; font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-  font-size:clamp(2.2rem, 6.5vw, 4.4rem); line-height:1; text-transform:uppercase;
-  color:var(--papel); max-width:16ch; margin:0 auto;
+  font-size:clamp(2.8rem, 8.5vw, 6rem); line-height:1.18; text-transform:uppercase;
+  color:#0c0c0c; max-width:16ch; margin:0 auto;
 }
 
 #sec-t3-line{ --muted:#8a97a8; }
@@ -696,7 +698,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t4 .tramo-header h1{
     font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.04; text-transform:uppercase;
+    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.22; text-transform:uppercase;
     letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
   }
 #sec-t4 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
@@ -781,7 +783,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t5 .tramo-header h1{
     font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.04; text-transform:uppercase;
+    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.22; text-transform:uppercase;
     letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
   }
 #sec-t5 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
@@ -874,17 +876,21 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 
 
-<section class="masthead halftone">
-  <svg class="court-lines" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice">
-    <path d="M -50 520 Q 500 300 1050 520" />
-    <circle cx="500" cy="140" r="70" />
-    <path d="M 500 0 L 500 500" />
-  </svg>
-  <p class="eyebrow">Cómo el triple reescribió el básquet</p>
-  <h1 class="title kinetic-title">
-    <span class="kt-layer">De la anécdota<br>al arma letal</span>
-    <span class="kt-layer kt-photo" style="background-image:url('../inspo_datos/chrisford.webp')">De la anécdota<br>al arma letal</span>
-  </h1>
+<div class="dot-transition halftone">
+  <div class="dot-transition-sticky">
+    <svg class="court-lines" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice">
+      <path d="M -50 520 Q 500 300 1050 520" />
+      <circle cx="500" cy="140" r="70" />
+      <path d="M 500 0 L 500 500" />
+    </svg>
+    <div class="dot-transition-circle"></div>
+    <div class="dot-transition-label">
+      <span class="eyebrow">Cómo el triple reescribió el básquet</span>
+      <span class="dot-transition-title">De la anécdota al arma letal</span>
+    </div>
+  </div>
+</div>
+<section class="masthead-tail halftone">
   <p class="bajada">En 1980 era un tiro de desesperación. Hoy define quién gana.</p>
 </section>
 
@@ -1200,9 +1206,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 <div class="tramo-header halftone">
   <div class="eyebrow">Prototipo — Tramo 4</div>
-  <h1 class="kinetic-title">
-    <span class="kt-layer">Hasta los pívots tiran de afuera</span>
-    <span class="kt-layer kt-photo" style="background-image:url('../inspo_datos/wemby.png')">Hasta los pívots tiran de afuera</span>
+  <h1 class="ball-slide-title">
+    <span class="bst-text">Hasta los pívots tiran de afuera</span>
+    <span class="bst-ball"></span>
   </h1>
   <p class="scrub-text">Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
 </div>
@@ -1273,9 +1279,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 <div class="tramo-header halftone">
   <div class="eyebrow">Prototipo — Tramo 5</div>
-  <h1 class="kinetic-title">
-    <span class="kt-layer">¿Se rompió el juego?</span>
-    <span class="kt-layer kt-photo" style="background-image:url('../inspo_datos/pelotareferencia.webp')">¿Se rompió el juego?</span>
+  <h1 class="ball-slide-title">
+    <span class="bst-text">¿Se rompió el juego?</span>
+    <span class="bst-ball"></span>
   </h1>
   <p class="scrub-text">El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
 </div>
@@ -1347,8 +1353,8 @@ svg{ width:100%; height:auto; overflow:visible; }
 (function(){
   function clamp01(v){ return Math.max(0, Math.min(1, v)); }
 
-  const kineticTitles = Array.from(document.querySelectorAll('.kinetic-title'));
   const dotTransitions = Array.from(document.querySelectorAll('.dot-transition'));
+  const ballSlideTitles = Array.from(document.querySelectorAll('.ball-slide-title'));
 
   const scrubParagraphs = Array.from(document.querySelectorAll('.scrub-text')).map(p => {
     const words = p.textContent.split(/(\s+)/);
@@ -1359,11 +1365,15 @@ svg{ width:100%; height:auto; overflow:visible; }
   function update(){
     const vh = window.innerHeight;
 
-    kineticTitles.forEach(el => {
+    ballSlideTitles.forEach(el => {
       const r = el.getBoundingClientRect();
-      const start = vh * 0.9;   // el título empieza a revelar la foto cuando entra por abajo
-      const end = vh * 0.35;    // queda del todo revelado cuando pasa este punto
-      el.style.setProperty('--kt-reveal', clamp01((start - r.top) / (start - end)));
+      const start = vh * 0.8;   // la pelota arranca a deslizarse cuando el título entra por abajo
+      const end = vh * 0.45;    // termina de revelarlo del todo acá
+      const t = clamp01((start - r.top) / (start - end));
+      el.style.setProperty('--bst-progress', t.toFixed(3));
+      // la pelota se desvanece justo antes de arrancar y justo al terminar, para no quedar pegada en los bordes
+      const ballOpacity = clamp01(Math.min(t, 1 - t) * 14);
+      el.style.setProperty('--bst-ball-opacity', ballOpacity.toFixed(2));
     });
 
     scrubParagraphs.forEach(({ el, spans }) => {
@@ -1380,7 +1390,7 @@ svg{ width:100%; height:auto; overflow:visible; }
       const scrollable = r.height - vh;               // recorrido real mientras el punto queda "pegado"
       const t = clamp01(scrollable > 0 ? -r.top / scrollable : 0);
       const growT = clamp01(t / 0.7);                  // el punto termina de crecer al 70% del recorrido
-      const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 60 * 0.6;
+      const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 90 * 0.85;
       el.style.setProperty('--dot-scale', (growT * maxScale).toFixed(2));
       const labelT = clamp01((t - 0.55) / 0.35);       // el título del tramo siguiente aparece al final
       el.style.setProperty('--dot-label', labelT.toFixed(2));
