@@ -814,6 +814,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t5 .timeline-wrap{ margin-bottom:3.5rem; }
 #sec-t5 #timeline{ width:100%; height:auto; overflow:visible; }
 #sec-t5 #timeline-axis{ stroke:var(--ink); stroke-width:2; opacity:0.3; }
+#sec-t5 .milestone-tick{ stroke:var(--ink); stroke-width:1; opacity:0.3; }
 #sec-t5 .milestone-dot{ fill:var(--papel); stroke:var(--gold); stroke-width:2.5; }
 #sec-t5 .milestone-year{
     font-family:'Martian Mono', monospace; font-size:11px; fill:var(--muted);
@@ -1263,7 +1264,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 <section class="closing halftone">
   <div class="timeline-wrap">
-    <svg id="timeline" viewBox="0 0 920 140" preserveAspectRatio="xMidYMid meet">
+    <svg id="timeline" viewBox="0 0 920 165" preserveAspectRatio="xMidYMid meet">
       <line id="timeline-axis" x1="40" y1="70" x2="880" y2="70"/>
       <g id="milestones"></g>
     </svg>
@@ -1467,6 +1468,23 @@ function playIntroDrop(){
     });
 }
 
+function reverseIntroDrop(){
+  if(!introPlayed) return;
+  introPlayed = false;
+
+  ball.interrupt();
+  d3.select(".pre-scroll-cue").classed("hidden", false);
+  d3.select("#court-motif").transition().duration(500).style("opacity", 1);
+  svg.selectAll(".axis").classed("revealed", false);
+  d3.select("#gridlines").classed("revealed", false);
+
+  ball.attr("x", introStartX).attr("y", introStartY)
+      .attr("transform", `rotate(${introStartRot} ${introStartX+21} ${introStartY+21})`)
+      .classed("pre-drop", true);
+  ring.classed("pre-drop", true);
+  tag.classed("pre-drop", true);
+}
+
 const scroller = scrollama();
 scroller.setup({
   step: document.querySelectorAll('#sec-t1t2 .step'),
@@ -1474,7 +1492,7 @@ scroller.setup({
   progress: false
 }).onStepEnter(response => {
   const el = response.element;
-  document.querySelectorAll(".step").forEach(e => e.classList.remove("is-active"));
+  document.querySelectorAll('#sec-t1t2 .step').forEach(e => e.classList.remove("is-active"));
   el.classList.add("is-active");
 
   if(el.dataset.step !== undefined){
@@ -1485,6 +1503,14 @@ scroller.setup({
     const i = +el.dataset.t2step;
     if(i === 0) playMatchCut();
     renderT2(t2Steps[i], true);
+  }
+}).onStepExit(response => {
+  const el = response.element;
+  if(response.direction !== "up") return;
+  if(el.dataset.step !== undefined && +el.dataset.step === 0){
+    reverseIntroDrop();
+  } else if(el.dataset.t2step !== undefined && +el.dataset.t2step === 0){
+    reverseMatchCut();
   }
 });
 
@@ -1599,6 +1625,27 @@ function playMatchCut(){
     });
 }
 
+function reverseMatchCut(){
+  if(!matchCutPlayed) return;
+  matchCutPlayed = false;
+
+  ball.interrupt();
+  d3.select("#t2-court").classed("visible", false);
+  d3.select("#hook-dot").classed("visible", false);
+  d3.selectAll(".t1-remnants").transition().duration(400).style("opacity", 1);
+  d3.select("#gridlines").classed("revealed", true);
+  svg.selectAll(".axis").classed("revealed", true);
+
+  const p = path.node().getPointAtLength(prevLength);
+  ball.style("opacity", 1).style("filter", null)
+      .attr("width", ballSize).attr("height", ballSize)
+      .attr("x", p.x - ballSize/2).attr("y", p.y - ballSize/2)
+      .attr("transform", null)
+      .classed("pre-drop", false);
+  ring.classed("pre-drop", false).attr("cx", p.x).attr("cy", p.y);
+  tag.classed("pre-drop", false);
+}
+
 
 })();
 
@@ -1669,9 +1716,7 @@ updateAllBars(Math.max(...beforePlayers.map(p => p.value)));
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.classList.add("visible");
-    }
+    entry.target.classList.toggle("visible", entry.isIntersecting);
   });
 }, { threshold: 0.3 });
 
@@ -1688,6 +1733,7 @@ function revealAfterGroup(){
 
   afterPlayers.forEach(p => {
     const col = makeCol(p, false);
+    col.classList.add("after-col");
     container.appendChild(col);
     observer.observe(col);
   });
@@ -1696,9 +1742,26 @@ function revealAfterGroup(){
   updateAllBars(newMax); // recalcula TODAS las barras (antes + después) contra la nueva escala
 }
 
+function hideAfterGroup(){
+  if(!afterRevealed) return;
+  afterRevealed = false;
+
+  container.querySelectorAll(".group-divider, .after-col").forEach(el => {
+    observer.unobserve(el);
+    el.remove();
+  });
+
+  updateAllBars(Math.max(...beforePlayers.map(p => p.value)));
+}
+
 const hookObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if(entry.isIntersecting) revealAfterGroup();
+    if(entry.isIntersecting){
+      revealAfterGroup();
+    } else if(entry.boundingClientRect.top > 0){
+      // el bloque volvió a quedar debajo del viewport: se scrolleó hacia arriba, más allá de este punto
+      hideAfterGroup();
+    }
   });
 }, { threshold: 0.4 });
 hookObserver.observe(document.getElementById("hook-section"));
@@ -1843,9 +1906,9 @@ function drawPies(){
 }
 
 const scroller = scrollama();
-scroller.setup({ step:".step", offset:0.65, progress:true })
+scroller.setup({ step: document.querySelectorAll('#sec-t3-line .step'), offset:0.65, progress:true })
   .onStepEnter(response => {
-    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    document.querySelectorAll('#sec-t3-line .step').forEach(el => el.classList.remove("is-active"));
     response.element.classList.add("is-active");
     const i = +response.element.dataset.step;
 
@@ -1862,7 +1925,7 @@ scroller.setup({ step:".step", offset:0.65, progress:true })
   })
   .onStepExit(response => {
     const i = +response.element.dataset.step;
-    if(i === 0 && response.direction === "down") photoAside.classList.remove("visible");
+    if(i === 0) photoAside.classList.remove("visible");
   })
   .onStepProgress(response => {
     const i = +response.index;
@@ -1880,10 +1943,8 @@ window.addEventListener("resize", scroller.resize);
 
 const payoffObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if(entry.isIntersecting){
-      drawPies();
-      document.querySelectorAll(".pie-svg").forEach(el => el.classList.add("visible"));
-    }
+    if(entry.isIntersecting) drawPies();
+    document.querySelectorAll(".pie-svg").forEach(el => el.classList.toggle("visible", entry.isIntersecting));
   });
 }, { threshold: 0.3 });
 payoffObserver.observe(document.querySelector(".payoff-section"));
@@ -1954,9 +2015,9 @@ players.forEach(p => {
     .text(p.name);
 });
 
-function reveal(id){
-  d3.select("#dot-"+id).classed("revealed", true);
-  d3.select("#name-"+id).classed("revealed", true);
+function reveal(id, on){
+  d3.select("#dot-"+id).classed("revealed", on);
+  d3.select("#name-"+id).classed("revealed", on);
 }
 function highlight(id, on){
   d3.select("#dot-"+id).classed("highlighted", on);
@@ -1964,7 +2025,7 @@ function highlight(id, on){
 
 const lopezCard = document.getElementById("lopez-card");
 function positionLopezCard(){
-  const svgEl = document.getElementById("chart");
+  const svgEl = document.getElementById("chart-t4");
   const scale = svgEl.getBoundingClientRect().width / width;
   const px = x(2008) * scale;
   const py = y(2.60) * scale;
@@ -1976,42 +2037,35 @@ const group0 = ["kareem","hakeem","ewing","shaq","dirk","howard"];
 const group3 = ["towns","jokic","embiid","holmgren","wemby"];
 
 function renderStep(i){
-  if(i === 0){
-    group0.forEach(reveal);
-    group0.forEach(id => highlight(id, false));
-    highlight("lopez", false);
-    lopezCard.classList.remove("visible");
-  }
-  if(i === 1){
-    group0.forEach(reveal);
-    highlight("dirk", true);
-    highlight("howard", true);
-  }
-  if(i === 2){
-    reveal("lopez");
-    highlight("lopez", true);
-    positionLopezCard();
-    lopezCard.classList.add("visible");
-  }
-  if(i === 3){
-    group3.forEach(reveal);
-    group3.forEach(id => highlight(id, true));
-  }
+  // declarativo: para cada índice de step se fija el estado completo,
+  // así funciona igual scrolleando hacia abajo o hacia arriba
+  group0.forEach(id => reveal(id, true));
+  group0.forEach(id => highlight(id, i === 1));
+
+  const lopezOn = i >= 2;
+  reveal("lopez", lopezOn);
+  highlight("lopez", lopezOn);
+  lopezCard.classList.toggle("visible", lopezOn);
+  if(lopezOn) positionLopezCard();
+
+  const group3On = i >= 3;
+  group3.forEach(id => reveal(id, group3On));
+  group3.forEach(id => highlight(id, group3On));
 }
 
 renderStep(0);
 
 const scroller = scrollama();
-scroller.setup({ step:".step", offset:0.65, progress:false })
+scroller.setup({ step: document.querySelectorAll('#sec-t4 .step'), offset:0.65, progress:false })
   .onStepEnter(response => {
-    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    document.querySelectorAll('#sec-t4 .step').forEach(el => el.classList.remove("is-active"));
     response.element.classList.add("is-active");
     renderStep(+response.element.dataset.step);
   });
 
 window.addEventListener("resize", () => {
   scroller.resize();
-  if(document.querySelector('[data-step="2"]').classList.contains('is-active')) positionLopezCard();
+  if(document.querySelector('#sec-t4 [data-step="2"]').classList.contains('is-active')) positionLopezCard();
 });
 
 })();
@@ -2097,6 +2151,8 @@ function renderStep(i){
     dot.classed("visible", true).classed("highlighted", true);
     tag.classed("visible", true);
     peakLabel.classed("visible", true);
+    svg.select("#ts-projection").classed("visible", false);
+    d3.selectAll(".fading-out").classed("faded", false);
   }
   if(i === 4){
     const projX2 = width - margin.right + 60;
@@ -2114,9 +2170,9 @@ function renderStep(i){
 renderStep(0);
 
 const scroller = scrollama();
-scroller.setup({ step:".step", offset:0.65, progress:false })
+scroller.setup({ step: document.querySelectorAll('#sec-t5 .step'), offset:0.65, progress:false })
   .onStepEnter(response => {
-    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    document.querySelectorAll('#sec-t5 .step').forEach(el => el.classList.remove("is-active"));
     response.element.classList.add("is-active");
     renderStep(+response.element.dataset.step);
   });
@@ -2137,12 +2193,21 @@ const tWidth = 920;
 const tx = d3.scaleLinear().domain([1979, 2026]).range([tMargin.left, tWidth-tMargin.right]);
 
 const milestonesG = d3.select("#milestones");
-milestones.forEach(m => {
+milestones.forEach((m, i) => {
   const mx = tx(m.year);
+  // 2016 y 2017 quedan a ~18px entre sí en esta escala: alterno filas para que no se pisen las etiquetas
+  const stagger = i % 2 === 1;
+  const labelY1 = stagger ? 128 : 100;
+  const labelY2 = stagger ? 144 : 116;
+
   milestonesG.append("circle").attr("class","milestone-dot").attr("cx", mx).attr("cy", 70).attr("r", 7);
   milestonesG.append("text").attr("class","milestone-year").attr("x", mx).attr("y", 30).text(m.year);
-  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", 100).text(m.label);
-  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", 116)
+  if(stagger){
+    milestonesG.append("line").attr("class","milestone-tick")
+      .attr("x1", mx).attr("y1", 78).attr("x2", mx).attr("y2", labelY1 - 10);
+  }
+  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", labelY1).text(m.label);
+  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", labelY2)
     .style("font-size","9px").style("opacity",0.65).text(m.sub);
 });
 
