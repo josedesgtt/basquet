@@ -29,6 +29,24 @@ body{
     color:var(--ink);
     font-family:'Public Sans', sans-serif;
   }
+
+/* ---------- título cinético: el relleno pasa de color sólido a una foto, atado al scroll ---------- */
+.kinetic-title{ position:relative; }
+.kinetic-title .kt-layer{ display:block; margin:0; }
+.kinetic-title .kt-photo{
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent; color:transparent;
+    filter:grayscale(1) contrast(1.15) brightness(0.9);
+    opacity:var(--kt-reveal, 0);
+    pointer-events:none;
+  }
+
+/* ---------- texto que se ilumina palabra por palabra a medida que se lee ---------- */
+.scrub-text span{ color:var(--muted); opacity:0.4; transition:color 0.2s ease, opacity 0.2s ease; }
+.scrub-text span.lit{ color:inherit; opacity:1; }
+
 #sec-t1t2 .halftone{
     background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
     background-size: 9px 9px;
@@ -847,14 +865,17 @@ svg{ width:100%; height:auto; overflow:visible; }
     <path d="M 500 0 L 500 500" />
   </svg>
   <p class="eyebrow">Cómo el triple reescribió el básquet</p>
-  <h1 class="title">De la anécdota<br>al arma letal</h1>
+  <h1 class="title kinetic-title">
+    <span class="kt-layer">De la anécdota<br>al arma letal</span>
+    <span class="kt-layer kt-photo" style="background-image:url('../inspo_datos/chrisford.webp')">De la anécdota<br>al arma letal</span>
+  </h1>
   <p class="bajada">En 1980 era un tiro de desesperación. Hoy define quién gana.</p>
 </section>
 
 <section class="intro-block">
   <div class="text-col">
-    <p class="body">Noviembre de 1979. Chris Ford, escolta de los Boston Celtics, convierte el primer triple de la historia de la NBA. Nadie en el estadio lo festeja demasiado: es una curiosidad reglamentaria, un tiro que casi nadie se anima a intentar.</p>
-    <p class="body">Cuarenta y cinco años después, la liga tira más de 35 triples por partido — casi trece veces más que en aquella primera temporada. Lo que empezó como un experimento al margen terminó reescribiendo por completo la forma en que se juega al básquet.</p>
+    <p class="body scrub-text">Noviembre de 1979. Chris Ford, escolta de los Boston Celtics, convierte el primer triple de la historia de la NBA. Nadie en el estadio lo festeja demasiado: es una curiosidad reglamentaria, un tiro que casi nadie se anima a intentar.</p>
+    <p class="body scrub-text">Cuarenta y cinco años después, la liga tira más de 35 triples por partido — casi trece veces más que en aquella primera temporada. Lo que empezó como un experimento al margen terminó reescribiendo por completo la forma en que se juega al básquet.</p>
     <p class="question">¿Cómo un tiro despreciado se convirtió en el arma más poderosa del deporte?</p>
   </div>
 
@@ -1155,8 +1176,11 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 <div class="tramo-header halftone">
   <div class="eyebrow">Prototipo — Tramo 4</div>
-  <h1>Hasta los pívots tiran de afuera</h1>
-  <p>Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
+  <h1 class="kinetic-title">
+    <span class="kt-layer">Hasta los pívots tiran de afuera</span>
+    <span class="kt-layer kt-photo" style="background-image:url('../inspo_datos/wemby.png')">Hasta los pívots tiran de afuera</span>
+  </h1>
+  <p class="scrub-text">Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
 </div>
 
 <div class="scrolly">
@@ -1221,8 +1245,11 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 <div class="tramo-header halftone">
   <div class="eyebrow">Prototipo — Tramo 5</div>
-  <h1>¿Se rompió el juego?</h1>
-  <p>El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
+  <h1 class="kinetic-title">
+    <span class="kt-layer">¿Se rompió el juego?</span>
+    <span class="kt-layer kt-photo" style="background-image:url('../inspo_datos/pelotareferencia.webp')">¿Se rompió el juego?</span>
+  </h1>
+  <p class="scrub-text">El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
 </div>
 
 <div class="scrolly">
@@ -1284,6 +1311,54 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
+
+<!-- Títulos cinéticos (relleno de foto) y texto que se ilumina al leer.
+     Sin banderas de "ya se reprodujo": todo se deriva de la posición de scroll
+     en cada frame, así que funciona igual de bien para adelante que para atrás. -->
+<script>
+(function(){
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+
+  const kineticTitles = Array.from(document.querySelectorAll('.kinetic-title'));
+
+  const scrubParagraphs = Array.from(document.querySelectorAll('.scrub-text')).map(p => {
+    const words = p.textContent.split(/(\s+)/);
+    p.innerHTML = words.map(w => w.trim() ? `<span>${w}</span>` : w).join('');
+    return { el: p, spans: Array.from(p.querySelectorAll('span')) };
+  });
+
+  function update(){
+    const vh = window.innerHeight;
+
+    kineticTitles.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const start = vh * 0.9;   // el título empieza a revelar la foto cuando entra por abajo
+      const end = vh * 0.35;    // queda del todo revelado cuando pasa este punto
+      el.style.setProperty('--kt-reveal', clamp01((start - r.top) / (start - end)));
+    });
+
+    scrubParagraphs.forEach(({ el, spans }) => {
+      const r = el.getBoundingClientRect();
+      const start = vh * 0.85;
+      const end = vh * 0.35;
+      const progress = clamp01((start - r.top) / ((start - end) + r.height));
+      const litCount = Math.round(progress * spans.length);
+      spans.forEach((s, i) => s.classList.toggle('lit', i < litCount));
+    });
+  }
+
+  let ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+</script>
+
 <script>
 
 // ---- Intro + Tramo 1 + Tramo 2 ----
