@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De la anécdota al arma letal — Prototipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+    --papel: #F2E8D5;
+    --bg: var(--papel);
+    --panel: #ffffff;
+    --naranja: #D9642E;
+    --azul: #1B3654;
+    --rojo: #B23B32;
+    --verde: #3D8792;
+    --ink: var(--azul);
+    --muted: #5b6b80;
+    --gold: var(--naranja);
+    --red: var(--rojo);
+    --line-cold: var(--azul);
+  }
+*{ box-sizing:border-box; }
+html,body{ margin:0; }
+body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Public Sans', sans-serif;
+  }
+#sec-t1t2 .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+#sec-t1t2 .masthead{
+    position:relative;
+    min-height:52vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 3rem 1.5rem 2.5rem;
+    overflow:hidden;
+  }
+#sec-t1t2 .court-lines{
+    position:absolute; inset:0; width:100%; height:100%; z-index:0;
+  }
+#sec-t1t2 .court-lines path{ fill:none; stroke:var(--azul); stroke-width:2; opacity:0.07; }
+#sec-t1t2 .court-lines circle{ fill:none; stroke:var(--azul); stroke-width:2; opacity:0.07; }
+#sec-t1t2 .masthead > *{ position:relative; z-index:1; }
+#sec-t1t2 .eyebrow{
+    font-family:'Martian Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--rojo);
+    margin:0 0 1.1rem;
+  }
+#sec-t1t2 .title{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    font-size:clamp(2.6rem, 8vw, 5.2rem);
+    line-height:0.92;
+    letter-spacing:-0.01em;
+    text-transform:uppercase;
+    margin:0 0 1.6rem;
+    color:var(--naranja);
+    -webkit-text-stroke: 1.5px var(--azul);
+    max-width:14ch;
+  }
+#sec-t1t2 .bajada{
+    font-family:'Public Sans', sans-serif;
+    font-weight:500;
+    font-style:italic;
+    font-size:clamp(1.05rem, 2.4vw, 1.3rem);
+    max-width:32ch;
+    line-height:1.5;
+    margin:0;
+    opacity:0.85;
+  }
+#sec-t1t2 .bajada::before, #sec-t1t2 .bajada::after{ content:'"'; }
+#sec-t1t2 .intro-block{
+    max-width:1040px;
+    margin:0 auto;
+    padding: 5rem 1.5rem 6rem;
+    display:grid;
+    grid-template-columns: 1.3fr 0.9fr;
+    gap: 3.5rem;
+    align-items:start;
+  }
+#sec-t1t2 .text-col p.body{ font-size:1.15rem; line-height:1.75; margin:0 0 1.6rem; }
+#sec-t1t2 .text-col p.question{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:600;
+    font-size:clamp(1.5rem, 3.2vw, 2rem);
+    line-height:1.15;
+    color:var(--azul);
+    margin: 2rem 0 0;
+    border-left: 4px solid var(--naranja);
+    padding-left: 1.1rem;
+  }
+#sec-t1t2 .photo-insert{ margin:0; transform: rotate(-2deg); }
+#sec-t1t2 .photo-frame{
+    position:relative;
+    border: 3px solid var(--azul);
+    background:var(--azul);
+    overflow:hidden;
+    box-shadow: 8px 8px 0 rgba(27,54,84,0.18);
+  }
+#sec-t1t2 .photo-frame img{
+    display:block; width:100%; height:auto;
+    filter: grayscale(1) contrast(1.15) brightness(0.92);
+    mix-blend-mode: luminosity;
+  }
+#sec-t1t2 .duotone-layer{
+    position:absolute; inset:0;
+    background: linear-gradient(155deg, var(--azul) 20%, var(--rojo) 100%);
+    mix-blend-mode: color;
+    opacity:0.95;
+  }
+#sec-t1t2 .halftone-layer{
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(242,232,213,0.9) 1.1px, transparent 1.1px);
+    background-size: 4px 4px;
+    mix-blend-mode: multiply;
+    opacity:0.35;
+  }
+#sec-t1t2 .photo-tag{
+    position:absolute; top:12px; left:-8px;
+    background:var(--naranja); color:var(--papel);
+    font-family:'Martian Mono', monospace;
+    font-size:0.72rem; letter-spacing:0.06em;
+    padding:5px 12px 5px 16px; z-index:2;
+  }
+#sec-t1t2 figcaption{
+    font-family:'Martian Mono', monospace;
+    font-size:0.72rem; line-height:1.5;
+    color:var(--azul); opacity:0.65;
+    margin-top:0.7rem; text-align:left;
+  }
+@media (max-width: 720px){#sec-t1t2 .intro-block{ grid-template-columns: 1fr; }#sec-t1t2 .photo-insert{ order:-1; max-width:280px; margin: 0 auto 1rem; }}
+#sec-t1t2 .pre-scroll-cue{
+    position:absolute;
+    left:50%; bottom:9%;
+    transform:translateX(-50%);
+    z-index:2;
+    text-align:center;
+    font-family:'Martian Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--azul);
+    opacity:0.55;
+    transition: opacity 0.7s ease;
+  }
+#sec-t1t2 .pre-scroll-cue.hidden{ opacity:0; }
+#sec-t1t2 .pre-scroll-cue .arrow{
+    display:block; margin:0.6rem auto 0;
+    animation: nudge 1.6s ease-in-out infinite;
+  }
+@keyframes nudge{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(6px);} }
+#sec-t1t2 .scrolly{ position:relative; }
+#sec-t1t2 .sticky-graphic{
+    position:sticky; top:0; height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center;
+    z-index:1;
+    background:var(--bg);
+  }
+#sec-t1t2 .chart-wrap{ width:min(92vw, 980px); }
+#sec-t1t2 .chart-caption{
+    font-family:'Martian Mono', monospace;
+    font-size:0.7rem; color:var(--muted);
+    letter-spacing:0.03em; margin-top:0.6rem;
+    display:flex; justify-content:space-between;
+  }
+svg{ width:100%; height:auto; overflow:visible; }
+#sec-t1t2 #court-motif{ transition: opacity 0.9s ease; }
+#sec-t1t2 #court-motif path, #sec-t1t2 #court-motif circle, #sec-t1t2 #court-motif line{
+    fill:none; stroke:var(--ink); stroke-width:2; opacity:0.09;
+  }
+#sec-t1t2 .axis{ opacity:0; transition:opacity 0.9s ease; }
+#sec-t1t2 .axis.revealed{ opacity:1; }
+#sec-t1t2 .axis path, #sec-t1t2 .axis line{ stroke: rgba(27,54,84,0.25); }
+#sec-t1t2 .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+#sec-t1t2 #gridlines{ opacity:0; transition:opacity 0.9s ease; }
+#sec-t1t2 #gridlines.revealed{ opacity:1; }
+#sec-t1t2 .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
+#sec-t1t2 .line-path{
+    fill:none; stroke:var(--line-cold); stroke-width:3;
+    stroke-linecap:round; stroke-linejoin:round;
+    transition: stroke 0.5s ease;
+  }
+#sec-t1t2 .rule-band{
+    fill: rgba(178,59,50,0.10);
+    stroke: rgba(178,59,50,0.45);
+    stroke-width:1; stroke-dasharray:3 3;
+    opacity:0; transition: opacity 0.6s ease;
+  }
+#sec-t1t2 .rule-band.visible{ opacity:1; }
+#sec-t1t2 .rule-label{
+    fill:var(--red);
+    font-family:'Martian Mono', monospace;
+    font-size:11px; opacity:0;
+    transition: opacity 0.6s ease;
+  }
+#sec-t1t2 .rule-label.visible{ opacity:1; }
+#sec-t1t2 .lead-ball{
+    filter: url(#glow);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bounce 1.4s ease-in-out infinite;
+  }
+#sec-t1t2 .lead-ball.pre-drop{ animation:none; }
+@keyframes bounce{
+    0%, 100% { transform: scale(1) translateY(0); }
+    50%      { transform: scale(1.08) translateY(-4px); }
+  }
+#sec-t1t2 .pulse-ring{
+    fill:none; stroke-width:2;
+    transform-box: fill-box; transform-origin: center;
+    animation: pulse 1.7s ease-out infinite;
+    transition: stroke 0.5s ease, opacity 0.3s ease;
+  }
+#sec-t1t2 .pulse-ring.pre-drop{ opacity:0 !important; animation:none; }
+@keyframes pulse{
+    0%   { transform: scale(1);   opacity:0.45; }
+    100% { transform: scale(3.4); opacity:0; }
+  }
+#sec-t1t2 .value-tag{
+    font-family:'Martian Mono', monospace;
+    font-weight:500; font-size:13px;
+    fill:var(--ink);
+    opacity:1;
+    transition: opacity 0.6s ease;
+  }
+#sec-t1t2 .value-tag.pre-drop{ opacity:0; }
+#sec-t1t2 .steps{
+    position:relative; z-index:2; margin-top:-100vh;
+    counter-reset: stepnum;
+  }
+#sec-t1t2 .step{
+    min-height:100vh; display:flex; align-items:center; padding: 2rem 1.5rem;
+  }
+#sec-t1t2 .step-col{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:1.1rem;
+  }
+#sec-t1t2 .miller-aside{
+    max-width:400px;
+    display:flex;
+    align-items:flex-start;
+    gap:0.9rem;
+    border-top:2px dashed rgba(27,54,84,0.35);
+    padding-top:1rem;
+    opacity:0;
+    transform:translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events:none;
+  }
+#sec-t1t2 .step:nth-child(3).is-active .miller-aside{
+    opacity:1;
+    transform:translateY(0);
+  }
+#sec-t1t2 .miller-photo{
+    position:relative;
+    width:58px; height:58px;
+    flex-shrink:0;
+    border:2px solid var(--ink);
+    background:var(--ink);
+    overflow:hidden;
+    box-shadow:3px 3px 0 rgba(27,54,84,0.22);
+  }
+#sec-t1t2 .miller-photo img{
+    display:block; width:100%; height:100%;
+    object-fit:cover;
+    filter:grayscale(1) contrast(1.15) brightness(0.95);
+    mix-blend-mode:luminosity;
+  }
+#sec-t1t2 .miller-duotone{
+    position:absolute; inset:0;
+    background:linear-gradient(155deg, var(--azul) 20%, var(--rojo) 100%);
+    mix-blend-mode:color;
+    opacity:0.95;
+  }
+#sec-t1t2 .miller-text{ flex:1; }
+#sec-t1t2 .miller-name{
+    font-family:'Martian Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--red);
+    margin:0 0 0.4rem;
+  }
+#sec-t1t2 .miller-stats{
+    display:flex;
+    flex-direction:column;
+    gap:0.2rem;
+    font-family:'Martian Mono', monospace;
+    font-size:0.78rem;
+    color:var(--muted);
+    margin-bottom:0.5rem;
+  }
+#sec-t1t2 .miller-stats strong{ color:var(--ink); font-weight:500; }
+#sec-t1t2 .miller-stats em{ font-style:normal; color:var(--gold); }
+#sec-t1t2 .miller-note{
+    font-family:'Public Sans', sans-serif;
+    font-size:0.82rem;
+    line-height:1.4;
+    color:var(--muted);
+    margin:0;
+  }
+#sec-t1t2 .step-card{
+    position:relative;
+    counter-increment: stepnum;
+    max-width:400px;
+    background:var(--papel);
+    border: 2px solid var(--ink);
+    border-left: 7px solid var(--line-cold);
+    box-shadow: 7px 7px 0 rgba(27,54,84,0.22);
+    padding:1.5rem 1.7rem;
+    font-size:1.05rem; line-height:1.6;
+    color:var(--muted);
+    transition: color 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+  }
+#sec-t1t2 .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
+#sec-t1t2 .step:nth-child(even) .step-card{ transform: rotate(1.1deg); }
+#sec-t1t2 .step-card::before{
+    content: counter(stepnum, decimal-leading-zero);
+    position:absolute; top:-16px; left:-16px;
+    width:32px; height:32px; border-radius:50%;
+    background:var(--line-cold); color:var(--papel);
+    border:2px solid var(--papel);
+    box-shadow:0 0 0 1.5px var(--ink);
+    font-family:'Martian Mono', monospace; font-size:0.72rem;
+    display:flex; align-items:center; justify-content:center;
+    transition: background 0.4s ease;
+  }
+#sec-t1t2 .step-card strong{
+    font-family:'Martian Mono', monospace;
+    font-weight:500; color:var(--line-cold);
+    transition: color 0.4s ease;
+  }
+#sec-t1t2 .step.is-active .step-card{
+    color:var(--ink);
+    border-left-color: var(--gold);
+    transform: rotate(0deg);
+    box-shadow: 9px 9px 0 rgba(217,100,46,0.25);
+  }
+#sec-t1t2 .step.is-active .step-card::before{ background:var(--gold); }
+#sec-t1t2 .step.is-active .step-card strong{ color:var(--gold); }
+#sec-t1t2 .step:nth-child(3).is-active .step-card, #sec-t1t2 .step:nth-child(4).is-active .step-card{
+    border-left-color: var(--red);
+    box-shadow: 9px 9px 0 rgba(178,59,50,0.25);
+  }
+#sec-t1t2 .step:nth-child(3).is-active .step-card::before, #sec-t1t2 .step:nth-child(4).is-active .step-card::before{ background:var(--red); }
+#sec-t1t2 .step:nth-child(3).is-active .step-card strong, #sec-t1t2 .step:nth-child(4).is-active .step-card strong{ color:var(--red); }
+#sec-t1t2 .step-card.reflective{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:600; font-size:1.7rem; line-height:1.15;
+    text-transform:none; color:var(--ink);
+    border-left-color: var(--gold);
+    transform:rotate(0deg);
+    max-width:460px;
+  }
+#sec-t1t2 .step-card.reflective::before{ background:var(--gold); }
+#sec-t1t2 .t1-remnants{ transition: opacity 0.7s ease; }
+#sec-t1t2 .t1-remnants.hidden{ opacity:0; }
+#sec-t1t2 .t2-steps{ counter-reset: stepnum; }
+#sec-t1t2 .zone-shape{ stroke:var(--ink); stroke-width:1; transition: stroke 0.4s ease, stroke-width 0.4s ease, opacity 0.4s ease, filter 0.4s ease; }
+#sec-t1t2 .zone-shape.highlighted{ stroke: var(--gold); stroke-width:3; }
+#sec-t1t2 .zone-shape.dimmed{ opacity:0.25; filter:grayscale(0.7); }
+#sec-t1t2 .zone-label{
+    font-family:'Martian Mono', monospace; font-weight:500; font-size:15px;
+    fill:var(--ink); text-anchor:middle; dominant-baseline:central;
+    paint-order: stroke; stroke: var(--papel); stroke-width:4px; stroke-linejoin:round;
+    transition: opacity 0.4s ease;
+  }
+#sec-t1t2 .zone-sub{
+    font-family:'Martian Mono', monospace; font-size:9px;
+    fill:var(--ink); text-anchor:middle; opacity:0.8;
+    paint-order: stroke; stroke: var(--papel); stroke-width:3px; stroke-linejoin:round;
+    transition: opacity 0.4s ease;
+  }
+#sec-t1t2 .zone-label.dimmed{ opacity:0.3; }
+#sec-t1t2 .zone-sub.dimmed{ opacity:0.3; }
+#sec-t1t2 #court-lines-t2 line, #sec-t1t2 #court-lines-t2 circle{ stroke:var(--ink); stroke-width:1.5; opacity:0.3; }
+#sec-t1t2 .hook-dot{ fill: var(--gold); opacity:0; transition: opacity 0.6s ease; }
+#sec-t1t2 .hook-dot.visible{ opacity:1; animation: hookpulse 1.4s ease-in-out infinite; }
+@keyframes hookpulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.5); } }
+#sec-t1t2 .t2-court{ opacity:0; transition: opacity 1s ease; }
+#sec-t1t2 .t2-court.visible{ opacity:1; }
+#sec-t1t2 .spacer{ height:30vh; }
+
+/* ---------- separador entre tramos (placeholder de transición) ---------- */
+.tramo-divider{
+  display:flex; align-items:center; gap:1rem;
+  max-width:640px; margin:0 auto; padding:3.5rem 1.5rem;
+}
+.tramo-divider-line{ flex:1; height:1px; background:rgba(27,54,84,0.25); }
+.tramo-divider-label{
+  font-family:'Martian Mono', monospace; font-size:0.7rem; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--rojo); white-space:nowrap;
+}
+
+#sec-t3-line{ --muted:#8a97a8; }
+
+#sec-t3-draft .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+#sec-t3-draft .note{
+    max-width:640px; margin:0 auto; padding:2rem 1.5rem 0.5rem; text-align:center;
+    font-family:'Martian Mono', monospace; font-size:0.7rem; letter-spacing:0.05em;
+    color:var(--muted); text-transform:uppercase;
+  }
+#sec-t3-draft .draft-block{
+    max-width:1040px; margin:0 auto; padding: 3.5rem 1.5rem 5rem;
+    display:grid; grid-template-columns: 1.3fr 0.9fr; gap: 3.5rem; align-items:start;
+  }
+#sec-t3-draft .draft-block .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--rojo); margin:0 0 1rem;
+  }
+#sec-t3-draft .draft-block p.body{ font-size:1.15rem; line-height:1.75; margin:0 0 1.4rem; }
+#sec-t3-draft .photo-insert{ margin:0; transform: rotate(-2deg); }
+#sec-t3-draft .photo-frame{
+    position:relative; border:3px solid var(--azul); background:var(--azul);
+    overflow:hidden; box-shadow:8px 8px 0 rgba(27,54,84,0.18);
+  }
+#sec-t3-draft .photo-frame img{
+    display:block; width:100%; height:auto;
+    filter: grayscale(1) contrast(1.15) brightness(0.92);
+    mix-blend-mode: luminosity;
+  }
+#sec-t3-draft .duotone-layer{
+    position:absolute; inset:0;
+    background: linear-gradient(155deg, var(--azul) 20%, var(--rojo) 100%);
+    mix-blend-mode: color; opacity:0.95;
+  }
+#sec-t3-draft .halftone-layer{
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(242,232,213,0.9) 1.1px, transparent 1.1px);
+    background-size: 4px 4px; mix-blend-mode: multiply; opacity:0.35;
+  }
+#sec-t3-draft .photo-tag{
+    position:absolute; top:12px; left:-8px; background:var(--naranja); color:var(--papel);
+    font-family:'Martian Mono', monospace; font-size:0.72rem; letter-spacing:0.06em;
+    padding:5px 12px 5px 16px; z-index:2;
+  }
+#sec-t3-draft figcaption{
+    font-family:'Martian Mono', monospace; font-size:0.72rem; line-height:1.5;
+    color:var(--azul); opacity:0.65; margin-top:0.7rem; text-align:left;
+  }
+@media (max-width: 720px){#sec-t3-draft .draft-block{ grid-template-columns: 1fr; }#sec-t3-draft .photo-insert{ order:-1; max-width:320px; margin: 0 auto 1rem; }}
+#sec-t3-draft .bars-section{ max-width:980px; margin:0 auto; padding: 1rem 1.5rem 6rem; }
+#sec-t3-draft .bars-header{ text-align:center; margin-bottom:2.5rem; }
+#sec-t3-draft .bars-header .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--rojo); margin:0 0 0.8rem;
+  }
+#sec-t3-draft .bars-header h2{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:clamp(1.6rem, 4vw, 2.3rem); line-height:1; text-transform:uppercase;
+    margin:0; color:var(--azul);
+  }
+#sec-t3-draft .bars-scroll{ overflow-x:auto; padding-bottom:0.5rem; }
+#sec-t3-draft .bars-columns{
+    display:flex; align-items:flex-end; gap:10px;
+    padding:0 4px; width:max-content; margin:0 auto;
+  }
+#sec-t3-draft .col{
+    display:flex; flex-direction:column; align-items:center;
+    flex:0 0 auto; width:58px;
+  }
+@media (max-width: 640px){#sec-t3-draft .col{ width:52px; }}
+#sec-t3-draft .col-plot{
+    position:relative; width:100%; height:240px;
+  }
+#sec-t3-draft .col-photo{
+    position:absolute; left:50%; bottom:10px;
+    width:42px; height:42px;
+    transform:translateX(-50%);
+    overflow:hidden;
+    transition: bottom 1.1s cubic-bezier(0.22,1,0.36,1);
+  }
+#sec-t3-draft .col.visible .col-photo{ bottom: var(--photo-bottom); }
+#sec-t3-draft .col-photo img{
+    display:block; width:100%; height:100%; object-fit:cover;
+  }
+#sec-t3-draft .col-bar{
+    position:absolute; left:0; bottom:0; width:100%;
+    background:var(--azul); height:0;
+    transition: height 1.1s cubic-bezier(0.22,1,0.36,1);
+  }
+#sec-t3-draft .col.is-curry .col-bar{ background:var(--naranja); }
+#sec-t3-draft .col.visible .col-bar{ height: var(--bar-height); }
+#sec-t3-draft .col-value{
+    font-family:'Martian Mono', monospace; font-size:0.82rem; color:var(--muted);
+    margin-top:0.6rem;
+  }
+#sec-t3-draft .col.is-curry .col-value{ color:var(--naranja); font-weight:500; }
+#sec-t3-draft .col-name{
+    font-family:'Public Sans', sans-serif; font-size:0.7rem; font-weight:500;
+    text-align:center; color:var(--azul); line-height:1.2; margin-top:0.15rem;
+  }
+#sec-t3-draft .col.is-curry .col-name{ font-weight:600; color:var(--naranja); }
+#sec-t3-draft .bars-footer{
+    margin-top:2rem; padding-top:1.3rem; border-top:2px dashed rgba(27,54,84,0.3);
+    font-family:'Big Shoulders Display', sans-serif; font-weight:600;
+    font-size:clamp(1.2rem, 2.6vw, 1.5rem); line-height:1.25; color:var(--azul);
+  }
+#sec-t3-draft .bars-footer strong{ color:var(--naranja); }
+#sec-t3-draft .hook-section{
+    max-width:640px; margin:0 auto; padding:4rem 1.5rem 5rem; text-align:center;
+  }
+#sec-t3-draft .hook-text{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:600;
+    font-size:clamp(1.4rem, 3.2vw, 1.9rem); line-height:1.3; color:var(--azul);
+    max-width:36ch; margin:0 auto;
+  }
+#sec-t3-draft .group-divider{
+    flex-shrink:0; width:0; align-self:stretch;
+    border-left:2px dashed rgba(27,54,84,0.3);
+    margin:0 4px;
+  }
+
+#sec-t3-line .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+#sec-t3-line .note{
+    max-width:640px; margin:0 auto; padding:2rem 1.5rem 0.5rem; text-align:center;
+    font-family:'Martian Mono', monospace; font-size:0.7rem; letter-spacing:0.05em;
+    color:var(--muted); text-transform:uppercase;
+  }
+#sec-t3-line .scrolly{ position:relative; }
+#sec-t3-line .sticky-graphic{
+    position:sticky; top:0; height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:2.2rem; z-index:1;
+  }
+#sec-t3-line .chart-wrap{ width:min(64vw, 720px); position:relative; }
+#sec-t3-line .side-panel{
+    width:180px; flex-shrink:0; position:relative; height:320px;
+  }
+@media (max-width: 860px){#sec-t3-line .sticky-graphic{ flex-direction:column; gap:1rem; }#sec-t3-line .chart-wrap{ width:min(92vw, 720px); }#sec-t3-line .side-panel{ width:140px; height:170px; }}
+
+#sec-t3-line .axis path, #sec-t3-line .axis line{ stroke: rgba(27,54,84,0.25); }
+#sec-t3-line .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+#sec-t3-line .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
+#sec-t3-line .bg-line{ fill:none; stroke:var(--muted); stroke-width:2; opacity:0.55; }
+#sec-t3-line .bg-name{ font-family:'Martian Mono', monospace; font-size:10px; fill:var(--muted); opacity:0.7; }
+#sec-t3-line .curry-line{ fill:none; stroke-width:3.5; stroke-linecap:round; stroke:var(--ink); }
+#sec-t3-line .curry-dot{ fill:var(--ink); }
+#sec-t3-line .value-tag{
+    font-family:'Martian Mono', monospace; font-weight:600; font-size:15px;
+    fill:var(--ink); opacity:0; transition: opacity 0.4s ease;
+  }
+#sec-t3-line .value-tag.visible{ opacity:1; }
+#sec-t3-line .photo-aside{
+    position:absolute; top:50%; left:50%; width:130px;
+    opacity:0; transform:translate(-50%,-50%) rotate(-3deg);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events:none;
+  }
+#sec-t3-line .photo-aside.visible{ opacity:1; transform:translate(-50%,-50%) rotate(-3deg); }
+#sec-t3-line .photo-frame{
+    position:relative; border:3px solid var(--ink); background:var(--ink);
+    overflow:hidden; box-shadow:6px 6px 0 rgba(27,54,84,0.2);
+  }
+#sec-t3-line .photo-frame img{
+    display:block; width:100%; height:auto;
+    filter: grayscale(1) contrast(1.15) brightness(0.92);
+    mix-blend-mode: luminosity;
+  }
+#sec-t3-line .duotone-layer{
+    position:absolute; inset:0;
+    background: linear-gradient(155deg, var(--ink) 20%, var(--red) 100%);
+    mix-blend-mode: color; opacity:0.95;
+  }
+#sec-t3-line .photo-tag{
+    position:absolute; top:8px; left:-6px; background:var(--gold); color:var(--papel);
+    font-family:'Martian Mono', monospace; font-size:0.6rem; letter-spacing:0.04em;
+    padding:3px 8px 3px 12px; z-index:2;
+  }
+#sec-t3-line .photo-cap{
+    font-family:'Martian Mono', monospace; font-size:0.6rem; color:var(--ink);
+    opacity:0.7; margin-top:0.4rem; line-height:1.3;
+  }
+#sec-t3-line .attach-card{
+    position:absolute; top:50%; left:50%; width:150px;
+    opacity:0; transform:translate(-50%,-50%) rotate(2deg);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events:none;
+  }
+#sec-t3-line .attach-card.visible{ opacity:1; transform:translate(-50%,-50%) rotate(2deg); }
+#sec-t3-line .clipping-frame{
+    border:3px solid var(--ink); box-shadow:6px 6px 0 rgba(27,54,84,0.2);
+    overflow:hidden;
+  }
+#sec-t3-line .clipping-frame img{ display:block; width:100%; height:auto; }
+#sec-t3-line .attach-card .photo-cap{ text-align:center; }
+#sec-t3-line .steps{ position:relative; z-index:2; margin-top:-100vh; }
+#sec-t3-line .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
+#sec-t3-line .step-card{
+    max-width:400px; background:var(--papel); border:2px solid var(--ink);
+    border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(27,54,84,0.22);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6;
+    transition: border-color 0.4s ease;
+  }
+#sec-t3-line .step.is-active .step-card{ border-left-color:var(--gold); }
+#sec-t3-line .payoff-section{
+    max-width:720px; margin:0 auto; padding:5rem 1.5rem 6rem;
+    text-align:center;
+  }
+#sec-t3-line .payoff-quote{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:600;
+    font-size:clamp(1.5rem, 3.6vw, 2.1rem); line-height:1.25;
+    color:var(--ink); max-width:34ch; margin:0 auto 3rem;
+  }
+#sec-t3-line .pie-row{
+    display:flex; gap:3rem; justify-content:center;
+  }
+#sec-t3-line .pie-item{ text-align:center; width:140px; }
+#sec-t3-line .pie-svg{
+    width:100%; max-width:140px; height:auto;
+    opacity:0; transform:scale(0.85);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+#sec-t3-line .pie-svg.visible{ opacity:1; transform:scale(1); }
+#sec-t3-line .pie-cap{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; color:var(--muted);
+    line-height:1.3; margin:0.6rem 0 0;
+  }
+#sec-t3-line .pie-wedge-label{
+    font-family:'Martian Mono', monospace; font-size:11px; fill:var(--papel);
+    text-anchor:middle; dominant-baseline:central; font-weight:600;
+  }
+#sec-t3-line .pie-legend{
+    display:flex; justify-content:center; gap:1.3rem; margin-top:1.3rem;
+    font-family:'Martian Mono', monospace; font-size:0.72rem; color:var(--muted);
+  }
+#sec-t3-line .pie-legend span{ display:flex; align-items:center; gap:0.35rem; }
+#sec-t3-line .pie-legend i{ width:9px; height:9px; display:inline-block; border-radius:50%; }
+#sec-t3-line .step-card strong{ font-family:'Martian Mono', monospace; color:var(--gold); font-weight:500; }
+#sec-t3-line .spacer{ height:25vh; }
+
+#sec-t4 .tramo-header, #sec-t5 .tramo-header{
+  padding: 4rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center;
+}
+#sec-t4 .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+#sec-t4 .tramo-header{ padding: 4rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
+#sec-t4 .tramo-header .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--red); margin-bottom:0.75rem;
+  }
+#sec-t4 .tramo-header h1{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:clamp(2.2rem, 6vw, 3.4rem); line-height:0.95; text-transform:uppercase;
+    letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
+  }
+#sec-t4 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
+#sec-t4 .scrolly{ position:relative; }
+#sec-t4 .sticky-graphic{
+    position:sticky; top:0; height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center; z-index:1;
+  }
+#sec-t4 .chart-wrap{ width:min(92vw, 960px); position:relative; }
+
+#sec-t4 .axis path, #sec-t4 .axis line{ stroke: rgba(27,54,84,0.25); }
+#sec-t4 .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+#sec-t4 .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
+#sec-t4 .axis-label{ font-family:'Martian Mono', monospace; font-size:11px; fill:var(--muted); }
+#sec-t4 .player-dot{
+    opacity:0;
+    transition: opacity 0.7s ease;
+  }
+#sec-t4 .player-dot.revealed{ opacity:1; }
+#sec-t4 .player-visual{
+    transition: transform 0.5s ease;
+    transform-box: fill-box; transform-origin:center;
+  }
+#sec-t4 .player-dot.highlighted .player-visual{ transform: scale(1.15); }
+#sec-t4 .player-photo{ filter: grayscale(1) contrast(1.1) brightness(0.95); }
+#sec-t4 .player-tint{ mix-blend-mode:color; fill:var(--ink); opacity:0.85; transition:fill 0.4s ease; }
+#sec-t4 .player-dot.highlighted .player-tint{ fill:var(--gold); }
+#sec-t4 .player-ring{ fill:none; stroke:var(--ink); stroke-width:2; opacity:0.5; }
+#sec-t4 .player-dot.highlighted .player-ring{ stroke:var(--gold); stroke-width:3; opacity:1; }
+#sec-t4 .player-name{
+    font-family:'Martian Mono', monospace; font-size:9px; fill:var(--muted);
+    text-anchor:middle; opacity:0; transition:opacity 0.5s ease;
+  }
+#sec-t4 .player-name.revealed{ opacity:0.85; }
+#sec-t4 .player-dot.highlighted ~ .player-name{ fill:var(--gold); font-weight:500; }
+#sec-t4 .lopez-card{
+    position:absolute; width:170px;
+    background:var(--papel); border:2px solid var(--ink); border-left:6px solid var(--gold);
+    box-shadow:6px 6px 0 rgba(27,54,84,0.2); padding:0.8rem 1rem;
+    opacity:0; transform:translateY(8px) rotate(-2deg);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events:none;
+  }
+#sec-t4 .lopez-card.visible{ opacity:1; transform:translateY(0) rotate(-2deg); }
+#sec-t4 .lopez-card .compare{ display:flex; justify-content:space-between; align-items:baseline; margin-top:0.4rem; }
+#sec-t4 .lopez-card .num{ font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:1.6rem; }
+#sec-t4 .lopez-card .num.small{ color:var(--muted); font-size:1.1rem; }
+#sec-t4 .lopez-card .num.big{ color:var(--gold); }
+#sec-t4 .lopez-card .lbl{ font-family:'Martian Mono', monospace; font-size:0.6rem; color:var(--muted); text-transform:uppercase; }
+#sec-t4 .lopez-card .title{ font-family:'Martian Mono', monospace; font-size:0.65rem; color:var(--red); text-transform:uppercase; letter-spacing:0.04em; }
+#sec-t4 .steps{ position:relative; z-index:2; margin-top:-100vh; counter-reset: stepnum; }
+#sec-t4 .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
+#sec-t4 .step-card{
+    position:relative; counter-increment: stepnum;
+    max-width:410px; background:var(--papel); border:2px solid var(--ink);
+    border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(27,54,84,0.22);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted);
+    transition: color 0.4s ease, border-color 0.4s ease;
+  }
+#sec-t4 .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
+#sec-t4 .step:nth-child(even) .step-card{ transform: rotate(1.1deg); }
+#sec-t4 .step-card::before{
+    content: counter(stepnum, decimal-leading-zero);
+    position:absolute; top:-16px; left:-16px; width:32px; height:32px; border-radius:50%;
+    background:var(--ink); color:var(--papel); border:2px solid var(--papel);
+    box-shadow:0 0 0 1.5px var(--ink); font-family:'Martian Mono', monospace; font-size:0.72rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+#sec-t4 .step.is-active .step-card{ color:var(--ink); border-left-color:var(--gold); transform:rotate(0deg); }
+#sec-t4 .step.is-active .step-card::before{ background:var(--gold); }
+#sec-t4 .step-card strong{ font-family:'Martian Mono', monospace; color:var(--gold); font-weight:500; }
+#sec-t4 .spacer{ height:25vh; }
+
+#sec-t5 .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+#sec-t5 .tramo-header{ padding: 4rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
+#sec-t5 .tramo-header .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--red); margin-bottom:0.75rem;
+  }
+#sec-t5 .tramo-header h1{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:clamp(2.2rem, 6vw, 3.4rem); line-height:0.95; text-transform:uppercase;
+    letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
+  }
+#sec-t5 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
+#sec-t5 .scrolly{ position:relative; }
+#sec-t5 .sticky-graphic{
+    position:sticky; top:0; height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center; z-index:1;
+  }
+#sec-t5 .chart-wrap{ width:min(92vw, 920px); }
+
+#sec-t5 .axis path, #sec-t5 .axis line{ stroke: rgba(27,54,84,0.3); }
+#sec-t5 .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+#sec-t5 .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
+#sec-t5 .ts-line{
+    fill:none; stroke:var(--muted); stroke-width:2.5; stroke-linecap:round;
+    transition: stroke 0.6s ease, stroke-width 0.6s ease;
+  }
+#sec-t5 .ts-line.highlighted{ stroke:var(--gold); stroke-width:4; }
+#sec-t5 .ts-dot{ fill:var(--muted); opacity:0; transition:opacity 0.5s ease, fill 0.6s ease; }
+#sec-t5 .ts-dot.visible{ opacity:1; }
+#sec-t5 .ts-dot.highlighted{ fill:var(--gold); }
+#sec-t5 .value-tag{
+    font-family:'Martian Mono', monospace; font-weight:600; font-size:15px;
+    fill:var(--gold); opacity:0; transition:opacity 0.5s ease;
+  }
+#sec-t5 .value-tag.visible{ opacity:1; }
+#sec-t5 .peak-label{
+    font-family:'Martian Mono', monospace; font-size:10px; fill:var(--muted);
+    opacity:0; transition:opacity 0.5s ease;
+  }
+#sec-t5 .peak-label.visible{ opacity:1; }
+#sec-t5 .steps{ position:relative; z-index:2; margin-top:-100vh; counter-reset: stepnum; }
+#sec-t5 .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
+#sec-t5 .step-card{
+    position:relative; counter-increment: stepnum;
+    max-width:420px; background:var(--papel); border:2px solid var(--ink);
+    border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(27,54,84,0.22);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted);
+    transition: color 0.4s ease, border-color 0.4s ease;
+  }
+#sec-t5 .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
+#sec-t5 .step:nth-child(even) .step-card{ transform: rotate(1.1deg); }
+#sec-t5 .step-card::before{
+    content: counter(stepnum, decimal-leading-zero);
+    position:absolute; top:-16px; left:-16px; width:32px; height:32px; border-radius:50%;
+    background:var(--ink); color:var(--papel); border:2px solid var(--papel);
+    box-shadow:0 0 0 1.5px var(--ink); font-family:'Martian Mono', monospace; font-size:0.72rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+#sec-t5 .step.is-active .step-card{ color:var(--ink); border-left-color:var(--gold); transform:rotate(0deg); }
+#sec-t5 .step.is-active .step-card::before{ background:var(--gold); }
+#sec-t5 .step-card strong{ font-family:'Martian Mono', monospace; color:var(--gold); font-weight:500; }
+#sec-t5 .step-card q{ font-style:italic; }
+#sec-t5 .spacer{ height:25vh; }
+#sec-t5 .fade-step .step-card{ opacity:0; box-shadow:none; border:none; pointer-events:none; }
+#sec-t5 .ts-projection{
+    fill:none; stroke:var(--muted); stroke-width:2; stroke-dasharray:4 5;
+    opacity:0; transition: opacity 1.2s ease;
+  }
+#sec-t5 .ts-projection.visible{ opacity:0.55; }
+#sec-t5 .fading-out{ transition: opacity 1s ease; }
+#sec-t5 .fading-out.faded{ opacity:0.15; }
+#sec-t5 .closing{ max-width:960px; margin:0 auto; padding:5rem 1.5rem 6rem; }
+#sec-t5 .timeline-wrap{ margin-bottom:3.5rem; }
+#sec-t5 #timeline{ width:100%; height:auto; overflow:visible; }
+#sec-t5 #timeline-axis{ stroke:var(--ink); stroke-width:2; opacity:0.3; }
+#sec-t5 .milestone-dot{ fill:var(--papel); stroke:var(--gold); stroke-width:2.5; }
+#sec-t5 .milestone-year{
+    font-family:'Martian Mono', monospace; font-size:11px; fill:var(--muted);
+    text-anchor:middle;
+  }
+#sec-t5 .milestone-label{
+    font-family:'Public Sans', sans-serif; font-size:11px; fill:var(--ink);
+    text-anchor:middle; font-weight:500;
+  }
+#sec-t5 .closing-text{ max-width:640px; margin:0 auto; text-align:center; }
+#sec-t5 .closing-text p{ font-size:1.15rem; line-height:1.75; color:var(--ink); margin:0 0 1.6rem; }
+#sec-t5 .closing-text q{ font-style:italic; }
+#sec-t5 .closing-text .closing-line{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:600;
+    font-size:clamp(1.3rem, 2.8vw, 1.7rem); line-height:1.4; color:var(--ink);
+  }
+#sec-t5 .closing-text .closing-line strong{ font-family:inherit; color:var(--gold); font-weight:600; }
+</style>
+</head>
+<body>
+
+<div id="sec-t1t2">
+
+
+
+<section class="masthead halftone">
+  <svg class="court-lines" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice">
+    <path d="M -50 520 Q 500 300 1050 520" />
+    <circle cx="500" cy="140" r="70" />
+    <path d="M 500 0 L 500 500" />
+  </svg>
+  <p class="eyebrow">Cómo el triple reescribió el básquet</p>
+  <h1 class="title">De la anécdota<br>al arma letal</h1>
+  <p class="bajada">En 1980 era un tiro de desesperación. Hoy define quién gana.</p>
+</section>
+
+<section class="intro-block">
+  <div class="text-col">
+    <p class="body">Noviembre de 1979. Chris Ford, escolta de los Boston Celtics, convierte el primer triple de la historia de la NBA. Nadie en el estadio lo festeja demasiado: es una curiosidad reglamentaria, un tiro que casi nadie se anima a intentar.</p>
+    <p class="body">Cuarenta y cinco años después, la liga tira más de 35 triples por partido — casi trece veces más que en aquella primera temporada. Lo que empezó como un experimento al margen terminó reescribiendo por completo la forma en que se juega al básquet.</p>
+    <p class="question">¿Cómo un tiro despreciado se convirtió en el arma más poderosa del deporte?</p>
+  </div>
+
+  <figure class="photo-insert">
+    <div class="photo-frame">
+      <span class="photo-tag">nov. 1979</span>
+      <img src="../inspo_datos/chrisford.webp" alt="Chris Ford, de los Boston Celtics, en el instante de tirar">
+      <div class="duotone-layer"></div>
+      <div class="halftone-layer"></div>
+    </div>
+    <figcaption>Chris Ford, Boston Celtics.<br>El primer triple convertido en la historia de la NBA.</figcaption>
+  </figure>
+</section>
+
+
+<div class="scrolly">
+
+  <div class="sticky-graphic halftone">
+    <div class="pre-scroll-cue">
+      seguí bajando
+      <span class="arrow">↓</span>
+    </div>
+    <div class="chart-wrap">
+      <svg id="chart" viewBox="0 0 920 480" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3.2" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <clipPath id="plot-area-clip">
+          <rect x="50" y="40" width="840" height="400"/>
+        </clipPath>
+        <g clip-path="url(#plot-area-clip)" class="t1-remnants">
+          <image href="../inspo_datos/maderapiso.jpg" x="50" y="40" width="840" height="400"
+                 preserveAspectRatio="xMidYMid slice"
+                 style="filter:grayscale(0.5) sepia(0.15) brightness(1.05) contrast(0.95); opacity:0.5;"/>
+          <rect x="50" y="40" width="840" height="400" fill="#F2E8D5" opacity="0.42"/>
+        </g>
+        <g id="court-motif">
+          <path id="court-arc" d="M -80 560 Q 460 260 1000 560"/>
+          <circle id="court-circle" cx="460" cy="180" r="90"/>
+          <line id="court-vertical" x1="50" y1="40" x2="50" y2="440"/>
+        </g>
+        <g id="gridlines" class="t1-remnants"></g>
+        <g class="t1-remnants">
+          <rect id="rule-band" class="rule-band" y="40" height="380"></rect>
+          <text id="rule-label" class="rule-label"></text>
+          <g id="x-axis" class="axis"></g>
+          <g id="y-axis" class="axis"></g>
+          <path id="line-path" class="line-path"></path>
+        </g>
+
+        <!-- Cancha de tramo 2: trasladada para que el aro coincida exacto con el punto final (890, 135.6) -->
+        <g id="t2-court" class="t2-court" transform="translate(120,-39)">
+          <rect x="140" y="50" width="400" height="458" rx="6" class="zone-shape" id="zone-above" fill="#F2E8D5"></rect>
+          <rect x="140" y="394" width="24" height="114" class="zone-shape" id="zone-corner-l" fill="#F2E8D5"></rect>
+          <rect x="516" y="394" width="24" height="114" class="zone-shape" id="zone-corner-r" fill="#F2E8D5"></rect>
+          <path d="M164,508 L164,394 A190,190 0 0 1 516,394 L516,508 Z M276,508 L404,508 L404,356 L276,356 Z"
+                fill-rule="evenodd" class="zone-shape" id="zone-mid" fill="#F2E8D5"></path>
+          <rect x="276" y="356" width="128" height="152" class="zone-shape" id="zone-paint" fill="#F2E8D5"></rect>
+          <path d="M308,466 A32,32 0 0 1 372,466 Z" class="zone-shape" id="zone-ra" fill="#F2E8D5"></path>
+          <g id="court-lines-t2">
+            <line x1="140" y1="508" x2="540" y2="508"/>
+            <line x1="140" y1="50" x2="140" y2="508"/>
+            <line x1="540" y1="50" x2="540" y2="508"/>
+            <circle cx="340" cy="356" r="48" fill="none"/>
+          </g>
+          <circle cx="340" cy="466" r="4" fill="#1B3654"></circle>
+          <circle id="hook-dot" class="hook-dot" cx="340" cy="276" r="7"></circle>
+
+          <text class="zone-label" id="label-ra" x="340" y="450"></text>
+          <text class="zone-sub" x="340" y="462">restringida</text>
+          <text class="zone-label" id="label-paint" x="340" y="400"></text>
+          <text class="zone-sub" x="340" y="413">pintura</text>
+          <text class="zone-label" id="label-mid" x="215" y="440"></text>
+          <text class="zone-sub" x="215" y="453">media dist.</text>
+          <text class="zone-label" id="label-corner" x="152" y="440"></text>
+          <text class="zone-sub" x="152" y="453">corner 3</text>
+          <text class="zone-label" id="label-above" x="340" y="130"></text>
+          <text class="zone-sub" x="340" y="143">arriba del arco</text>
+        </g>
+
+        <circle id="pulse-ring" class="pulse-ring" r="10"></circle>
+        <image id="lead-ball" class="lead-ball" width="42" height="42" href="../inspo_datos/ball.png"></image>
+        <text id="value-tag" class="value-tag"></text>
+      </svg>
+      <div class="chart-caption t1-remnants" id="chart-caption">
+        <span>Intentos de triple por partido · promedio de liga</span>
+        <span>Fuente: Basketball-Reference</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0">
+      <div class="step-card">1979-80: la NBA introduce la línea de triple. Los equipos la usan apenas <strong>2.8 veces</strong> por partido.</div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card">Durante 15 años el triple crece, pero muy despacio: de 2.8 a <strong>9.9</strong> intentos por partido. Sigue siendo terreno de especialistas, no una estrategia de equipo.</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-col">
+        <div class="step-card">En 1994, la liga se impacienta. Acerca físicamente la línea de triple — de 23'9" a 22 pies parejos — para obligar a tirar más de afuera.</div>
+        <div class="miller-aside">
+          <div class="miller-photo">
+            <img src="../inspo_datos/reggie.png" alt="Reggie Miller">
+            <div class="miller-duotone"></div>
+          </div>
+          <div class="miller-text">
+            <p class="miller-name">Reggie Miller</p>
+            <div class="miller-stats">
+              <span>94-95 <strong>195</strong></span>
+              <span>95-96 <strong>168</strong></span>
+              <span>96-97 <strong>229</strong> <em>récord</em></span>
+            </div>
+            <p class="miller-note">La regla no lo inventó, pero le dio más espacio para hacer lo que ya sabía hacer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-card">En 1997, devuelven la línea a su lugar. Los intentos caen — pero no vuelven al punto de partida.</div>
+    </div>
+    <div class="step" data-step="4">
+      <div class="step-card reflective">La liga movió la canasta para cambiar el juego, y funcionó solo mientras duró la regla. Lo que en serio lo cambió para siempre, unos años después, no fue una línea distinta. Fue una idea.</div>
+    </div>
+
+    <div class="t2-steps">
+      <div class="step" data-t2step="0">
+        <div class="step-card">2003. Daryl Morey, un ingeniero informático del MIT sin haber jugado nunca profesionalmente, entra a los Celtics. Tres años después ya es asistente de gerente general en los Rockets. Ese año, <strong>35.7%</strong> de todos los tiros de la liga salían de media distancia — la zona más usada de toda la cancha.</div>
+      </div>
+      <div class="step" data-t2step="1">
+        <div class="step-card">Morey hizo una cuenta simple: un triple al 35% vale lo mismo, en promedio, que un doble al 70%. Casi nadie tira 70% desde media distancia. El mid-range era, en los papeles, <strong>el peor tiro del básquet</strong>.</div>
+      </div>
+      <div class="step" data-t2step="2">
+        <div class="step-card">Veinte años después, la media distancia pasó de 35.7% a apenas <strong>10.05%</strong> de los tiros de la liga — una caída de casi 26 puntos. El triple de arriba del arco casi se triplicó, y hasta el corner 3 se duplicó.</div>
+      </div>
+      <div class="step" data-t2step="3">
+        <div class="step-card">El cambio de reglas del juego ya estaba escrito. Solo faltaba alguien que llevara esa lógica al extremo.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+<div class="tramo-divider halftone">
+  <span class="tramo-divider-line"></span>
+  <span class="tramo-divider-label">Tramo 3 — Curry rompe la escala</span>
+  <span class="tramo-divider-line"></span>
+</div>
+
+
+<div id="sec-t3-draft">
+
+
+<section class="draft-block">
+  <div class="text-col">
+    <p class="eyebrow">Junio de 2009 · Draft de la NBA</p>
+    <p class="body">Golden State Warriors elige a Stephen Curry en el número 7 del draft. Viene de Davidson, una universidad chica fuera del radar habitual, y los informes de los scouts dudan de él: cuerpo frágil, poca explosividad, un base que tira demasiado para su posición.</p>
+    <p class="body">Nadie en ese escenario sospecha que años después va a ser considerado el mejor tirador de la historia del básquet.</p>
+  </div>
+  <figure class="photo-insert">
+    <div class="photo-frame">
+      <span class="photo-tag">jun. 2009</span>
+      <img src="../inspo_datos/draftcurry.jpeg" alt="Stephen Curry el día de su draft, con la gorra de los Golden State Warriors">
+      <div class="duotone-layer"></div>
+      <div class="halftone-layer"></div>
+    </div>
+    <figcaption>Stephen Curry, pick n.º 7 del Draft 2009.<br>Golden State Warriors.</figcaption>
+  </figure>
+</section>
+
+<section class="bars-section halftone">
+  <div class="bars-header">
+    <p class="eyebrow">Triples anotados en la temporada debut</p>
+    <h2>Antes de Curry</h2>
+  </div>
+
+  <div class="bars-scroll">
+    <div class="bars-columns" id="bars"></div>
+  </div>
+
+  <div class="bars-footer">
+    166 triples en una temporada debut, en 2009, era un número que <strong>casi nadie</strong> había visto antes.
+  </div>
+</section>
+
+<section class="hook-section" id="hook-section">
+  <p class="hook-text">Lo que Curry hizo como individuo, la liga entera lo empezó a copiar — no en el promedio general de la liga, sino en cómo debuta cada generación nueva.</p>
+</section>
+
+
+
+</div>
+
+<div id="sec-t3-line">
+
+
+<div class="scrolly">
+  <div class="sticky-graphic halftone">
+    <div class="chart-wrap">
+      <svg id="chart-t3" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet">
+        <g id="gridlines-t3"></g>
+        <g id="x-axis-t3" class="axis"></g>
+        <g id="y-axis-t3" class="axis"></g>
+        <g id="bg-lines"></g>
+        <path id="curry-line" class="curry-line"></path>
+        <circle id="curry-dot" class="curry-dot" r="6"></circle>
+        <text id="value-tag-t3" class="value-tag"></text>
+      </svg>
+    </div>
+
+    <div class="side-panel">
+      <div id="photo-aside" class="photo-aside">
+        <div class="photo-frame">
+          <span class="photo-tag">2012-13</span>
+          <img src="../inspo_datos/currytriple.jpg" alt="Stephen Curry tirando un triple">
+          <div class="duotone-layer"></div>
+        </div>
+        <p class="photo-cap">La temporada del primer récord: 272 triples.</p>
+      </div>
+
+      <div id="attach-card" class="attach-card">
+        <div class="clipping-frame">
+          <img src="../inspo_datos/739season.jpg" alt="Tapa del Daily News: 73-9, mejor récord de la historia">
+        </div>
+        <p class="photo-cap">Curry, además, primer MVP elegido por unanimidad.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0">
+      <div class="step-card">Temporada 2012-13: Curry bate el récord de triples en una temporada con <strong>272</strong>. Es un buen tirador entre varios buenos tiradores — todavía nadie sospecha lo que viene.</div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card">Temporada 2015-16: Curry no solo vuelve a romper su propio récord. Lo destroza. Termina con <strong>402</strong> triples — más de 100 por encima de cualquier marca anterior en la historia de la liga.</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-card">Ese mismo año los Warriors terminan <strong>73-9</strong>, el mejor récord regular de la historia de la NBA, y Curry es el primer <strong>MVP unánime</strong>.</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+<section class="payoff-section halftone">
+  <p class="payoff-quote">No fue una temporada rara de un jugador suelto: fue la prueba de que un equipo entero podía construirse alrededor del triple.</p>
+
+  <div class="pie-row" id="pie-row">
+    <div class="pie-item">
+      <svg class="pie-svg" id="pie-bulls" viewBox="0 0 120 120"></svg>
+      <p class="pie-cap">Bulls<br>1995-96</p>
+    </div>
+    <div class="pie-item">
+      <svg class="pie-svg" id="pie-warriors" viewBox="0 0 120 120"></svg>
+      <p class="pie-cap">Warriors<br>2015-16</p>
+    </div>
+  </div>
+  <div class="pie-legend">
+    <span><i style="background:var(--ink)"></i> Dobles</span>
+    <span><i style="background:var(--gold)"></i> Triples</span>
+    <span><i style="background:#8a97a8"></i> Libres</span>
+  </div>
+</section>
+
+
+
+
+
+</div>
+
+
+<div class="tramo-divider halftone">
+  <span class="tramo-divider-line"></span>
+  <span class="tramo-divider-label">Tramo 4 — Hasta los pívots tiran de afuera</span>
+  <span class="tramo-divider-line"></span>
+</div>
+
+
+<div id="sec-t4">
+
+
+<div class="tramo-header halftone">
+  <div class="eyebrow">Prototipo — Tramo 4</div>
+  <h1>Hasta los pívots tiran de afuera</h1>
+  <p>Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
+</div>
+
+<div class="scrolly">
+  <div class="sticky-graphic halftone">
+    <div class="chart-wrap">
+      <svg id="chart-t4" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="photo-clip"><circle cx="0" cy="0" r="22"/></clipPath>
+        </defs>
+        <g id="gridlines-t4"></g>
+        <g id="x-axis-t4" class="axis"></g>
+        <g id="y-axis-t4" class="axis"></g>
+        <text class="axis-label" x="860" y="475" text-anchor="end">debut</text>
+        <text class="axis-label" x="40" y="45" text-anchor="end">3PA/partido</text>
+        <g id="players"></g>
+      </svg>
+
+      <div class="lopez-card" id="lopez-card">
+        <p class="title">Brook Lopez</p>
+        <div class="compare">
+          <div><div class="num small">31</div><div class="lbl">8 años, total</div></div>
+          <div><div class="num big">387</div><div class="lbl">una sola temporada</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0">
+      <div class="step-card">El salto que vimos con Wembanyama y Holmgren no es tan nuevo como parece — o no debería serlo. Durante 35 años, ser pívot significó lo mismo: casi nunca tirar de afuera.</div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card">Bueno, casi. <strong>Dirk Nowitzki</strong> ya en 1998 tiraba más de tres triples por partido — una rareza total para su época. Pero una excepción no cambia una posición entera: seis años después, <strong>Dwight Howard</strong>, uno de los pívots más dominantes de su generación, seguía firme en cero.</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-card">El quiebre real llega en 2008, con <strong>Brook Lopez</strong> — aunque su propio promedio de carrera (2.6) no alcanza a contarlo. En sus primeras ocho temporadas, intentó apenas 31 triples en total. En la 2016-17, intentó 387 — diez veces más que toda su carrera anterior junta, en una sola temporada.</div>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-card">Desde ahí, ningún pívot relevante volvió a tirar como Kareem o Howard. <strong>Wembanyama</strong> y <strong>Holmgren</strong> no son el capricho de una generación nueva — son la confirmación de una regla que ya lleva quince años escrita.</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+
+
+
+
+</div>
+
+
+<div class="tramo-divider halftone">
+  <span class="tramo-divider-line"></span>
+  <span class="tramo-divider-label">Tramo 5 — ¿Se rompió el juego?</span>
+  <span class="tramo-divider-line"></span>
+</div>
+
+
+<div id="sec-t5">
+
+
+<div class="tramo-header halftone">
+  <div class="eyebrow">Prototipo — Tramo 5</div>
+  <h1>¿Se rompió el juego?</h1>
+  <p>El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
+</div>
+
+<div class="scrolly">
+  <div class="sticky-graphic halftone">
+    <div class="chart-wrap">
+      <svg id="chart-t5" viewBox="0 0 920 480" preserveAspectRatio="xMidYMid meet">
+        <g id="gridlines-t5" class="fading-out"></g>
+        <g id="x-axis-t5" class="axis fading-out"></g>
+        <g id="y-axis-t5" class="axis fading-out"></g>
+        <path id="ts-line" class="ts-line"></path>
+        <path id="ts-projection" class="ts-projection"></path>
+        <circle id="ts-dot" class="ts-dot" r="6"></circle>
+        <text id="value-tag-t5" class="value-tag"></text>
+        <text id="peak-label" class="peak-label"></text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0">
+      <div class="step-card">A medida que el triple se comió la cancha, empezó a crecer un coro de ex-jugadores y comentaristas incómodos con el cambio: ¿se rompió el juego?</div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card"><q>Si podés tirar el triple, hacer una bandeja, y meter un libre</q> — así resume Isiah Thomas, campeón con los Pistons, lo que hace falta para jugar en la NBA de hoy. El resto del juego, dice, se volvió decorado.</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-card"><q>No me gustan los equipos que tiran de afuera</q>, repite Charles Barkley hace años en la TV. Ni siquiera los pívots se salvan de la crítica — hoy <strong>Wembanyama</strong> tira más triples que dobles cerca del aro.</div>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-card">Y sin embargo, la liga nunca anotó de forma más eficiente. El <strong>true shooting %</strong> — que corrige el porcentaje de tiro por cuánto vale cada canasta — está en su <strong>punto más alto de la historia</strong>.</div>
+    </div>
+    <div class="step" data-step="4">
+      <div class="step-card fade-step"></div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+<section class="closing halftone">
+  <div class="timeline-wrap">
+    <svg id="timeline" viewBox="0 0 920 140" preserveAspectRatio="xMidYMid meet">
+      <line id="timeline-axis" x1="40" y1="70" x2="880" y2="70"/>
+      <g id="milestones"></g>
+    </svg>
+  </div>
+
+  <div class="closing-text">
+    <p>El triple no cambió las reglas del básquet. Cambió la pregunta que se hacen los que lo juegan: ya no es <q>¿puedo entrar?</q>, sino <q>¿desde dónde conviene tirar?</q>. Esa pregunta la empezó a responder una oficina de analistas, la llevó al extremo un base de 1,88 metros, y terminó reescribiendo hasta el rol de los pívots.</p>
+    <p class="closing-line">Cuarenta años después de aquel primer tiro casi ignorado, la única certeza es que la línea se va a seguir corriendo. <strong>La pregunta que queda es hacia dónde.</strong></p>
+  </div>
+</section>
+
+
+
+
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
+<script>
+
+// ---- Intro + Tramo 1 + Tramo 2 ----
+(function(){
+
+
+const data = [
+  {season:"1979-80", value:2.8},  {season:"1980-81", value:2.0},
+  {season:"1981-82", value:2.3},  {season:"1982-83", value:2.3},
+  {season:"1983-84", value:2.4},  {season:"1984-85", value:3.1},
+  {season:"1985-86", value:3.3},  {season:"1986-87", value:4.7},
+  {season:"1987-88", value:5.0},  {season:"1988-89", value:6.6},
+  {season:"1989-90", value:6.6},  {season:"1990-91", value:7.1},
+  {season:"1991-92", value:7.6},  {season:"1992-93", value:9.0},
+  {season:"1993-94", value:9.9},  {season:"1994-95", value:15.3},
+  {season:"1995-96", value:16.0}, {season:"1996-97", value:16.8},
+  {season:"1997-98", value:12.7}, {season:"1998-99", value:13.2},
+  {season:"1999-2000", value:13.7}
+];
+
+// Config de cada step: hasta qué índice de datos dibujar,
+// si se muestra la franja de "línea acortada", y color del punto líder.
+const steps = [
+  { to: 0,  band:false, color:"var(--gold)" },
+  { to: 14, band:false, color:"var(--gold)" },
+  { to: 17, band:true,  color:"var(--red)"  },
+  { to: 20, band:true,  color:"var(--gold)" },
+  { to: 20, band:true,  color:"var(--gold)" }
+];
+
+const svg = d3.select("#chart");
+const margin = {top:40, right:30, bottom:40, left:50};
+const width = 920, height = 480;
+
+const x = d3.scalePoint()
+  .domain(data.map(d => d.season))
+  .range([margin.left + 20, width - margin.right])
+  .padding(0.5);
+
+const y = d3.scaleLinear()
+  .domain([0, 18])
+  .range([height - margin.bottom, margin.top]);
+
+const line = d3.line()
+  .x(d => x(d.season))
+  .y(d => y(d.value))
+  .curve(d3.curveMonotoneX);
+
+// Gridlines horizontales
+d3.select("#gridlines")
+  .selectAll("line")
+  .data(y.ticks(4))
+  .join("line")
+  .attr("class","gridline")
+  .attr("x1", margin.left).attr("x2", width - margin.right)
+  .attr("y1", d => y(d)).attr("y2", d => y(d));
+
+// Ejes
+const tickSeasons = ["1979-80","1984-85","1989-90","1994-95","1999-2000"];
+svg.select("#x-axis")
+  .attr("transform", `translate(0,${height - margin.bottom})`)
+  .call(d3.axisBottom(x).tickValues(tickSeasons));
+
+svg.select("#y-axis")
+  .attr("transform", `translate(${margin.left},0)`)
+  .call(d3.axisLeft(y).ticks(4));
+
+// Franja de "línea acortada" (1994-95 a 1996-97)
+const bandStart = x("1994-95") - x.step()/2;
+const bandEnd   = x("1996-97") + x.step()/2;
+svg.select("#rule-band")
+  .attr("x", bandStart)
+  .attr("width", bandEnd - bandStart);
+
+svg.select("#rule-label")
+  .attr("x", bandStart + 6)
+  .attr("y", margin.top - 14)
+  .text("línea acortada (22 pies)");
+
+const path = svg.select("#line-path");
+const ball = svg.select("#lead-ball");
+const ring = svg.select("#pulse-ring");
+const tag = svg.select("#value-tag");
+
+const ballSize = 42;
+let prevLength = 0; // cuánto del recorrido ya está "dibujado" hasta ahora
+
+function render(stepConf, animate){
+  const slice = data.slice(0, stepConf.to + 1);
+  const last = slice[slice.length - 1];
+
+  const d = line(slice);
+  const pathNode = path.attr("d", d).node();
+  const totalLength = pathNode.getTotalLength();
+
+  if(animate && totalLength > prevLength){
+    // Revela SOLO el tramo nuevo (no redibuja todo desde el principio),
+    // y la pelota viaja pegada a esa misma punta — mismo progreso "t"
+    // para el trazo y para la pelota, así nunca se desfasan entre sí.
+    path
+      .attr("stroke-dasharray", totalLength)
+      .attr("stroke-dashoffset", totalLength - prevLength)
+      .transition()
+      .duration(900)
+      .ease(d3.easeCubicOut)
+      .attr("stroke-dashoffset", 0)
+      .tween("ballFollow", () => t => {
+        const currentLength = prevLength + (totalLength - prevLength) * t;
+        const p = pathNode.getPointAtLength(currentLength);
+        ball.attr("x", p.x - ballSize/2).attr("y", p.y - ballSize/2);
+        ring.attr("cx", p.x).attr("cy", p.y);
+      })
+      .on("end", () => { prevLength = totalLength; });
+  } else {
+    // Sin animación (carga inicial, o el tramo es igual/más corto): ubicar directo
+    path.attr("stroke-dasharray", null).attr("stroke-dashoffset", null);
+    const p = pathNode.getPointAtLength(totalLength);
+    ball.attr("x", p.x - ballSize/2).attr("y", p.y - ballSize/2);
+    ring.attr("cx", p.x).attr("cy", p.y);
+    prevLength = totalLength;
+  }
+
+  ring.transition().duration(300)
+     .attr("stroke", stepConf.color.includes("red") ? "var(--red)" : "var(--gold)");
+
+  tag.transition().duration(900)
+     .attr("x", x(last.season) + ballSize/2 + 8).attr("y", y(last.value) - 16)
+     .text(`${last.value}`);
+
+  svg.select("#rule-band").classed("visible", stepConf.band);
+  svg.select("#rule-label").classed("visible", stepConf.band);
+}
+
+// Estado inicial (antes de scrollear)
+render(steps[0], false);
+
+// --- Transición de entrada: la cancha se apaga, la pelota aterriza en el primer dato ---
+const introFinalX = +ball.attr("x");
+const introFinalY = +ball.attr("y");
+const introStartX = introFinalX - 36;
+const introStartY = -150;
+const introStartRot = 460;
+
+ball.attr("x", introStartX).attr("y", introStartY)
+    .attr("transform", `rotate(${introStartRot} ${introStartX+21} ${introStartY+21})`)
+    .classed("pre-drop", true);
+ring.classed("pre-drop", true);
+tag.classed("pre-drop", true);
+svg.selectAll(".axis").classed("revealed", false);
+d3.select("#gridlines").classed("revealed", false);
+
+let introPlayed = false;
+function playIntroDrop(){
+  if(introPlayed) return;
+  introPlayed = true;
+
+  d3.select(".pre-scroll-cue").classed("hidden", true);
+  d3.select("#court-motif").transition().duration(900).style("opacity", 0);
+  svg.selectAll(".axis").classed("revealed", true);
+  d3.select("#gridlines").classed("revealed", true);
+
+  const dx = introFinalX - introStartX;
+  const dy = introFinalY - introStartY;
+
+  ball.classed("pre-drop", false)
+    .transition()
+    .duration(1200)
+    .ease(d3.easeLinear)
+    .tween("fall", () => t => {
+      // Y cae y rebota de verdad; X se acomoda antes, sin rebotar; el giro frena con X
+      const ty = d3.easeBounceOut(t);
+      const tx = d3.easeCubicOut(Math.min(t * 1.35, 1));
+      const cx = introStartX + dx * tx;
+      const cy = introStartY + dy * ty;
+      const rot = introStartRot * (1 - tx);
+      ball.attr("x", cx).attr("y", cy);
+      ball.attr("transform", `rotate(${rot} ${cx+21} ${cy+21})`);
+    })
+    .on("end", () => {
+      ring.classed("pre-drop", false);
+      tag.classed("pre-drop", false);
+    });
+}
+
+const scroller = scrollama();
+scroller.setup({
+  step: document.querySelectorAll('#sec-t1t2 .step'),
+  offset: 0.65,
+  progress: false
+}).onStepEnter(response => {
+  const el = response.element;
+  document.querySelectorAll(".step").forEach(e => e.classList.remove("is-active"));
+  el.classList.add("is-active");
+
+  if(el.dataset.step !== undefined){
+    const i = +el.dataset.step;
+    if(i === 0) playIntroDrop();
+    render(steps[i], true);
+  } else if(el.dataset.t2step !== undefined){
+    const i = +el.dataset.t2step;
+    if(i === 0) playMatchCut();
+    renderT2(t2Steps[i], true);
+  }
+});
+
+window.addEventListener("resize", scroller.resize);
+
+// ============ TRAMO 2: Moreyball (shot chart) ============
+
+const zoneData = {
+  ra:     { before: 31.32, after: 28.41, shapeSel: "#zone-ra",     labelSel: "#label-ra"     },
+  paint:  { before: 14.42, after: 20.04, shapeSel: "#zone-paint",  labelSel: "#label-paint"  },
+  mid:    { before: 35.70, after: 10.05, shapeSel: "#zone-mid",    labelSel: "#label-mid"    },
+  corner: { before: 5.07,  after: 10.76, shapeSel: ["#zone-corner-l", "#zone-corner-r"], labelSel: "#label-corner" },
+  above:  { before: 13.49, after: 30.74, shapeSel: "#zone-above",  labelSel: "#label-above"  }
+};
+
+const t2ColorScale = d3.scaleLinear()
+  .domain([0, 15, 38])
+  .range(["#F2E8D5", "#D9642E", "#B23B32"])
+  .interpolate(d3.interpolateRgb);
+
+const t2Steps = [
+  { state: "before", highlight: false, hook: false },
+  { state: "before", highlight: true,  hook: false },
+  { state: "after",  highlight: false, hook: false },
+  { state: "after",  highlight: false, hook: true  }
+];
+
+function renderT2(stepConf, animate){
+  const duration = animate ? 900 : 0;
+
+  Object.values(zoneData).forEach(zone => {
+    const value = zone[stepConf.state];
+    const shapes = Array.isArray(zone.shapeSel)
+      ? zone.shapeSel.map(s => d3.select(s))
+      : [d3.select(zone.shapeSel)];
+
+    shapes.forEach(sel => {
+      sel.transition().duration(duration).attr("fill", t2ColorScale(value));
+    });
+
+    const labelSel = d3.select(zone.labelSel);
+    const currentText = labelSel.text();
+    const startVal = currentText ? parseFloat(currentText) : value;
+    labelSel.transition().duration(duration).tween("text", function(){
+      const interp = d3.interpolateNumber(startVal, value);
+      return function(t){ this.textContent = interp(t).toFixed(1) + "%"; };
+    });
+  });
+
+  d3.select("#zone-ra").classed("highlighted", stepConf.highlight);
+  d3.select("#zone-corner-l").classed("highlighted", stepConf.highlight);
+  d3.select("#zone-corner-r").classed("highlighted", stepConf.highlight);
+  d3.select("#zone-above").classed("highlighted", stepConf.highlight);
+  d3.select("#zone-mid").classed("dimmed", stepConf.highlight);
+  d3.select("#label-mid").classed("dimmed", stepConf.highlight);
+  d3.select("#label-mid").node().nextElementSibling.classList.toggle("dimmed", stepConf.highlight);
+
+  d3.select("#hook-dot").classed("visible", stepConf.hook);
+}
+
+renderT2(t2Steps[0], false);
+
+// ============ Transición tramo 1 → tramo 2 (match cut) ============
+
+let matchCutPlayed = false;
+function playMatchCut(){
+  if(matchCutPlayed) return;
+  matchCutPlayed = true;
+
+  d3.selectAll(".t1-remnants").transition().duration(600).style("opacity", 0);
+  d3.select("#gridlines").classed("revealed", false);
+  svg.selectAll(".axis").classed("revealed", false);
+  ring.classed("pre-drop", true);
+  tag.classed("pre-drop", true);
+  ball.classed("pre-drop", true).style("filter", "none");
+
+  const startX = +ball.attr("x");
+  const startY = +ball.attr("y");
+  const startW = +ball.attr("width");
+  const startCenterX = startX + startW / 2;
+  const startCenterY = startY + startW / 2;
+
+  const targetCenterX = 460, targetCenterY = 427;
+  const bigSize = 360;
+
+  ball.attr("transform", null)
+    .transition()
+    .duration(1100)
+    .ease(d3.easeCubicInOut)
+    .tween("grow", () => t => {
+      const cx = startCenterX + (targetCenterX - startCenterX) * t;
+      const cy = startCenterY + (targetCenterY - startCenterY) * t;
+      const size = startW + (bigSize - startW) * t;
+      ball.attr("x", cx - size / 2).attr("y", cy - size / 2)
+          .attr("width", size).attr("height", size);
+    })
+    .on("end", () => {
+      d3.select("#t2-court").classed("visible", true);
+
+      ball.transition()
+        .duration(650)
+        .delay(250)
+        .ease(d3.easeCubicInOut)
+        .tween("shrink", () => t => {
+          const size = bigSize + (8 - bigSize) * t;
+          ball.attr("x", targetCenterX - size / 2).attr("y", targetCenterY - size / 2)
+              .attr("width", size).attr("height", size);
+        })
+        .transition()
+        .duration(400)
+        .style("opacity", 0);
+    });
+}
+
+
+})();
+
+
+// ---- Tramo 3 - draft + barras ----
+(function(){
+
+const beforePlayers = [
+  { name:"Michael Jordan", value:9, photo:"../inspo_datos/michael.png" },
+  { name:"Reggie Miller", value:61, photo:"../inspo_datos/reggie.png" },
+  { name:"Ray Allen", value:117, photo:"../inspo_datos/ray.png" },
+  { name:"Kobe Bryant", value:51, photo:"../inspo_datos/kobe.png" },
+  { name:"Allen Iverson", value:155, photo:"../inspo_datos/allen.png" },
+  { name:"Steve Nash", value:23, photo:"../inspo_datos/steve.png" },
+  { name:"Peja Stojaković", value:57, photo:"../inspo_datos/peja.png" },
+  { name:"LeBron James", value:63, photo:"../inspo_datos/lebron.png" },
+  { name:"Chris Paul", value:50, photo:"../inspo_datos/chris.png" },
+  { name:"Russell Westbrook", value:35, photo:"../inspo_datos/russel.png" },
+  { name:"Stephen Curry", value:166, photo:"../inspo_datos/curry.png", curry:true }
+];
+
+const afterPlayers = [
+  { name:"James Harden", value:113 },
+  { name:"Klay Thompson", value:111 },
+  { name:"Kemba Walker", value:69 },
+  { name:"Damian Lillard", value:185 },
+  { name:"Luka Dončić", value:168 },
+  { name:"Tyler Herro", value:116 },
+  { name:"Anthony Edwards", value:171 },
+  { name:"Tyrese Haliburton", value:121 },
+  { name:"Victor Wembanyama", value:128 },
+  { name:"Chet Holmgren", value:129 }
+];
+
+const container = document.getElementById("bars");
+
+const PLOT_HEIGHT = 240;
+const PHOTO_SIZE = 42;
+const GAP = 10;
+const BAR_MAX = PLOT_HEIGHT - PHOTO_SIZE - GAP;
+
+function updateAllBars(max){
+  document.querySelectorAll(".col").forEach(col => {
+    const value = +col.dataset.value;
+    const barHeight = (value / max) * BAR_MAX;
+    col.style.setProperty("--bar-height", barHeight + "px");
+    col.style.setProperty("--photo-bottom", (barHeight + GAP) + "px");
+  });
+}
+
+function makeCol(p, hasPhoto){
+  const col = document.createElement("div");
+  col.className = "col" + (p.curry ? " is-curry" : "");
+  col.dataset.value = p.value;
+  col.innerHTML = `
+    <div class="col-plot">
+      ${hasPhoto ? `<div class="col-photo"><img src="${p.photo}" alt="${p.name}"></div>` : ""}
+      <div class="col-bar"></div>
+    </div>
+    <div class="col-value">${p.value}</div>
+    <div class="col-name">${p.name}</div>
+  `;
+  return col;
+}
+
+beforePlayers.forEach(p => container.appendChild(makeCol(p, true)));
+updateAllBars(Math.max(...beforePlayers.map(p => p.value)));
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll(".col").forEach(col => observer.observe(col));
+
+let afterRevealed = false;
+function revealAfterGroup(){
+  if(afterRevealed) return;
+  afterRevealed = true;
+
+  const divider = document.createElement("div");
+  divider.className = "group-divider";
+  container.appendChild(divider);
+
+  afterPlayers.forEach(p => {
+    const col = makeCol(p, false);
+    container.appendChild(col);
+    observer.observe(col);
+  });
+
+  const newMax = Math.max(...beforePlayers.map(p=>p.value), ...afterPlayers.map(p=>p.value));
+  updateAllBars(newMax); // recalcula TODAS las barras (antes + después) contra la nueva escala
+}
+
+const hookObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) revealAfterGroup();
+  });
+}, { threshold: 0.4 });
+hookObserver.observe(document.getElementById("hook-section"));
+
+})();
+
+
+// ---- Tramo 3 - line chart + pies ----
+(function(){
+
+const seasons = ["2009-10","2010-11","2011-12","2012-13","2013-14","2014-15","2015-16","2016-17"];
+const curryData = [166,151,55,272,261,286,402,324];
+
+const bgPlayers = [
+  { name:"Harden", values:[93,113,114,179,177,208,236,262] },
+  { name:"Klay Thompson", values:[null,null,111,211,223,239,276,268] },
+  { name:"Korver", values:[59,120,118,189,185,221,158,162] },
+  { name:"Terry", values:[136,127,138,123,39,126,93,73] },
+  { name:"Ray Allen", values:[145,168,106,139,116,null,null,null] }
+];
+
+const margin = {top:40, right:30, bottom:40, left:50};
+const width = 900, height = 520;
+
+const svg = d3.select("#chart-t3");
+const x = d3.scalePoint().domain(seasons).range([margin.left+20, width-margin.right]);
+let y = d3.scaleLinear().domain([0, 300]).range([height-margin.bottom, margin.top]);
+
+const xAxisG = svg.select("#x-axis-t3").attr("transform", `translate(0,${height-margin.bottom})`);
+const yAxisG = svg.select("#y-axis-t3").attr("transform", `translate(${margin.left},0)`);
+
+const bgLineGen = d3.line().defined(d => d !== null).x((d,i) => x(seasons[i])).y(d => y(d));
+const curryLineGen = d3.line().x(d => d.px).y(d => y(d.val));
+
+const bgG = svg.select("#bg-lines");
+bgPlayers.forEach(p => {
+  bgG.append("path").datum(p.values).attr("class","bg-line");
+  bgG.append("text").attr("class","bg-name").text(p.name);
+});
+
+const curryPath = svg.select("#curry-line");
+const curryDot = svg.select("#curry-dot");
+const valueTag = svg.select("#value-tag-t3");
+
+const INK = "#1B3654", GOLD = "#D9642E";
+const colorInterp = d3.interpolateRgb(INK, GOLD);
+
+function renderAt(t, yMax, colorT){
+  y.domain([0, yMax]);
+
+  xAxisG.call(d3.axisBottom(x));
+  yAxisG.call(d3.axisLeft(y).ticks(6));
+
+  d3.select("#gridlines-t3").selectAll("line")
+    .data(y.ticks(6))
+    .join("line")
+    .attr("class","gridline")
+    .attr("x1", margin.left).attr("x2", width-margin.right)
+    .attr("y1", d=>y(d)).attr("y2", d=>y(d));
+
+  bgG.selectAll(".bg-line").attr("d", bgLineGen);
+  bgG.selectAll(".bg-name").each(function(_,i){
+    const p = bgPlayers[i];
+    const lastIdx = p.values.map(v=>v!==null?1:0).lastIndexOf(1);
+    d3.select(this)
+      .attr("x", x(seasons[lastIdx]) + 8)
+      .attr("y", y(p.values[lastIdx]) + 3);
+  });
+
+  const baseIdx = Math.floor(t);
+  const frac = t - baseIdx;
+  const pts = [];
+  for(let i=0;i<=baseIdx;i++) pts.push({ px:x(seasons[i]), val:curryData[i] });
+  if(frac > 0 && baseIdx < curryData.length-1){
+    const x0=x(seasons[baseIdx]), x1=x(seasons[baseIdx+1]);
+    const v0=curryData[baseIdx], v1=curryData[baseIdx+1];
+    pts.push({ px:x0+(x1-x0)*frac, val:v0+(v1-v0)*frac });
+  }
+
+  curryPath.attr("d", curryLineGen(pts));
+
+  const tip = pts[pts.length-1];
+  curryDot.attr("cx", tip.px).attr("cy", y(tip.val));
+  valueTag.classed("visible", true)
+    .attr("x", tip.px+12).attr("y", y(tip.val)-12)
+    .text(Math.round(tip.val));
+
+  const col = colorInterp(colorT);
+  curryPath.attr("stroke", col);
+  curryDot.attr("fill", col);
+  valueTag.attr("fill", col);
+}
+
+renderAt(3, 300, 0);
+
+const photoAside = document.getElementById("photo-aside");
+const attachCard = document.getElementById("attach-card");
+
+// ---------- Pie charts: reparto de puntos, Bulls 95-96 vs Warriors 15-16 ----------
+const pieDatasets = {
+  "pie-bulls": [
+    { label:"Dobles", pct:63.9, color:"#1B3654" },
+    { label:"Triples", pct:18.8, color:"#D9642E" },
+    { label:"Libres", pct:17.3, color:"#8a97a8" }
+  ],
+  "pie-warriors": [
+    { label:"Dobles", pct:51.2, color:"#1B3654" },
+    { label:"Triples", pct:34.2, color:"#D9642E" },
+    { label:"Libres", pct:14.5, color:"#8a97a8" }
+  ]
+};
+
+const pieGen = d3.pie().value(d => d.pct).sort(null);
+const arcGen = d3.arc().innerRadius(0).outerRadius(65);
+const labelArc = d3.arc().innerRadius(38).outerRadius(65);
+
+let piesDrawn = false;
+function drawPies(){
+  if(piesDrawn) return;
+  piesDrawn = true;
+
+  Object.entries(pieDatasets).forEach(([svgId, data]) => {
+    const svg = d3.select("#"+svgId).attr("viewBox","0 0 150 150");
+    const g = svg.append("g").attr("transform","translate(75,75)");
+    const arcs = pieGen(data);
+
+    g.selectAll("path")
+      .data(arcs)
+      .join("path")
+      .attr("d", arcGen)
+      .attr("fill", d => d.data.color)
+      .attr("stroke", "#F2E8D5")
+      .attr("stroke-width", 2);
+
+    g.selectAll("text")
+      .data(arcs)
+      .join("text")
+      .attr("class","pie-wedge-label")
+      .attr("transform", d => `translate(${labelArc.centroid(d)})`)
+      .text(d => d.data.pct >= 15 ? Math.round(d.data.pct)+"%" : "");
+  });
+}
+
+const scroller = scrollama();
+scroller.setup({ step:".step", offset:0.65, progress:true })
+  .onStepEnter(response => {
+    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    response.element.classList.add("is-active");
+    const i = +response.element.dataset.step;
+
+    if(i === 0){
+      renderAt(3, 300, 0);
+      photoAside.classList.add("visible");
+      attachCard.classList.remove("visible");
+    }
+    if(i === 2){
+      renderAt(6, 420, 1);
+      attachCard.classList.add("visible");
+      photoAside.classList.remove("visible");
+    }
+  })
+  .onStepExit(response => {
+    const i = +response.element.dataset.step;
+    if(i === 0 && response.direction === "down") photoAside.classList.remove("visible");
+  })
+  .onStepProgress(response => {
+    const i = +response.index;
+    if(i === 1){
+      const t = 3 + response.progress * 3;
+      const yMax = 300 + response.progress * 120;
+      const colorT = Math.max(0, (response.progress - 0.45) / 0.55);
+      renderAt(t, yMax, colorT);
+      photoAside.classList.remove("visible");
+      attachCard.classList.remove("visible");
+    }
+  });
+
+window.addEventListener("resize", scroller.resize);
+
+const payoffObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      drawPies();
+      document.querySelectorAll(".pie-svg").forEach(el => el.classList.add("visible"));
+    }
+  });
+}, { threshold: 0.3 });
+payoffObserver.observe(document.querySelector(".payoff-section"));
+
+})();
+
+
+// ---- Tramo 4 - pivots ----
+(function(){
+
+const players = [
+  { id:"kareem",   name:"Kareem",   year:1969,   v:0.01, photo:"../inspo_datos/kareem.png",   group:0 },
+  { id:"hakeem",   name:"Hakeem",   year:1984,   v:0.10, photo:"../inspo_datos/face5.png",   group:0 },
+  { id:"ewing",    name:"Ewing",    year:1985,   v:0.11, photo:"../inspo_datos/ewing.png",    group:0 },
+  { id:"shaq",     name:"Shaq",     year:1992,   v:0.02, photo:"../inspo_datos/shaq.png",     group:0 },
+  { id:"dirk",     name:"Dirk",     year:1998,   v:3.42, photo:"../inspo_datos/dirk.png",     group:0 },
+  { id:"howard",   name:"Howard",   year:2004,   v:0.08, photo:"../inspo_datos/howard.png",   group:0 },
+  { id:"lopez",    name:"Lopez",    year:2008,   v:2.60, photo:"../inspo_datos/lopez.png",    group:2 },
+  { id:"towns",    name:"Towns",    year:2014.7, v:4.30, photo:"../inspo_datos/towns.png",    group:3 },
+  { id:"jokic",    name:"Jokić",    year:2015.3, v:2.80, photo:"../inspo_datos/jokic.png",    group:3 },
+  { id:"embiid",   name:"Embiid",   year:2016,   v:3.50, photo:"../inspo_datos/embiid.png",   group:3 },
+  { id:"holmgren", name:"Holmgren", year:2022.6, v:3.83, photo:"../inspo_datos/holmgreen.png", group:3 },
+  { id:"wemby",    name:"Wemby",    year:2023.4, v:3.90, photo:"../inspo_datos/wemby.png",    group:3 }
+];
+
+const margin = {top:50, right:40, bottom:50, left:50};
+const width = 900, height = 520;
+
+const svg = d3.select("#chart-t4");
+const x = d3.scaleLinear().domain([1966, 2026]).range([margin.left, width-margin.right]);
+const y = d3.scaleLinear().domain([0, 5]).range([height-margin.bottom, margin.top]);
+
+svg.select("#x-axis-t4")
+  .attr("transform", `translate(0,${height-margin.bottom})`)
+  .call(d3.axisBottom(x).tickFormat(d3.format("d")).ticks(8));
+svg.select("#y-axis-t4")
+  .attr("transform", `translate(${margin.left},0)`)
+  .call(d3.axisLeft(y).ticks(5));
+
+d3.select("#gridlines-t4").selectAll("line")
+  .data(y.ticks(5)).join("line")
+  .attr("class","gridline")
+  .attr("x1", margin.left).attr("x2", width-margin.right)
+  .attr("y1", d=>y(d)).attr("y2", d=>y(d));
+
+const playersG = svg.select("#players");
+
+players.forEach(p => {
+  const g = playersG.append("g")
+    .attr("class", "player-dot")
+    .attr("id", "dot-"+p.id)
+    .attr("transform", `translate(${x(p.year)},${y(p.v)})`);
+
+  const visual = g.append("g").attr("class", "player-visual");
+
+  visual.append("circle").attr("class","player-ring").attr("r", 24);
+  visual.append("image")
+    .attr("class","player-photo")
+    .attr("href", p.photo)
+    .attr("x", -22).attr("y", -22).attr("width", 44).attr("height", 44)
+    .attr("clip-path", "url(#photo-clip)");
+  visual.append("circle").attr("class","player-tint").attr("r", 22).attr("clip-path", "url(#photo-clip)");
+
+  playersG.append("text")
+    .attr("class", "player-name")
+    .attr("id", "name-"+p.id)
+    .attr("x", x(p.year)).attr("y", y(p.v) + 38)
+    .text(p.name);
+});
+
+function reveal(id){
+  d3.select("#dot-"+id).classed("revealed", true);
+  d3.select("#name-"+id).classed("revealed", true);
+}
+function highlight(id, on){
+  d3.select("#dot-"+id).classed("highlighted", on);
+}
+
+const lopezCard = document.getElementById("lopez-card");
+function positionLopezCard(){
+  const svgEl = document.getElementById("chart");
+  const scale = svgEl.getBoundingClientRect().width / width;
+  const px = x(2008) * scale;
+  const py = y(2.60) * scale;
+  lopezCard.style.left = (px + 30*scale) + "px";
+  lopezCard.style.top = (py - 70*scale) + "px";
+}
+
+const group0 = ["kareem","hakeem","ewing","shaq","dirk","howard"];
+const group3 = ["towns","jokic","embiid","holmgren","wemby"];
+
+function renderStep(i){
+  if(i === 0){
+    group0.forEach(reveal);
+    group0.forEach(id => highlight(id, false));
+    highlight("lopez", false);
+    lopezCard.classList.remove("visible");
+  }
+  if(i === 1){
+    group0.forEach(reveal);
+    highlight("dirk", true);
+    highlight("howard", true);
+  }
+  if(i === 2){
+    reveal("lopez");
+    highlight("lopez", true);
+    positionLopezCard();
+    lopezCard.classList.add("visible");
+  }
+  if(i === 3){
+    group3.forEach(reveal);
+    group3.forEach(id => highlight(id, true));
+  }
+}
+
+renderStep(0);
+
+const scroller = scrollama();
+scroller.setup({ step:".step", offset:0.65, progress:false })
+  .onStepEnter(response => {
+    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    response.element.classList.add("is-active");
+    renderStep(+response.element.dataset.step);
+  });
+
+window.addEventListener("resize", () => {
+  scroller.resize();
+  if(document.querySelector('[data-step="2"]').classList.contains('is-active')) positionLopezCard();
+});
+
+})();
+
+
+// ---- Tramo 5 - TS% + cierre ----
+(function(){
+
+// True Shooting % de la liga, real, temporada por temporada (Basketball-Reference)
+const data = [
+  {s:"1979-80",v:53.1},{s:"1980-81",v:53.4},{s:"1981-82",v:53.9},{s:"1982-83",v:53.1},
+  {s:"1983-84",v:54.3},{s:"1984-85",v:54.3},{s:"1985-86",v:54.1},{s:"1986-87",v:53.8},
+  {s:"1987-88",v:53.8},{s:"1988-89",v:53.7},{s:"1989-90",v:53.7},{s:"1990-91",v:53.4},
+  {s:"1991-92",v:53.1},{s:"1992-93",v:53.6},{s:"1993-94",v:52.8},{s:"1994-95",v:54.3},
+  {s:"1995-96",v:54.2},{s:"1996-97",v:53.6},{s:"1997-98",v:52.4},{s:"1998-99",v:51.1},
+  {s:"1999-00",v:52.3},{s:"2000-01",v:51.8},{s:"2001-02",v:52.0},{s:"2002-03",v:51.9},
+  {s:"2003-04",v:51.6},{s:"2004-05",v:52.9},{s:"2005-06",v:53.6},{s:"2006-07",v:54.1},
+  {s:"2007-08",v:54.0},{s:"2008-09",v:54.4},{s:"2009-10",v:54.3},{s:"2010-11",v:54.1},
+  {s:"2011-12",v:52.7},{s:"2012-13",v:53.5},{s:"2013-14",v:54.1},{s:"2014-15",v:53.4},
+  {s:"2015-16",v:54.1},{s:"2016-17",v:55.2},{s:"2017-18",v:55.6},{s:"2018-19",v:56.0},
+  {s:"2019-20",v:56.5},{s:"2020-21",v:57.2},{s:"2021-22",v:56.6},{s:"2022-23",v:58.1},
+  {s:"2023-24",v:58.0},{s:"2024-25",v:57.6},{s:"2025-26",v:58.1}
+];
+
+const margin = {top:40, right:40, bottom:40, left:50};
+const width = 920, height = 480;
+
+const svg = d3.select("#chart-t5");
+const x = d3.scalePoint().domain(data.map(d=>d.s)).range([margin.left, width-margin.right]);
+const y = d3.scaleLinear().domain([48, 60]).range([height-margin.bottom, margin.top]);
+
+svg.select("#x-axis-t5")
+  .attr("transform", `translate(0,${height-margin.bottom})`)
+  .call(d3.axisBottom(x).tickValues(data.filter((d,i)=>i%5===0).map(d=>d.s)));
+svg.select("#y-axis-t5")
+  .attr("transform", `translate(${margin.left},0)`)
+  .call(d3.axisLeft(y).ticks(6).tickFormat(d=>d+"%"));
+
+d3.select("#gridlines-t5").selectAll("line")
+  .data(y.ticks(6)).join("line")
+  .attr("class","gridline")
+  .attr("x1", margin.left).attr("x2", width-margin.right)
+  .attr("y1", d=>y(d)).attr("y2", d=>y(d));
+
+const line = d3.line().x(d=>x(d.s)).y(d=>y(d.v));
+const path = svg.select("#ts-line").datum(data).attr("d", line);
+const totalLength = path.node().getTotalLength();
+
+path.attr("stroke-dasharray", totalLength)
+    .attr("stroke-dashoffset", totalLength);
+
+const dot = svg.select("#ts-dot");
+const tag = svg.select("#value-tag-t5");
+const peakLabel = svg.select("#peak-label");
+
+const last = data[data.length-1];
+dot.attr("cx", x(last.s)).attr("cy", y(last.v));
+tag.attr("x", x(last.s)-70).attr("y", y(last.v)-16).text(last.v + "% — máximo histórico");
+peakLabel.attr("x", x(last.s)-70).attr("y", y(last.v)+18).text("2022-23 empata el mismo valor");
+
+function setDraw(fraction, animate){
+  const offset = totalLength * (1 - fraction);
+  (animate ? path.transition().duration(900) : path).attr("stroke-dashoffset", offset);
+}
+
+function renderStep(i){
+  if(i === 0){
+    setDraw(0, false);
+    path.classed("highlighted", false);
+    dot.classed("visible", false).classed("highlighted", false);
+    tag.classed("visible", false);
+    peakLabel.classed("visible", false);
+  }
+  if(i === 1){
+    setDraw(0.55, true);
+  }
+  if(i === 2){
+    setDraw(1, true);
+  }
+  if(i === 3){
+    setDraw(1, false);
+    path.classed("highlighted", true);
+    dot.classed("visible", true).classed("highlighted", true);
+    tag.classed("visible", true);
+    peakLabel.classed("visible", true);
+  }
+  if(i === 4){
+    const projX2 = width - margin.right + 60;
+    const projY2 = y(last.v) - 8;
+    svg.select("#ts-projection")
+      .attr("d", `M${x(last.s)},${y(last.v)} L${projX2},${projY2}`)
+      .classed("visible", true);
+    d3.selectAll(".fading-out").classed("faded", true);
+    dot.classed("visible", false);
+    tag.classed("visible", false);
+    peakLabel.classed("visible", false);
+  }
+}
+
+renderStep(0);
+
+const scroller = scrollama();
+scroller.setup({ step:".step", offset:0.65, progress:false })
+  .onStepEnter(response => {
+    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    response.element.classList.add("is-active");
+    renderStep(+response.element.dataset.step);
+  });
+
+window.addEventListener("resize", scroller.resize);
+
+// ---------- Línea de tiempo de cierre ----------
+const milestones = [
+  { year:1979, label:"Chris Ford", sub:"primer triple de la historia" },
+  { year:2003, label:"Daryl Morey", sub:"la analítica entra a la cancha" },
+  { year:2016, label:"Curry: 402 y 73-9", sub:"un jugador rompe la escala" },
+  { year:2017, label:"Brook Lopez: 387", sub:"hasta los pívots tiran de afuera" },
+  { year:2023, label:"TS% 58.1%", sub:"el juego, más eficiente que nunca" }
+];
+
+const tMargin = {left:40, right:40};
+const tWidth = 920;
+const tx = d3.scaleLinear().domain([1979, 2026]).range([tMargin.left, tWidth-tMargin.right]);
+
+const milestonesG = d3.select("#milestones");
+milestones.forEach(m => {
+  const mx = tx(m.year);
+  milestonesG.append("circle").attr("class","milestone-dot").attr("cx", mx).attr("cy", 70).attr("r", 7);
+  milestonesG.append("text").attr("class","milestone-year").attr("x", mx).attr("y", 30).text(m.year);
+  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", 100).text(m.label);
+  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", 116)
+    .style("font-size","9px").style("opacity",0.65).text(m.sub);
+});
+
+})();
+
+</script>
+</body>
+</html>
