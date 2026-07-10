@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tramo 5 — ¿Se rompió el juego?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel: #F2E8D5;
+    --ink: #1B3654;
+    --muted: #5b6b80;
+    --gold: #D9642E;
+    --red: #B23B32;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--papel); color:var(--ink); font-family:'Public Sans', sans-serif; }
+
+  .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+
+  .masthead{ padding: 4rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
+  .masthead .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--red); margin-bottom:0.75rem;
+  }
+  .masthead h1{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:clamp(2.2rem, 6vw, 3.4rem); line-height:0.95; text-transform:uppercase;
+    letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
+  }
+  .masthead p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
+
+  .scrolly{ position:relative; }
+  .sticky-graphic{
+    position:sticky; top:0; height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center; z-index:1;
+  }
+  .chart-wrap{ width:min(92vw, 920px); }
+  svg{ width:100%; height:auto; overflow:visible; }
+
+  .axis path, .axis line{ stroke: rgba(27,54,84,0.3); }
+  .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+  .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
+
+  .ts-line{
+    fill:none; stroke:var(--muted); stroke-width:2.5; stroke-linecap:round;
+    transition: stroke 0.6s ease, stroke-width 0.6s ease;
+  }
+  .ts-line.highlighted{ stroke:var(--gold); stroke-width:4; }
+
+  .ts-dot{ fill:var(--muted); opacity:0; transition:opacity 0.5s ease, fill 0.6s ease; }
+  .ts-dot.visible{ opacity:1; }
+  .ts-dot.highlighted{ fill:var(--gold); }
+
+  .value-tag{
+    font-family:'Martian Mono', monospace; font-weight:600; font-size:15px;
+    fill:var(--gold); opacity:0; transition:opacity 0.5s ease;
+  }
+  .value-tag.visible{ opacity:1; }
+
+  .peak-label{
+    font-family:'Martian Mono', monospace; font-size:10px; fill:var(--muted);
+    opacity:0; transition:opacity 0.5s ease;
+  }
+  .peak-label.visible{ opacity:1; }
+
+  .steps{ position:relative; z-index:2; margin-top:-100vh; counter-reset: stepnum; }
+  .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
+  .step-card{
+    position:relative; counter-increment: stepnum;
+    max-width:420px; background:var(--papel); border:2px solid var(--ink);
+    border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(27,54,84,0.22);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted);
+    transition: color 0.4s ease, border-color 0.4s ease;
+  }
+  .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
+  .step:nth-child(even) .step-card{ transform: rotate(1.1deg); }
+  .step-card::before{
+    content: counter(stepnum, decimal-leading-zero);
+    position:absolute; top:-16px; left:-16px; width:32px; height:32px; border-radius:50%;
+    background:var(--ink); color:var(--papel); border:2px solid var(--papel);
+    box-shadow:0 0 0 1.5px var(--ink); font-family:'Martian Mono', monospace; font-size:0.72rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step.is-active .step-card{ color:var(--ink); border-left-color:var(--gold); transform:rotate(0deg); }
+  .step.is-active .step-card::before{ background:var(--gold); }
+  .step-card strong{ font-family:'Martian Mono', monospace; color:var(--gold); font-weight:500; }
+  .step-card q{ font-style:italic; }
+  .spacer{ height:25vh; }
+
+  .fade-step .step-card{ opacity:0; box-shadow:none; border:none; pointer-events:none; }
+
+  .ts-projection{
+    fill:none; stroke:var(--muted); stroke-width:2; stroke-dasharray:4 5;
+    opacity:0; transition: opacity 1.2s ease;
+  }
+  .ts-projection.visible{ opacity:0.55; }
+
+  .fading-out{ transition: opacity 1s ease; }
+  .fading-out.faded{ opacity:0.15; }
+
+  /* ---------- CIERRE ---------- */
+  .closing{ max-width:960px; margin:0 auto; padding:5rem 1.5rem 6rem; }
+
+  .timeline-wrap{ margin-bottom:3.5rem; }
+  #timeline{ width:100%; height:auto; overflow:visible; }
+  #timeline-axis{ stroke:var(--ink); stroke-width:2; opacity:0.3; }
+
+  .milestone-dot{ fill:var(--papel); stroke:var(--gold); stroke-width:2.5; }
+  .milestone-year{
+    font-family:'Martian Mono', monospace; font-size:11px; fill:var(--muted);
+    text-anchor:middle;
+  }
+  .milestone-label{
+    font-family:'Public Sans', sans-serif; font-size:11px; fill:var(--ink);
+    text-anchor:middle; font-weight:500;
+  }
+
+  .closing-text{ max-width:640px; margin:0 auto; text-align:center; }
+  .closing-text p{ font-size:1.15rem; line-height:1.75; color:var(--ink); margin:0 0 1.6rem; }
+  .closing-text q{ font-style:italic; }
+  .closing-text .closing-line{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:600;
+    font-size:clamp(1.3rem, 2.8vw, 1.7rem); line-height:1.4; color:var(--ink);
+  }
+  .closing-text .closing-line strong{ font-family:inherit; color:var(--gold); font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="masthead halftone">
+  <div class="eyebrow">Prototipo — Tramo 5</div>
+  <h1>¿Se rompió el juego?</h1>
+  <p>El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
+</div>
+
+<div class="scrolly">
+  <div class="sticky-graphic halftone">
+    <div class="chart-wrap">
+      <svg id="chart" viewBox="0 0 920 480" preserveAspectRatio="xMidYMid meet">
+        <g id="gridlines" class="fading-out"></g>
+        <g id="x-axis" class="axis fading-out"></g>
+        <g id="y-axis" class="axis fading-out"></g>
+        <path id="ts-line" class="ts-line"></path>
+        <path id="ts-projection" class="ts-projection"></path>
+        <circle id="ts-dot" class="ts-dot" r="6"></circle>
+        <text id="value-tag" class="value-tag"></text>
+        <text id="peak-label" class="peak-label"></text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0">
+      <div class="step-card">A medida que el triple se comió la cancha, empezó a crecer un coro de ex-jugadores y comentaristas incómodos con el cambio: ¿se rompió el juego?</div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card"><q>Si podés tirar el triple, hacer una bandeja, y meter un libre</q> — así resume Isiah Thomas, campeón con los Pistons, lo que hace falta para jugar en la NBA de hoy. El resto del juego, dice, se volvió decorado.</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-card"><q>No me gustan los equipos que tiran de afuera</q>, repite Charles Barkley hace años en la TV. Ni siquiera los pívots se salvan de la crítica — hoy <strong>Wembanyama</strong> tira más triples que dobles cerca del aro.</div>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-card">Y sin embargo, la liga nunca anotó de forma más eficiente. El <strong>true shooting %</strong> — que corrige el porcentaje de tiro por cuánto vale cada canasta — está en su <strong>punto más alto de la historia</strong>.</div>
+    </div>
+    <div class="step" data-step="4">
+      <div class="step-card fade-step"></div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+<section class="closing halftone">
+  <div class="timeline-wrap">
+    <svg id="timeline" viewBox="0 0 920 140" preserveAspectRatio="xMidYMid meet">
+      <line id="timeline-axis" x1="40" y1="70" x2="880" y2="70"/>
+      <g id="milestones"></g>
+    </svg>
+  </div>
+
+  <div class="closing-text">
+    <p>El triple no cambió las reglas del básquet. Cambió la pregunta que se hacen los que lo juegan: ya no es <q>¿puedo entrar?</q>, sino <q>¿desde dónde conviene tirar?</q>. Esa pregunta la empezó a responder una oficina de analistas, la llevó al extremo un base de 1,88 metros, y terminó reescribiendo hasta el rol de los pívots.</p>
+    <p class="closing-line">Cuarenta años después de aquel primer tiro casi ignorado, la única certeza es que la línea se va a seguir corriendo. <strong>La pregunta que queda es hacia dónde.</strong></p>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
+<script>
+// True Shooting % de la liga, real, temporada por temporada (Basketball-Reference)
+const data = [
+  {s:"1979-80",v:53.1},{s:"1980-81",v:53.4},{s:"1981-82",v:53.9},{s:"1982-83",v:53.1},
+  {s:"1983-84",v:54.3},{s:"1984-85",v:54.3},{s:"1985-86",v:54.1},{s:"1986-87",v:53.8},
+  {s:"1987-88",v:53.8},{s:"1988-89",v:53.7},{s:"1989-90",v:53.7},{s:"1990-91",v:53.4},
+  {s:"1991-92",v:53.1},{s:"1992-93",v:53.6},{s:"1993-94",v:52.8},{s:"1994-95",v:54.3},
+  {s:"1995-96",v:54.2},{s:"1996-97",v:53.6},{s:"1997-98",v:52.4},{s:"1998-99",v:51.1},
+  {s:"1999-00",v:52.3},{s:"2000-01",v:51.8},{s:"2001-02",v:52.0},{s:"2002-03",v:51.9},
+  {s:"2003-04",v:51.6},{s:"2004-05",v:52.9},{s:"2005-06",v:53.6},{s:"2006-07",v:54.1},
+  {s:"2007-08",v:54.0},{s:"2008-09",v:54.4},{s:"2009-10",v:54.3},{s:"2010-11",v:54.1},
+  {s:"2011-12",v:52.7},{s:"2012-13",v:53.5},{s:"2013-14",v:54.1},{s:"2014-15",v:53.4},
+  {s:"2015-16",v:54.1},{s:"2016-17",v:55.2},{s:"2017-18",v:55.6},{s:"2018-19",v:56.0},
+  {s:"2019-20",v:56.5},{s:"2020-21",v:57.2},{s:"2021-22",v:56.6},{s:"2022-23",v:58.1},
+  {s:"2023-24",v:58.0},{s:"2024-25",v:57.6},{s:"2025-26",v:58.1}
+];
+
+const margin = {top:40, right:40, bottom:40, left:50};
+const width = 920, height = 480;
+
+const svg = d3.select("#chart");
+const x = d3.scalePoint().domain(data.map(d=>d.s)).range([margin.left, width-margin.right]);
+const y = d3.scaleLinear().domain([48, 60]).range([height-margin.bottom, margin.top]);
+
+svg.select("#x-axis")
+  .attr("transform", `translate(0,${height-margin.bottom})`)
+  .call(d3.axisBottom(x).tickValues(data.filter((d,i)=>i%5===0).map(d=>d.s)));
+svg.select("#y-axis")
+  .attr("transform", `translate(${margin.left},0)`)
+  .call(d3.axisLeft(y).ticks(6).tickFormat(d=>d+"%"));
+
+d3.select("#gridlines").selectAll("line")
+  .data(y.ticks(6)).join("line")
+  .attr("class","gridline")
+  .attr("x1", margin.left).attr("x2", width-margin.right)
+  .attr("y1", d=>y(d)).attr("y2", d=>y(d));
+
+const line = d3.line().x(d=>x(d.s)).y(d=>y(d.v));
+const path = svg.select("#ts-line").datum(data).attr("d", line);
+const totalLength = path.node().getTotalLength();
+
+path.attr("stroke-dasharray", totalLength)
+    .attr("stroke-dashoffset", totalLength);
+
+const dot = svg.select("#ts-dot");
+const tag = svg.select("#value-tag");
+const peakLabel = svg.select("#peak-label");
+
+const last = data[data.length-1];
+dot.attr("cx", x(last.s)).attr("cy", y(last.v));
+tag.attr("x", x(last.s)-70).attr("y", y(last.v)-16).text(last.v + "% — máximo histórico");
+peakLabel.attr("x", x(last.s)-70).attr("y", y(last.v)+18).text("2022-23 empata el mismo valor");
+
+function setDraw(fraction, animate){
+  const offset = totalLength * (1 - fraction);
+  (animate ? path.transition().duration(900) : path).attr("stroke-dashoffset", offset);
+}
+
+function renderStep(i){
+  if(i === 0){
+    setDraw(0, false);
+    path.classed("highlighted", false);
+    dot.classed("visible", false).classed("highlighted", false);
+    tag.classed("visible", false);
+    peakLabel.classed("visible", false);
+  }
+  if(i === 1){
+    setDraw(0.55, true);
+  }
+  if(i === 2){
+    setDraw(1, true);
+  }
+  if(i === 3){
+    setDraw(1, false);
+    path.classed("highlighted", true);
+    dot.classed("visible", true).classed("highlighted", true);
+    tag.classed("visible", true);
+    peakLabel.classed("visible", true);
+  }
+  if(i === 4){
+    const projX2 = width - margin.right + 60;
+    const projY2 = y(last.v) - 8;
+    svg.select("#ts-projection")
+      .attr("d", `M${x(last.s)},${y(last.v)} L${projX2},${projY2}`)
+      .classed("visible", true);
+    d3.selectAll(".fading-out").classed("faded", true);
+    dot.classed("visible", false);
+    tag.classed("visible", false);
+    peakLabel.classed("visible", false);
+  }
+}
+
+renderStep(0);
+
+const scroller = scrollama();
+scroller.setup({ step:".step", offset:0.65, progress:false })
+  .onStepEnter(response => {
+    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    response.element.classList.add("is-active");
+    renderStep(+response.element.dataset.step);
+  });
+
+window.addEventListener("resize", scroller.resize);
+
+// ---------- Línea de tiempo de cierre ----------
+const milestones = [
+  { year:1979, label:"Chris Ford", sub:"primer triple de la historia" },
+  { year:2003, label:"Daryl Morey", sub:"la analítica entra a la cancha" },
+  { year:2016, label:"Curry: 402 y 73-9", sub:"un jugador rompe la escala" },
+  { year:2017, label:"Brook Lopez: 387", sub:"hasta los pívots tiran de afuera" },
+  { year:2023, label:"TS% 58.1%", sub:"el juego, más eficiente que nunca" }
+];
+
+const tMargin = {left:40, right:40};
+const tWidth = 920;
+const tx = d3.scaleLinear().domain([1979, 2026]).range([tMargin.left, tWidth-tMargin.right]);
+
+const milestonesG = d3.select("#milestones");
+milestones.forEach(m => {
+  const mx = tx(m.year);
+  milestonesG.append("circle").attr("class","milestone-dot").attr("cx", mx).attr("cy", 70).attr("r", 7);
+  milestonesG.append("text").attr("class","milestone-year").attr("x", mx).attr("y", 30).text(m.year);
+  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", 100).text(m.label);
+  milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", 116)
+    .style("font-size","9px").style("opacity",0.65).text(m.sub);
+});
+</script>
+</body>
+</html>

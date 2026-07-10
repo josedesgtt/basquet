@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tramo 3 — Draft de Curry + debuts pre-Curry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel: #F2E8D5;
+    --naranja: #D9642E;
+    --azul: #1B3654;
+    --rojo: #B23B32;
+    --verde: #3D8792;
+    --muted: #5b6b80;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--papel); color:var(--azul); font-family:'Public Sans', sans-serif; }
+
+  .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+
+  .note{
+    max-width:640px; margin:0 auto; padding:2rem 1.5rem 0.5rem; text-align:center;
+    font-family:'Martian Mono', monospace; font-size:0.7rem; letter-spacing:0.05em;
+    color:var(--muted); text-transform:uppercase;
+  }
+
+  /* ---------- DRAFT: texto + foto ---------- */
+  .draft-block{
+    max-width:1040px; margin:0 auto; padding: 3.5rem 1.5rem 5rem;
+    display:grid; grid-template-columns: 1.3fr 0.9fr; gap: 3.5rem; align-items:start;
+  }
+  .draft-block .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--rojo); margin:0 0 1rem;
+  }
+  .draft-block p.body{ font-size:1.15rem; line-height:1.75; margin:0 0 1.4rem; }
+
+  .photo-insert{ margin:0; transform: rotate(-2deg); }
+  .photo-frame{
+    position:relative; border:3px solid var(--azul); background:var(--azul);
+    overflow:hidden; box-shadow:8px 8px 0 rgba(27,54,84,0.18);
+  }
+  .photo-frame img{
+    display:block; width:100%; height:auto;
+    filter: grayscale(1) contrast(1.15) brightness(0.92);
+    mix-blend-mode: luminosity;
+  }
+  .duotone-layer{
+    position:absolute; inset:0;
+    background: linear-gradient(155deg, var(--azul) 20%, var(--rojo) 100%);
+    mix-blend-mode: color; opacity:0.95;
+  }
+  .halftone-layer{
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(242,232,213,0.9) 1.1px, transparent 1.1px);
+    background-size: 4px 4px; mix-blend-mode: multiply; opacity:0.35;
+  }
+  .photo-tag{
+    position:absolute; top:12px; left:-8px; background:var(--naranja); color:var(--papel);
+    font-family:'Martian Mono', monospace; font-size:0.72rem; letter-spacing:0.06em;
+    padding:5px 12px 5px 16px; z-index:2;
+  }
+  figcaption{
+    font-family:'Martian Mono', monospace; font-size:0.72rem; line-height:1.5;
+    color:var(--azul); opacity:0.65; margin-top:0.7rem; text-align:left;
+  }
+
+  @media (max-width: 720px){
+    .draft-block{ grid-template-columns: 1fr; }
+    .photo-insert{ order:-1; max-width:320px; margin: 0 auto 1rem; }
+  }
+
+  /* ---------- BAR CHART (columnas verticales) ---------- */
+  .bars-section{ max-width:980px; margin:0 auto; padding: 1rem 1.5rem 6rem; }
+  .bars-header{ text-align:center; margin-bottom:2.5rem; }
+  .bars-header .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--rojo); margin:0 0 0.8rem;
+  }
+  .bars-header h2{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:clamp(1.6rem, 4vw, 2.3rem); line-height:1; text-transform:uppercase;
+    margin:0; color:var(--azul);
+  }
+
+  .bars-scroll{ overflow-x:auto; padding-bottom:0.5rem; }
+
+  .bars-columns{
+    display:flex; align-items:flex-end; gap:10px;
+    padding:0 4px; width:max-content; margin:0 auto;
+  }
+
+  .col{
+    display:flex; flex-direction:column; align-items:center;
+    flex:0 0 auto; width:58px;
+  }
+
+  @media (max-width: 640px){
+    .col{ width:52px; }
+  }
+
+  .col-plot{
+    position:relative; width:100%; height:240px;
+  }
+
+  .col-photo{
+    position:absolute; left:50%; bottom:10px;
+    width:42px; height:42px;
+    transform:translateX(-50%);
+    overflow:hidden;
+    transition: bottom 1.1s cubic-bezier(0.22,1,0.36,1);
+  }
+  .col.visible .col-photo{ bottom: var(--photo-bottom); }
+
+  .col-photo img{
+    display:block; width:100%; height:100%; object-fit:cover;
+  }
+
+  .col-bar{
+    position:absolute; left:0; bottom:0; width:100%;
+    background:var(--azul); height:0;
+    transition: height 1.1s cubic-bezier(0.22,1,0.36,1);
+  }
+  .col.is-curry .col-bar{ background:var(--naranja); }
+  .col.visible .col-bar{ height: var(--bar-height); }
+
+  .col-value{
+    font-family:'Martian Mono', monospace; font-size:0.82rem; color:var(--muted);
+    margin-top:0.6rem;
+  }
+  .col.is-curry .col-value{ color:var(--naranja); font-weight:500; }
+
+  .col-name{
+    font-family:'Public Sans', sans-serif; font-size:0.7rem; font-weight:500;
+    text-align:center; color:var(--azul); line-height:1.2; margin-top:0.15rem;
+  }
+  .col.is-curry .col-name{ font-weight:600; color:var(--naranja); }
+
+  .bars-footer{
+    margin-top:2rem; padding-top:1.3rem; border-top:2px dashed rgba(27,54,84,0.3);
+    font-family:'Big Shoulders Display', sans-serif; font-weight:600;
+    font-size:clamp(1.2rem, 2.6vw, 1.5rem); line-height:1.25; color:var(--azul);
+  }
+  .bars-footer strong{ color:var(--naranja); }
+
+  .hook-section{
+    max-width:640px; margin:0 auto; padding:4rem 1.5rem 5rem; text-align:center;
+  }
+  .hook-text{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:600;
+    font-size:clamp(1.4rem, 3.2vw, 1.9rem); line-height:1.3; color:var(--azul);
+    max-width:36ch; margin:0 auto;
+  }
+
+  .group-divider{
+    flex-shrink:0; width:0; align-self:stretch;
+    border-left:2px dashed rgba(27,54,84,0.3);
+    margin:0 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="note">Demo acotado — apartado del draft + gráfico de debuts (grupo "antes")</div>
+
+<section class="draft-block">
+  <div class="text-col">
+    <p class="eyebrow">Junio de 2009 · Draft de la NBA</p>
+    <p class="body">Golden State Warriors elige a Stephen Curry en el número 7 del draft. Viene de Davidson, una universidad chica fuera del radar habitual, y los informes de los scouts dudan de él: cuerpo frágil, poca explosividad, un base que tira demasiado para su posición.</p>
+    <p class="body">Nadie en ese escenario sospecha que años después va a ser considerado el mejor tirador de la historia del básquet.</p>
+  </div>
+  <figure class="photo-insert">
+    <div class="photo-frame">
+      <span class="photo-tag">jun. 2009</span>
+      <img src="draftcurry.jpeg" alt="Stephen Curry el día de su draft, con la gorra de los Golden State Warriors">
+      <div class="duotone-layer"></div>
+      <div class="halftone-layer"></div>
+    </div>
+    <figcaption>Stephen Curry, pick n.º 7 del Draft 2009.<br>Golden State Warriors.</figcaption>
+  </figure>
+</section>
+
+<section class="bars-section halftone">
+  <div class="bars-header">
+    <p class="eyebrow">Triples anotados en la temporada debut</p>
+    <h2>Antes de Curry</h2>
+  </div>
+
+  <div class="bars-scroll">
+    <div class="bars-columns" id="bars"></div>
+  </div>
+
+  <div class="bars-footer">
+    166 triples en una temporada debut, en 2009, era un número que <strong>casi nadie</strong> había visto antes.
+  </div>
+</section>
+
+<section class="hook-section" id="hook-section">
+  <p class="hook-text">Lo que Curry hizo como individuo, la liga entera lo empezó a copiar — no en el promedio general de la liga, sino en cómo debuta cada generación nueva.</p>
+</section>
+
+<script>
+const beforePlayers = [
+  { name:"Michael Jordan", value:9, photo:"players/michael.png" },
+  { name:"Reggie Miller", value:61, photo:"players/reggie.png" },
+  { name:"Ray Allen", value:117, photo:"players/ray.png" },
+  { name:"Kobe Bryant", value:51, photo:"players/kobe.png" },
+  { name:"Allen Iverson", value:155, photo:"players/allen.png" },
+  { name:"Steve Nash", value:23, photo:"players/steve.png" },
+  { name:"Peja Stojaković", value:57, photo:"players/peja.png" },
+  { name:"LeBron James", value:63, photo:"players/lebron.png" },
+  { name:"Chris Paul", value:50, photo:"players/chris.png" },
+  { name:"Russell Westbrook", value:35, photo:"players/russel.png" },
+  { name:"Stephen Curry", value:166, photo:"players/curry.png", curry:true }
+];
+
+const afterPlayers = [
+  { name:"James Harden", value:113 },
+  { name:"Klay Thompson", value:111 },
+  { name:"Kemba Walker", value:69 },
+  { name:"Damian Lillard", value:185 },
+  { name:"Luka Dončić", value:168 },
+  { name:"Tyler Herro", value:116 },
+  { name:"Anthony Edwards", value:171 },
+  { name:"Tyrese Haliburton", value:121 },
+  { name:"Victor Wembanyama", value:128 },
+  { name:"Chet Holmgren", value:129 }
+];
+
+const container = document.getElementById("bars");
+
+const PLOT_HEIGHT = 240;
+const PHOTO_SIZE = 42;
+const GAP = 10;
+const BAR_MAX = PLOT_HEIGHT - PHOTO_SIZE - GAP;
+
+function updateAllBars(max){
+  document.querySelectorAll(".col").forEach(col => {
+    const value = +col.dataset.value;
+    const barHeight = (value / max) * BAR_MAX;
+    col.style.setProperty("--bar-height", barHeight + "px");
+    col.style.setProperty("--photo-bottom", (barHeight + GAP) + "px");
+  });
+}
+
+function makeCol(p, hasPhoto){
+  const col = document.createElement("div");
+  col.className = "col" + (p.curry ? " is-curry" : "");
+  col.dataset.value = p.value;
+  col.innerHTML = `
+    <div class="col-plot">
+      ${hasPhoto ? `<div class="col-photo"><img src="${p.photo}" alt="${p.name}"></div>` : ""}
+      <div class="col-bar"></div>
+    </div>
+    <div class="col-value">${p.value}</div>
+    <div class="col-name">${p.name}</div>
+  `;
+  return col;
+}
+
+beforePlayers.forEach(p => container.appendChild(makeCol(p, true)));
+updateAllBars(Math.max(...beforePlayers.map(p => p.value)));
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll(".col").forEach(col => observer.observe(col));
+
+let afterRevealed = false;
+function revealAfterGroup(){
+  if(afterRevealed) return;
+  afterRevealed = true;
+
+  const divider = document.createElement("div");
+  divider.className = "group-divider";
+  container.appendChild(divider);
+
+  afterPlayers.forEach(p => {
+    const col = makeCol(p, false);
+    container.appendChild(col);
+    observer.observe(col);
+  });
+
+  const newMax = Math.max(...beforePlayers.map(p=>p.value), ...afterPlayers.map(p=>p.value));
+  updateAllBars(newMax); // recalcula TODAS las barras (antes + después) contra la nueva escala
+}
+
+const hookObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) revealAfterGroup();
+  });
+}, { threshold: 0.4 });
+hookObserver.observe(document.getElementById("hook-section"));
+</script>
+</body>
+</html>

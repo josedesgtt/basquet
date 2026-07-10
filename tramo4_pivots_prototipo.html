@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tramo 4 — pívots a través del tiempo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel: #F2E8D5;
+    --ink: #1B3654;
+    --muted: #5b6b80;
+    --gold: #D9642E;
+    --red: #B23B32;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--papel); color:var(--ink); font-family:'Public Sans', sans-serif; }
+
+  .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+
+  .masthead{ padding: 4rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
+  .masthead .eyebrow{
+    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--red); margin-bottom:0.75rem;
+  }
+  .masthead h1{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:clamp(2.2rem, 6vw, 3.4rem); line-height:0.95; text-transform:uppercase;
+    letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
+  }
+  .masthead p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
+
+  .scrolly{ position:relative; }
+  .sticky-graphic{
+    position:sticky; top:0; height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center; z-index:1;
+  }
+  .chart-wrap{ width:min(92vw, 960px); position:relative; }
+  svg{ width:100%; height:auto; overflow:visible; }
+
+  .axis path, .axis line{ stroke: rgba(27,54,84,0.25); }
+  .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+  .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
+  .axis-label{ font-family:'Martian Mono', monospace; font-size:11px; fill:var(--muted); }
+
+  .player-dot{
+    opacity:0;
+    transition: opacity 0.7s ease;
+  }
+  .player-dot.revealed{ opacity:1; }
+
+  .player-visual{
+    transition: transform 0.5s ease;
+    transform-box: fill-box; transform-origin:center;
+  }
+  .player-dot.highlighted .player-visual{ transform: scale(1.15); }
+
+  .player-photo{ filter: grayscale(1) contrast(1.1) brightness(0.95); }
+  .player-tint{ mix-blend-mode:color; fill:var(--ink); opacity:0.85; transition:fill 0.4s ease; }
+  .player-dot.highlighted .player-tint{ fill:var(--gold); }
+  .player-ring{ fill:none; stroke:var(--ink); stroke-width:2; opacity:0.5; }
+
+  .player-dot.highlighted .player-ring{ stroke:var(--gold); stroke-width:3; opacity:1; }
+
+  .player-name{
+    font-family:'Martian Mono', monospace; font-size:9px; fill:var(--muted);
+    text-anchor:middle; opacity:0; transition:opacity 0.5s ease;
+  }
+  .player-name.revealed{ opacity:0.85; }
+  .player-dot.highlighted ~ .player-name{ fill:var(--gold); font-weight:500; }
+
+  .lopez-card{
+    position:absolute; width:170px;
+    background:var(--papel); border:2px solid var(--ink); border-left:6px solid var(--gold);
+    box-shadow:6px 6px 0 rgba(27,54,84,0.2); padding:0.8rem 1rem;
+    opacity:0; transform:translateY(8px) rotate(-2deg);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events:none;
+  }
+  .lopez-card.visible{ opacity:1; transform:translateY(0) rotate(-2deg); }
+  .lopez-card .compare{ display:flex; justify-content:space-between; align-items:baseline; margin-top:0.4rem; }
+  .lopez-card .num{ font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:1.6rem; }
+  .lopez-card .num.small{ color:var(--muted); font-size:1.1rem; }
+  .lopez-card .num.big{ color:var(--gold); }
+  .lopez-card .lbl{ font-family:'Martian Mono', monospace; font-size:0.6rem; color:var(--muted); text-transform:uppercase; }
+  .lopez-card .title{ font-family:'Martian Mono', monospace; font-size:0.65rem; color:var(--red); text-transform:uppercase; letter-spacing:0.04em; }
+
+  .steps{ position:relative; z-index:2; margin-top:-100vh; counter-reset: stepnum; }
+  .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
+  .step-card{
+    position:relative; counter-increment: stepnum;
+    max-width:410px; background:var(--papel); border:2px solid var(--ink);
+    border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(27,54,84,0.22);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted);
+    transition: color 0.4s ease, border-color 0.4s ease;
+  }
+  .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
+  .step:nth-child(even) .step-card{ transform: rotate(1.1deg); }
+  .step-card::before{
+    content: counter(stepnum, decimal-leading-zero);
+    position:absolute; top:-16px; left:-16px; width:32px; height:32px; border-radius:50%;
+    background:var(--ink); color:var(--papel); border:2px solid var(--papel);
+    box-shadow:0 0 0 1.5px var(--ink); font-family:'Martian Mono', monospace; font-size:0.72rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step.is-active .step-card{ color:var(--ink); border-left-color:var(--gold); transform:rotate(0deg); }
+  .step.is-active .step-card::before{ background:var(--gold); }
+  .step-card strong{ font-family:'Martian Mono', monospace; color:var(--gold); font-weight:500; }
+  .spacer{ height:25vh; }
+</style>
+</head>
+<body>
+
+<div class="masthead halftone">
+  <div class="eyebrow">Prototipo — Tramo 4</div>
+  <h1>Hasta los pívots tiran de afuera</h1>
+  <p>Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
+</div>
+
+<div class="scrolly">
+  <div class="sticky-graphic halftone">
+    <div class="chart-wrap">
+      <svg id="chart" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="photo-clip"><circle cx="0" cy="0" r="22"/></clipPath>
+        </defs>
+        <g id="gridlines"></g>
+        <g id="x-axis" class="axis"></g>
+        <g id="y-axis" class="axis"></g>
+        <text class="axis-label" x="860" y="475" text-anchor="end">debut</text>
+        <text class="axis-label" x="40" y="45" text-anchor="end">3PA/partido</text>
+        <g id="players"></g>
+      </svg>
+
+      <div class="lopez-card" id="lopez-card">
+        <p class="title">Brook Lopez</p>
+        <div class="compare">
+          <div><div class="num small">31</div><div class="lbl">8 años, total</div></div>
+          <div><div class="num big">387</div><div class="lbl">una sola temporada</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0">
+      <div class="step-card">El salto que vimos con Wembanyama y Holmgren no es tan nuevo como parece — o no debería serlo. Durante 35 años, ser pívot significó lo mismo: casi nunca tirar de afuera.</div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card">Bueno, casi. <strong>Dirk Nowitzki</strong> ya en 1998 tiraba más de tres triples por partido — una rareza total para su época. Pero una excepción no cambia una posición entera: seis años después, <strong>Dwight Howard</strong>, uno de los pívots más dominantes de su generación, seguía firme en cero.</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-card">El quiebre real llega en 2008, con <strong>Brook Lopez</strong> — aunque su propio promedio de carrera (2.6) no alcanza a contarlo. En sus primeras ocho temporadas, intentó apenas 31 triples en total. En la 2016-17, intentó 387 — diez veces más que toda su carrera anterior junta, en una sola temporada.</div>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-card">Desde ahí, ningún pívot relevante volvió a tirar como Kareem o Howard. <strong>Wembanyama</strong> y <strong>Holmgren</strong> no son el capricho de una generación nueva — son la confirmación de una regla que ya lleva quince años escrita.</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
+<script>
+const players = [
+  { id:"kareem",   name:"Kareem",   year:1969,   v:0.01, photo:"pivots/kareem.png",   group:0 },
+  { id:"hakeem",   name:"Hakeem",   year:1984,   v:0.10, photo:"pivots/hakeem.png",   group:0 },
+  { id:"ewing",    name:"Ewing",    year:1985,   v:0.11, photo:"pivots/ewing.png",    group:0 },
+  { id:"shaq",     name:"Shaq",     year:1992,   v:0.02, photo:"pivots/shaq.png",     group:0 },
+  { id:"dirk",     name:"Dirk",     year:1998,   v:3.42, photo:"pivots/dirk.png",     group:0 },
+  { id:"howard",   name:"Howard",   year:2004,   v:0.08, photo:"pivots/howard.png",   group:0 },
+  { id:"lopez",    name:"Lopez",    year:2008,   v:2.60, photo:"pivots/lopez.png",    group:2 },
+  { id:"towns",    name:"Towns",    year:2014.7, v:4.30, photo:"pivots/towns.png",    group:3 },
+  { id:"jokic",    name:"Jokić",    year:2015.3, v:2.80, photo:"pivots/jokic.png",    group:3 },
+  { id:"embiid",   name:"Embiid",   year:2016,   v:3.50, photo:"pivots/embiid.png",   group:3 },
+  { id:"holmgren", name:"Holmgren", year:2022.6, v:3.83, photo:"pivots/holmgren.png", group:3 },
+  { id:"wemby",    name:"Wemby",    year:2023.4, v:3.90, photo:"pivots/wemby.png",    group:3 }
+];
+
+const margin = {top:50, right:40, bottom:50, left:50};
+const width = 900, height = 520;
+
+const svg = d3.select("#chart");
+const x = d3.scaleLinear().domain([1966, 2026]).range([margin.left, width-margin.right]);
+const y = d3.scaleLinear().domain([0, 5]).range([height-margin.bottom, margin.top]);
+
+svg.select("#x-axis")
+  .attr("transform", `translate(0,${height-margin.bottom})`)
+  .call(d3.axisBottom(x).tickFormat(d3.format("d")).ticks(8));
+svg.select("#y-axis")
+  .attr("transform", `translate(${margin.left},0)`)
+  .call(d3.axisLeft(y).ticks(5));
+
+d3.select("#gridlines").selectAll("line")
+  .data(y.ticks(5)).join("line")
+  .attr("class","gridline")
+  .attr("x1", margin.left).attr("x2", width-margin.right)
+  .attr("y1", d=>y(d)).attr("y2", d=>y(d));
+
+const playersG = svg.select("#players");
+
+players.forEach(p => {
+  const g = playersG.append("g")
+    .attr("class", "player-dot")
+    .attr("id", "dot-"+p.id)
+    .attr("transform", `translate(${x(p.year)},${y(p.v)})`);
+
+  const visual = g.append("g").attr("class", "player-visual");
+
+  visual.append("circle").attr("class","player-ring").attr("r", 24);
+  visual.append("image")
+    .attr("class","player-photo")
+    .attr("href", p.photo)
+    .attr("x", -22).attr("y", -22).attr("width", 44).attr("height", 44)
+    .attr("clip-path", "url(#photo-clip)");
+  visual.append("circle").attr("class","player-tint").attr("r", 22).attr("clip-path", "url(#photo-clip)");
+
+  playersG.append("text")
+    .attr("class", "player-name")
+    .attr("id", "name-"+p.id)
+    .attr("x", x(p.year)).attr("y", y(p.v) + 38)
+    .text(p.name);
+});
+
+function reveal(id){
+  d3.select("#dot-"+id).classed("revealed", true);
+  d3.select("#name-"+id).classed("revealed", true);
+}
+function highlight(id, on){
+  d3.select("#dot-"+id).classed("highlighted", on);
+}
+
+const lopezCard = document.getElementById("lopez-card");
+function positionLopezCard(){
+  const svgEl = document.getElementById("chart");
+  const scale = svgEl.getBoundingClientRect().width / width;
+  const px = x(2008) * scale;
+  const py = y(2.60) * scale;
+  lopezCard.style.left = (px + 30*scale) + "px";
+  lopezCard.style.top = (py - 70*scale) + "px";
+}
+
+const group0 = ["kareem","hakeem","ewing","shaq","dirk","howard"];
+const group3 = ["towns","jokic","embiid","holmgren","wemby"];
+
+function renderStep(i){
+  if(i === 0){
+    group0.forEach(reveal);
+    group0.forEach(id => highlight(id, false));
+    highlight("lopez", false);
+    lopezCard.classList.remove("visible");
+  }
+  if(i === 1){
+    group0.forEach(reveal);
+    highlight("dirk", true);
+    highlight("howard", true);
+  }
+  if(i === 2){
+    reveal("lopez");
+    highlight("lopez", true);
+    positionLopezCard();
+    lopezCard.classList.add("visible");
+  }
+  if(i === 3){
+    group3.forEach(reveal);
+    group3.forEach(id => highlight(id, true));
+  }
+}
+
+renderStep(0);
+
+const scroller = scrollama();
+scroller.setup({ step:".step", offset:0.65, progress:false })
+  .onStepEnter(response => {
+    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    response.element.classList.add("is-active");
+    renderStep(+response.element.dataset.step);
+  });
+
+window.addEventListener("resize", () => {
+  scroller.resize();
+  if(document.querySelector('[data-step="2"]').classList.contains('is-active')) positionLopezCard();
+});
+</script>
+</body>
+</html>

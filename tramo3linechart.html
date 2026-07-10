@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tramo 3 — demo: rompe la escala (crecimiento continuo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel: #F2E8D5;
+    --ink: #1B3654;
+    --muted: #8a97a8;
+    --gold: #D9642E;
+    --red: #B23B32;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--papel); color:var(--ink); font-family:'Public Sans', sans-serif; }
+
+  .halftone{
+    background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+
+  .note{
+    max-width:640px; margin:0 auto; padding:2rem 1.5rem 0.5rem; text-align:center;
+    font-family:'Martian Mono', monospace; font-size:0.7rem; letter-spacing:0.05em;
+    color:var(--muted); text-transform:uppercase;
+  }
+
+  .scrolly{ position:relative; }
+  .sticky-graphic{
+    position:sticky; top:0; height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:2.2rem; z-index:1;
+  }
+  .chart-wrap{ width:min(64vw, 720px); position:relative; }
+  .side-panel{
+    width:180px; flex-shrink:0; position:relative; height:320px;
+  }
+
+  @media (max-width: 860px){
+    .sticky-graphic{ flex-direction:column; gap:1rem; }
+    .chart-wrap{ width:min(92vw, 720px); }
+    .side-panel{ width:140px; height:170px; }
+  }
+  svg{ width:100%; height:auto; overflow:visible; }
+
+  .axis path, .axis line{ stroke: rgba(27,54,84,0.25); }
+  .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+  .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
+
+  .bg-line{ fill:none; stroke:var(--muted); stroke-width:2; opacity:0.55; }
+  .bg-name{ font-family:'Martian Mono', monospace; font-size:10px; fill:var(--muted); opacity:0.7; }
+
+  .curry-line{ fill:none; stroke-width:3.5; stroke-linecap:round; stroke:var(--ink); }
+  .curry-dot{ fill:var(--ink); }
+
+  .value-tag{
+    font-family:'Martian Mono', monospace; font-weight:600; font-size:15px;
+    fill:var(--ink); opacity:0; transition: opacity 0.4s ease;
+  }
+  .value-tag.visible{ opacity:1; }
+
+  .photo-aside{
+    position:absolute; top:50%; left:50%; width:130px;
+    opacity:0; transform:translate(-50%,-50%) rotate(-3deg);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events:none;
+  }
+  .photo-aside.visible{ opacity:1; transform:translate(-50%,-50%) rotate(-3deg); }
+  .photo-frame{
+    position:relative; border:3px solid var(--ink); background:var(--ink);
+    overflow:hidden; box-shadow:6px 6px 0 rgba(27,54,84,0.2);
+  }
+  .photo-frame img{
+    display:block; width:100%; height:auto;
+    filter: grayscale(1) contrast(1.15) brightness(0.92);
+    mix-blend-mode: luminosity;
+  }
+  .duotone-layer{
+    position:absolute; inset:0;
+    background: linear-gradient(155deg, var(--ink) 20%, var(--red) 100%);
+    mix-blend-mode: color; opacity:0.95;
+  }
+  .photo-tag{
+    position:absolute; top:8px; left:-6px; background:var(--gold); color:var(--papel);
+    font-family:'Martian Mono', monospace; font-size:0.6rem; letter-spacing:0.04em;
+    padding:3px 8px 3px 12px; z-index:2;
+  }
+  .photo-cap{
+    font-family:'Martian Mono', monospace; font-size:0.6rem; color:var(--ink);
+    opacity:0.7; margin-top:0.4rem; line-height:1.3;
+  }
+
+  .attach-card{
+    position:absolute; top:50%; left:50%; width:150px;
+    opacity:0; transform:translate(-50%,-50%) rotate(2deg);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events:none;
+  }
+  .attach-card.visible{ opacity:1; transform:translate(-50%,-50%) rotate(2deg); }
+  .clipping-frame{
+    border:3px solid var(--ink); box-shadow:6px 6px 0 rgba(27,54,84,0.2);
+    overflow:hidden;
+  }
+  .clipping-frame img{ display:block; width:100%; height:auto; }
+  .attach-card .photo-cap{ text-align:center; }
+
+  .steps{ position:relative; z-index:2; margin-top:-100vh; }
+  .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
+  .step-card{
+    max-width:400px; background:var(--papel); border:2px solid var(--ink);
+    border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(27,54,84,0.22);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6;
+    transition: border-color 0.4s ease;
+  }
+  .step.is-active .step-card{ border-left-color:var(--gold); }
+  .step-card strong{ font-family:'Martian Mono', monospace; color:var(--gold); font-weight:500; }
+  .spacer{ height:25vh; }
+</style>
+</head>
+<body>
+
+<div class="note">Demo acotado — crecimiento continuo ligado al scroll + fotos</div>
+
+<div class="scrolly">
+  <div class="sticky-graphic halftone">
+    <div class="chart-wrap">
+      <svg id="chart" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet">
+        <g id="gridlines"></g>
+        <g id="x-axis" class="axis"></g>
+        <g id="y-axis" class="axis"></g>
+        <g id="bg-lines"></g>
+        <path id="curry-line" class="curry-line"></path>
+        <circle id="curry-dot" class="curry-dot" r="6"></circle>
+        <text id="value-tag" class="value-tag"></text>
+      </svg>
+    </div>
+
+    <div class="side-panel">
+      <div id="photo-aside" class="photo-aside">
+        <div class="photo-frame">
+          <span class="photo-tag">2012-13</span>
+          <img src="currytriple.jpg" alt="Stephen Curry tirando un triple">
+          <div class="duotone-layer"></div>
+        </div>
+        <p class="photo-cap">La temporada del primer récord: 272 triples.</p>
+      </div>
+
+      <div id="attach-card" class="attach-card">
+        <div class="clipping-frame">
+          <img src="739season.jpg" alt="Tapa del Daily News: 73-9, mejor récord de la historia">
+        </div>
+        <p class="photo-cap">Curry, además, primer MVP elegido por unanimidad.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0">
+      <div class="step-card">Temporada 2012-13: Curry bate el récord de triples en una temporada con <strong>272</strong>. Es un buen tirador entre varios buenos tiradores — todavía nadie sospecha lo que viene.</div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card">Temporada 2015-16: Curry no solo vuelve a romper su propio récord. Lo destroza. Termina con <strong>402</strong> triples — más de 100 por encima de cualquier marca anterior en la historia de la liga.</div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-card">Ese mismo año los Warriors terminan <strong>73-9</strong>, el mejor récord regular de la historia de la NBA, y Curry es el primer <strong>MVP unánime</strong>. No fue una temporada rara de un jugador suelto: fue la prueba de que un equipo entero podía construirse alrededor del triple.</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
+<script>
+const seasons = ["2009-10","2010-11","2011-12","2012-13","2013-14","2014-15","2015-16","2016-17"];
+const curryData = [166,151,55,272,261,286,402,324];
+
+const bgPlayers = [
+  { name:"Harden", values:[93,113,114,179,177,208,236,262] },
+  { name:"Klay Thompson", values:[null,null,111,211,223,239,276,268] },
+  { name:"Korver", values:[59,120,118,189,185,221,158,162] },
+  { name:"Terry", values:[136,127,138,123,39,126,93,73] },
+  { name:"Ray Allen", values:[145,168,106,139,116,null,null,null] }
+];
+
+const margin = {top:40, right:30, bottom:40, left:50};
+const width = 900, height = 520;
+
+const svg = d3.select("#chart");
+const x = d3.scalePoint().domain(seasons).range([margin.left+20, width-margin.right]);
+let y = d3.scaleLinear().domain([0, 300]).range([height-margin.bottom, margin.top]);
+
+const xAxisG = svg.select("#x-axis").attr("transform", `translate(0,${height-margin.bottom})`);
+const yAxisG = svg.select("#y-axis").attr("transform", `translate(${margin.left},0)`);
+
+const bgLineGen = d3.line().defined(d => d !== null).x((d,i) => x(seasons[i])).y(d => y(d));
+const curryLineGen = d3.line().x(d => d.px).y(d => y(d.val));
+
+const bgG = svg.select("#bg-lines");
+bgPlayers.forEach(p => {
+  bgG.append("path").datum(p.values).attr("class","bg-line");
+  bgG.append("text").attr("class","bg-name").text(p.name);
+});
+
+const curryPath = svg.select("#curry-line");
+const curryDot = svg.select("#curry-dot");
+const valueTag = svg.select("#value-tag");
+
+const INK = "#1B3654", GOLD = "#D9642E";
+const colorInterp = d3.interpolateRgb(INK, GOLD);
+
+function renderAt(t, yMax, colorT){
+  y.domain([0, yMax]);
+
+  xAxisG.call(d3.axisBottom(x));
+  yAxisG.call(d3.axisLeft(y).ticks(6));
+
+  d3.select("#gridlines").selectAll("line")
+    .data(y.ticks(6))
+    .join("line")
+    .attr("class","gridline")
+    .attr("x1", margin.left).attr("x2", width-margin.right)
+    .attr("y1", d=>y(d)).attr("y2", d=>y(d));
+
+  bgG.selectAll(".bg-line").attr("d", bgLineGen);
+  bgG.selectAll(".bg-name").each(function(_,i){
+    const p = bgPlayers[i];
+    const lastIdx = p.values.map(v=>v!==null?1:0).lastIndexOf(1);
+    d3.select(this)
+      .attr("x", x(seasons[lastIdx]) + 8)
+      .attr("y", y(p.values[lastIdx]) + 3);
+  });
+
+  const baseIdx = Math.floor(t);
+  const frac = t - baseIdx;
+  const pts = [];
+  for(let i=0;i<=baseIdx;i++) pts.push({ px:x(seasons[i]), val:curryData[i] });
+  if(frac > 0 && baseIdx < curryData.length-1){
+    const x0=x(seasons[baseIdx]), x1=x(seasons[baseIdx+1]);
+    const v0=curryData[baseIdx], v1=curryData[baseIdx+1];
+    pts.push({ px:x0+(x1-x0)*frac, val:v0+(v1-v0)*frac });
+  }
+
+  curryPath.attr("d", curryLineGen(pts));
+
+  const tip = pts[pts.length-1];
+  curryDot.attr("cx", tip.px).attr("cy", y(tip.val));
+  valueTag.classed("visible", true)
+    .attr("x", tip.px+12).attr("y", y(tip.val)-12)
+    .text(Math.round(tip.val));
+
+  const col = colorInterp(colorT);
+  curryPath.attr("stroke", col);
+  curryDot.attr("fill", col);
+  valueTag.attr("fill", col);
+}
+
+renderAt(3, 300, 0);
+
+const photoAside = document.getElementById("photo-aside");
+const attachCard = document.getElementById("attach-card");
+
+const scroller = scrollama();
+scroller.setup({ step:".step", offset:0.65, progress:true })
+  .onStepEnter(response => {
+    document.querySelectorAll(".step").forEach(el => el.classList.remove("is-active"));
+    response.element.classList.add("is-active");
+    const i = +response.element.dataset.step;
+
+    if(i === 0){
+      renderAt(3, 300, 0);
+      photoAside.classList.add("visible");
+      attachCard.classList.remove("visible");
+    }
+    if(i === 2){
+      renderAt(6, 420, 1);
+      attachCard.classList.add("visible");
+      photoAside.classList.remove("visible");
+    }
+  })
+  .onStepExit(response => {
+    const i = +response.element.dataset.step;
+    if(i === 0 && response.direction === "down") photoAside.classList.remove("visible");
+  })
+  .onStepProgress(response => {
+    const i = +response.index;
+    if(i === 1){
+      const t = 3 + response.progress * 3;
+      const yMax = 300 + response.progress * 120;
+      const colorT = Math.max(0, (response.progress - 0.45) / 0.55);
+      renderAt(t, yMax, colorT);
+      photoAside.classList.remove("visible");
+      attachCard.classList.remove("visible");
+    }
+  });
+
+window.addEventListener("resize", scroller.resize);
+</script>
+</body>
+</html>
