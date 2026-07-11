@@ -399,9 +399,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .t1-remnants{ transition: opacity 0.7s ease; }
 #sec-t1t2 .t1-remnants.hidden{ opacity:0; }
 #sec-t1t2 .t2-steps{ counter-reset: stepnum; }
-#sec-t1t2 .zone-shape{ stroke:var(--ink); stroke-width:1; transition: stroke 0.4s ease, stroke-width 0.4s ease, opacity 0.4s ease, filter 0.4s ease; }
-#sec-t1t2 .zone-shape.highlighted{ stroke: var(--gold); stroke-width:9; }
-#sec-t1t2 .zone-shape.dimmed{ opacity:0.35; filter:grayscale(0.7); }
+/* El énfasis se comunica por textura, no por borde: la zona destacada se muestra
+   con color plano y las demás con una trama de puntitos (mismo color + puntos onyx). */
+#sec-t1t2 .zone-shape{ stroke:var(--ink); stroke-width:1; }
 #sec-t1t2 .zone-label{
     font-family:'Martian Mono', monospace; font-weight:500; font-size:15px;
     fill:var(--ink); text-anchor:middle; dominant-baseline:central;
@@ -1728,7 +1728,20 @@ const t2ColorScale = d3.scaleLinear()
   .range(["#F2E8D5", "#CC5C29", "#5C3D12"])
   .interpolate(d3.interpolateRgb);
 
-// cada step nombra UNA zona (o ninguna) para destacar con borde grueso —
+// Un patrón de puntitos por zona: el fondo del patrón lleva el color de la zona
+// (heatmap) y encima una trama de puntos onyx chiquitos. Las zonas no destacadas
+// se rellenan con este patrón; la destacada, con color plano.
+const t2Defs = d3.select("#chart defs");
+Object.keys(zoneData).forEach(key => {
+  const p = t2Defs.append("pattern")
+    .attr("id", "ptn-" + key)
+    .attr("width", 8).attr("height", 8)
+    .attr("patternUnits", "userSpaceOnUse");
+  p.append("rect").attr("class", "ptn-bg").attr("width", 8).attr("height", 8).attr("fill", "#F2E8D5");
+  p.append("circle").attr("cx", 4).attr("cy", 4).attr("r", 1.15).attr("fill", "#121212").attr("opacity", 0.34);
+});
+
+// cada step nombra UNA zona (o ninguna) para destacar con textura plana —
 // así el recuadro de texto y el gráfico siempre están señalando lo mismo.
 const t2Steps = [
   { state: "before", emphasize: ["mid"],    hook: false, yearJump: false },
@@ -1747,10 +1760,20 @@ function renderT2(stepConf, animate){
     const emphasized = stepConf.emphasize.includes(key);
     const dimmed = stepConf.emphasize.length > 0 && !emphasized;
     const shapes = zone.shapeSel.map(s => d3.select(s));
+    const color = t2ColorScale(value);
+
+    // el fondo del patrón sigue al color de la zona, así los puntos quedan
+    // sobre el mismo tono que tendría en plano
+    d3.select("#ptn-" + key + " .ptn-bg").attr("fill", color);
 
     shapes.forEach(sel => {
-      sel.transition().duration(duration).attr("fill", t2ColorScale(value));
-      sel.classed("highlighted", emphasized).classed("dimmed", dimmed);
+      if(dimmed){
+        // trama de puntos: se aplica directo (no interpola de color a url)
+        sel.interrupt().attr("fill", "url(#ptn-" + key + ")");
+      } else {
+        sel.transition().duration(duration).attr("fill", color);
+      }
+      sel.classed("dimmed", dimmed);
     });
 
     const labelSel = d3.select(zone.labelSel);
