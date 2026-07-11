@@ -42,11 +42,11 @@ body{
 }
 .ball-slide-title .bst-ball{
   position:absolute; top:52%; left:calc(var(--bst-progress, 0) * 100%);
-  width:0.62em; height:0.62em; transform:translate(-50%, -50%);
-  background-image:url('../inspo_datos/ball.png');
-  background-size:cover; background-position:center; border-radius:50%;
-  box-shadow:0 0 0 2px rgba(27,54,84,0.15);
+  width:0.75em; height:0.75em; transform:translate(-50%, -50%);
+  background-image:url('../inspo_datos/pelota_vector.png');
+  background-size:contain; background-repeat:no-repeat; background-position:center;
   opacity:var(--bst-ball-opacity, 0);
+  filter:drop-shadow(0 2px 3px rgba(27,54,84,0.25));
   pointer-events:none;
 }
 
@@ -422,10 +422,10 @@ svg{ width:100%; height:auto; overflow:visible; }
   overflow:hidden;
 }
 .dot-transition-circle{
-  position:absolute; width:90px; height:90px; border-radius:50%;
-  background-image:url('../inspo_datos/ball.png');
-  background-size:cover; background-position:center;
-  box-shadow:0 0 0 2px rgba(27,54,84,0.15);
+  position:absolute; width:110px; height:110px;
+  background-image:url('../inspo_datos/pelota_vector.png');
+  background-size:contain; background-repeat:no-repeat; background-position:center;
+  filter:drop-shadow(0 4px 6px rgba(27,54,84,0.25));
   transform:scale(var(--dot-scale, 0));
 }
 .dot-transition-label{
@@ -1390,7 +1390,7 @@ svg{ width:100%; height:auto; overflow:visible; }
       const scrollable = r.height - vh;               // recorrido real mientras el punto queda "pegado"
       const t = clamp01(scrollable > 0 ? -r.top / scrollable : 0);
       const growT = clamp01(t / 0.7);                  // el punto termina de crecer al 70% del recorrido
-      const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 90 * 0.85;
+      const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 110 * 0.85;
       el.style.setProperty('--dot-scale', (growT * maxScale).toFixed(2));
       const labelT = clamp01((t - 0.55) / 0.35);       // el título del tramo siguiente aparece al final
       el.style.setProperty('--dot-label', labelT.toFixed(2));
