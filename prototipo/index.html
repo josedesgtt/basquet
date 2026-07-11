@@ -1036,21 +1036,24 @@ svg{ width:100%; height:auto; overflow:visible; }
 
     <div class="t2-steps">
       <div class="step" data-t2step="0">
-        <div class="step-card">2003. Daryl Morey, un ingeniero informático del MIT sin haber jugado nunca profesionalmente, entra a los Celtics. Tres años después ya es asistente de gerente general en los Rockets. Ese año, <strong>35.7%</strong> de todos los tiros de la liga salían de <strong class="zone-hl">media distancia</strong> — la zona más usada de toda la cancha.</div>
+        <div class="step-card">Así se ve media cancha desde arriba, dividida en zonas. Cada número es el porcentaje de todos los tiros de la liga que salió de esa zona en <span class="year-hl">2003</span>. Cuanto más oscura la zona, más se tiraba desde ahí.</div>
       </div>
       <div class="step" data-t2step="1">
-        <div class="step-card">Morey hizo una cuenta simple: un triple vale un 50% más que un doble, así que ni hace falta acertarlo tan seguido para que rinda lo mismo. Casi nadie tira tan bien desde la <strong class="zone-hl">media distancia</strong>. En los papeles, era <strong>el peor tiro del básquet</strong>: ni tan cerca del aro como para entrar fácil, ni vale tanto como el triple.</div>
+        <div class="step-card">2003. Daryl Morey, un ingeniero informático del MIT sin haber jugado nunca profesionalmente, entra a los Celtics. Tres años después ya es asistente de gerente general en los Rockets. Ese año, <strong>35.7%</strong> de todos los tiros de la liga salían de <strong class="zone-hl">media distancia</strong> — la zona más usada de toda la cancha.</div>
       </div>
       <div class="step" data-t2step="2">
-        <div class="step-card">Veinte años después, la <strong class="zone-hl">media distancia</strong> pasó de 35.7% a apenas <strong>10.05%</strong> de los tiros de la liga — una caída de casi 26 puntos.</div>
+        <div class="step-card">Morey hizo una cuenta simple: un triple vale un 50% más que un doble, así que ni hace falta acertarlo tan seguido para que rinda lo mismo. Casi nadie tira tan bien desde la <strong class="zone-hl">media distancia</strong>. En los papeles, era <strong>el peor tiro del básquet</strong>: ni tan cerca del aro como para entrar fácil, ni vale tanto como el triple.</div>
       </div>
       <div class="step" data-t2step="3">
-        <div class="step-card">El triple de <strong class="zone-hl">arriba del arco</strong> casi se triplicó en el mismo período.</div>
+        <div class="step-card">Veinte años después, la <strong class="zone-hl">media distancia</strong> pasó de 35.7% a apenas <strong>10.05%</strong> de los tiros de la liga — una caída de casi 26 puntos.</div>
       </div>
       <div class="step" data-t2step="4">
-        <div class="step-card">Y hasta el <strong class="zone-hl">corner 3</strong> — el triple más corto de la cancha — se duplicó.</div>
+        <div class="step-card">El triple de <strong class="zone-hl">arriba del arco</strong> casi se triplicó en el mismo período.</div>
       </div>
       <div class="step" data-t2step="5">
+        <div class="step-card">Y hasta el <strong class="zone-hl">corner 3</strong> — el triple más corto de la cancha — se duplicó.</div>
+      </div>
+      <div class="step" data-t2step="6">
         <div class="step-card">El cambio de reglas del juego ya estaba escrito. Solo faltaba alguien que llevara esa lógica al extremo.</div>
       </div>
     </div>
@@ -1734,18 +1737,25 @@ const t2ColorScale = d3.scaleLinear()
 // color plano. El fondo de color evita que las zonas de atrás se cuelen por los
 // huecos de las de adelante (las áreas se superponen).
 const t2Defs = d3.select("#chart defs");
-Object.keys(zoneData).forEach(key => {
+Object.entries(zoneData).forEach(([key, zone]) => {
   const p = t2Defs.append("pattern")
     .attr("id", "ptn-" + key)
     .attr("width", 4).attr("height", 4)
     .attr("patternUnits", "userSpaceOnUse");
   p.append("rect").attr("class", "ptn-bg").attr("width", 4).attr("height", 4).attr("fill", "#CC5C29");
-  p.append("circle").attr("class", "ptn-dot").attr("cx", 2).attr("cy", 2).attr("r", 0.9).attr("fill", "#F2E8D5");
+  // los huecos arrancan invisibles (fill-opacity 0 = zona plana); el énfasis los
+  // desvanece hacia 1 (texturada) con transición, así el cambio de textura es un fade
+  p.append("circle").attr("class", "ptn-dot").attr("cx", 2).attr("cy", 2).attr("r", 0.9)
+    .attr("fill", "#F2E8D5").attr("fill-opacity", 0);
+  // cada zona se rellena siempre con su patrón; lo que cambia (con transición) es el
+  // color de fondo del patrón y la opacidad de los huecos
+  zone.shapeSel.forEach(s => d3.select(s).attr("fill", "url(#ptn-" + key + ")"));
 });
 
-// cada step nombra UNA zona (o ninguna) para destacar con textura plana —
-// así el recuadro de texto y el gráfico siempre están señalando lo mismo.
+// El primer paso presenta la cancha entera en plano (sin énfasis). Después cada
+// paso destaca UNA zona (o ninguna) dejándola plana mientras el resto se texturiza.
 const t2Steps = [
+  { state: "before", emphasize: [],         hook: false, yearJump: false },
   { state: "before", emphasize: ["mid"],    hook: false, yearJump: false },
   { state: "before", emphasize: ["mid"],    hook: false, yearJump: false },
   { state: "after",  emphasize: ["mid"],    hook: false, yearJump: true  },
@@ -1761,21 +1771,12 @@ function renderT2(stepConf, animate){
     const value = zone[stepConf.state];
     const emphasized = stepConf.emphasize.includes(key);
     const dimmed = stepConf.emphasize.length > 0 && !emphasized;
-    const shapes = zone.shapeSel.map(s => d3.select(s));
     const color = t2ColorScale(value);
 
-    // el fondo del patrón lleva el color de la zona (los puntos son huecos color papel)
-    d3.select("#ptn-" + key + " .ptn-bg").attr("fill", color);
-
-    shapes.forEach(sel => {
-      if(dimmed){
-        // trama de puntos: se aplica directo (no interpola de color a url)
-        sel.interrupt().attr("fill", "url(#ptn-" + key + ")");
-      } else {
-        sel.transition().duration(duration).attr("fill", color);
-      }
-      sel.classed("dimmed", dimmed);
-    });
+    // color de la zona → fondo del patrón (transición suave del heatmap);
+    // huecos → fade según el énfasis (0 = plano/destacado, 1 = texturado)
+    d3.select("#ptn-" + key + " .ptn-bg").transition().duration(duration).attr("fill", color);
+    d3.select("#ptn-" + key + " .ptn-dot").transition().duration(duration).attr("fill-opacity", dimmed ? 1 : 0);
 
     const labelSel = d3.select(zone.labelSel);
     labelSel.classed("dimmed", dimmed);
