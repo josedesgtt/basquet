@@ -6,7 +6,7 @@
 <title>De la anécdota al arma letal — Prototipo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Bricolage+Grotesque:wght@400;500;600;700&family=Paytone+One&family=Slackey&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Bricolage+Grotesque:wght@400;500;600;700&family=Slackey&display=swap" rel="stylesheet">
 <style>
 :root{
     --papel: #F2E8D5;
@@ -113,11 +113,11 @@ body{
     grid-template-columns: 1.3fr 0.9fr;
     gap: 3.5rem;
     align-items:start;
+    opacity: var(--intro-fade, 1);   /* aparece con un fade cuando la portada se achicó */
   }
 #sec-t1t2 .text-col p.body{ font-size:1.15rem; line-height:1.75; margin:0 0 1.6rem; }
 #sec-t1t2 .text-col p.question{
-    font-family:'Paytone One', sans-serif;
-    font-weight:700;
+    font-family:'Slackey', cursive;
     font-size:clamp(1.5rem, 3.2vw, 2rem);
     line-height:1.4;
     color:var(--ink);
@@ -160,8 +160,8 @@ body{
   }
 #sec-t1t2 figcaption{
     font-family:'Slackey', cursive;
-    font-size:0.72rem; line-height:1.5;
-    color:var(--ink); opacity:0.65;
+    font-size:0.82rem; line-height:1.55;
+    color:var(--ink); opacity:0.85;
     margin-top:0.7rem; text-align:left;
   }
 @media (max-width: 720px){#sec-t1t2 .intro-block{ grid-template-columns: 1fr; }#sec-t1t2 .photo-insert{ order:-1; max-width:280px; margin: 0 auto 1rem; }}
@@ -336,7 +336,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .miller-stats strong{ color:var(--ink); font-weight:500; }
 #sec-t1t2 .miller-stats em{ font-style:normal; color:var(--gold); }
 #sec-t1t2 .miller-note{
-    font-family:'Bricolage Grotesque', sans-serif;
+    font-family:'Slackey', cursive;
     font-size:0.82rem;
     line-height:1.4;
     color:var(--muted);
@@ -388,8 +388,8 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .step:nth-child(3).is-active .step-card::before, #sec-t1t2 .step:nth-child(4).is-active .step-card::before{ background:var(--azul); }
 #sec-t1t2 .step:nth-child(3).is-active .step-card strong, #sec-t1t2 .step:nth-child(4).is-active .step-card strong{ color:var(--azul); }
 #sec-t1t2 .step-card.reflective{
-    font-family:'Paytone One', sans-serif;
-    font-weight:700; font-size:1.7rem; line-height:1.4;
+    font-family:'Slackey', cursive;
+    font-size:1.7rem; line-height:1.4;
     text-transform:none; color:var(--ink);
     border-left-color: var(--gold);
     transform:rotate(0deg);
@@ -411,7 +411,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .zone-label.dimmed{ opacity:0.4; }
 #sec-t1t2 .zone-hl{ color:var(--gold); }
 #sec-t1t2 .year-counter{
-    font-family:'Paytone One', sans-serif; font-size:38px;
+    font-family:'Slackey', cursive; font-size:38px;
     fill:var(--azul); opacity:0;
   }
 #sec-t1t2 #court-lines-t2 line, #sec-t1t2 #court-lines-t2 circle{ stroke:var(--ink); stroke-width:1.5; opacity:0.3; }
@@ -423,8 +423,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .spacer{ height:30vh; }
 
 /* ---------- portada: la pelota crece hasta tapar la pantalla, revela el título y después
-   se convierte -con un fade- en el marco de una foto, con el subtítulo abajo ---------- */
-.dot-transition{ position:relative; height:340vh; }
+   se convierte -con un fade- en el marco de una foto, con el subtítulo abajo. Al final la
+   portada se achica hasta desaparecer (zoom inverso) y el cuerpo aparece con un fade. ---------- */
+.dot-transition{ position:relative; height:440vh; }
 .dot-transition-sticky{
   position:sticky; top:0; height:100vh; width:100%;
   display:flex; align-items:center; justify-content:center;
@@ -461,9 +462,8 @@ svg{ width:100%; height:auto; overflow:visible; }
   opacity:var(--dot-subtitle, 0);
 }
 .dot-transition-subtitle p{
-  font-family:'Slackey', cursive; font-weight:700;
-  font-size:clamp(1.3rem, 3.6vw, 2.1rem); line-height:1.35; letter-spacing:0.01em;
-  text-transform:uppercase;
+  font-family:'Slackey', cursive;
+  font-size:clamp(1.3rem, 3.6vw, 2.1rem); line-height:1.4; letter-spacing:0.01em;
   color:var(--naranja); max-width:22ch; margin:0 auto;
 }
 
@@ -513,8 +513,8 @@ svg{ width:100%; height:auto; overflow:visible; }
     padding:5px 12px 5px 16px; z-index:2;
   }
 #sec-t3-draft figcaption{
-    font-family:'Slackey', cursive; font-size:0.72rem; line-height:1.5;
-    color:var(--ink); opacity:0.65; margin-top:0.7rem; text-align:left;
+    font-family:'Slackey', cursive; font-size:0.82rem; line-height:1.55;
+    color:var(--ink); opacity:0.85; margin-top:0.7rem; text-align:left;
   }
 @media (max-width: 720px){#sec-t3-draft .draft-block{ grid-template-columns: 1fr; }#sec-t3-draft .photo-insert{ order:-1; max-width:320px; margin: 0 auto 1rem; }}
 #sec-t3-draft .bars-section{ max-width:980px; margin:0 auto; padding: 1rem 1.5rem 6rem; }
@@ -565,13 +565,13 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-draft .col.is-curry .col-value{ color:var(--naranja); font-weight:500; }
 #sec-t3-draft .col-name{
-    font-family:'Bricolage Grotesque', sans-serif; font-size:0.7rem; font-weight:500;
+    font-family:'Slackey', cursive; font-size:0.68rem;
     text-align:center; color:var(--ink); line-height:1.2; margin-top:0.15rem;
   }
 #sec-t3-draft .col.is-curry .col-name{ font-weight:600; color:var(--naranja); }
 #sec-t3-draft .bars-footer{
     margin-top:2rem; padding-top:1.3rem; border-top:2px dashed rgba(18,18,18,0.3);
-    font-family:'Paytone One', sans-serif; font-weight:700;
+    font-family:'Slackey', cursive;
     font-size:clamp(1.2rem, 2.6vw, 1.5rem); line-height:1.45; color:var(--ink);
   }
 #sec-t3-draft .bars-footer strong{ color:var(--naranja); }
@@ -579,7 +579,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     max-width:640px; margin:0 auto; padding:4rem 1.5rem 5rem; text-align:center;
   }
 #sec-t3-draft .hook-text{
-    font-family:'Paytone One', sans-serif; font-weight:700;
+    font-family:'Slackey', cursive;
     font-size:clamp(1.4rem, 3.2vw, 1.9rem); line-height:1.45; color:var(--ink);
     max-width:36ch; margin:0 auto;
   }
@@ -650,8 +650,8 @@ svg{ width:100%; height:auto; overflow:visible; }
     padding:3px 8px 3px 12px; z-index:2;
   }
 #sec-t3-line .photo-cap{
-    font-family:'Slackey', cursive; font-size:0.6rem; color:var(--ink);
-    opacity:0.7; margin-top:0.4rem; line-height:1.3;
+    font-family:'Slackey', cursive; font-size:0.72rem; color:var(--ink);
+    opacity:0.88; margin-top:0.4rem; line-height:1.35;
   }
 #sec-t3-line .attach-card{
     position:absolute; top:50%; left:50%; width:150px;
@@ -680,7 +680,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     text-align:center;
   }
 #sec-t3-line .payoff-quote{
-    font-family:'Paytone One', sans-serif; font-weight:500; font-style:italic;
+    font-family:'Slackey', cursive;
     font-size:clamp(1.5rem, 3.6vw, 2.1rem); line-height:1.45;
     color:var(--ink); max-width:34ch; margin:0 auto 3rem;
   }
@@ -759,7 +759,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t4 .lopez-card.visible{ opacity:1; transform:translateY(0) rotate(-2deg); }
 #sec-t4 .lopez-card .compare{ display:flex; justify-content:space-between; align-items:baseline; margin-top:0.4rem; }
-#sec-t4 .lopez-card .num{ font-family:'Paytone One', sans-serif; font-size:1.6rem; }
+#sec-t4 .lopez-card .num{ font-family:'Slackey', cursive; font-size:1.6rem; }
 #sec-t4 .lopez-card .num.small{ color:var(--muted); font-size:1.1rem; }
 #sec-t4 .lopez-card .num.big{ color:var(--gold); }
 #sec-t4 .lopez-card .lbl{ font-family:'Slackey', cursive; font-size:0.6rem; color:var(--muted); text-transform:uppercase; }
@@ -863,17 +863,17 @@ svg{ width:100%; height:auto; overflow:visible; }
     text-anchor:middle;
   }
 #sec-t5 .milestone-label{
-    font-family:'Bricolage Grotesque', sans-serif; font-size:11px; fill:var(--ink);
+    font-family:'Slackey', cursive; font-size:11px; fill:var(--ink);
     text-anchor:middle; font-weight:500;
   }
 #sec-t5 .closing-text{ max-width:640px; margin:0 auto; text-align:center; }
 #sec-t5 .closing-text p{ font-size:1.15rem; line-height:1.75; color:var(--ink); margin:0 0 1.6rem; }
 #sec-t5 .closing-text q{ font-style:italic; }
 #sec-t5 .closing-text .closing-line{
-    font-family:'Paytone One', sans-serif; font-weight:700;
+    font-family:'Slackey', cursive;
     font-size:clamp(1.3rem, 2.8vw, 1.7rem); line-height:1.45; color:var(--ink);
   }
-#sec-t5 .closing-text .closing-line strong{ font-family:inherit; color:var(--gold); font-weight:700; }
+#sec-t5 .closing-text .closing-line strong{ font-family:inherit; color:var(--gold); }
 </style>
 </head>
 <body>
@@ -1357,6 +1357,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   function clamp01(v){ return Math.max(0, Math.min(1, v)); }
 
   const dotTransitions = Array.from(document.querySelectorAll('.dot-transition'));
+  const introBlock = document.querySelector('#sec-t1t2 .intro-block');
 
   // pelota-cursor que revela el título letra a letra: cada carácter se envuelve en su
   // propio span para poder medir su posición y mover la pelota de forma fluida entre letras
@@ -1447,24 +1448,34 @@ svg{ width:100%; height:auto; overflow:visible; }
       const scrollable = r.height - vh;               // recorrido real mientras la pelota queda "pegada"
       const t = clamp01(scrollable > 0 ? -r.top / scrollable : 0);
 
-      // 1) la pelota crece hasta tapar la pantalla
-      const growT = clamp01(t / 0.4);
-      const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 110 * 0.85;
-      el.style.setProperty('--dot-scale', (growT * maxScale).toFixed(2));
+      // fase final: la portada se achica hasta desaparecer (zoom inverso al del arranque)
+      const collapseT = clamp01((t - 0.86) / 0.14);
 
-      // 2) título + epígrafe aparecen y vuelven a desaparecer
-      const labelT = rampUpDown(t, 0.35, 0.5, 0.62, 0.72);
-      el.style.setProperty('--dot-label', labelT.toFixed(2));
+      // 1) la pelota crece hasta tapar la pantalla; al final se achica de vuelta hasta un punto
+      const growT = clamp01(t / 0.30);
+      const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 110 * 0.85;
+      el.style.setProperty('--dot-scale', (growT * (1 - collapseT) * maxScale).toFixed(3));
+
+      // 2) título aparece y vuelve a desaparecer
+      const labelT = rampUpDown(t, 0.26, 0.38, 0.50, 0.58);
+      el.style.setProperty('--dot-label', labelT.toFixed(3));
 
       // 3) la pelota se convierte, con un fade, en el marco de la foto del triple
-      const photoT = clamp01((t - 0.68) / 0.17);
-      el.style.setProperty('--dot-photo', photoT.toFixed(2));
-      el.style.setProperty('--dot-ball-opacity', (1 - photoT).toFixed(2));
+      const photoT = clamp01((t - 0.54) / 0.12);
+      el.style.setProperty('--dot-photo', photoT.toFixed(3));
+      el.style.setProperty('--dot-ball-opacity', (1 - photoT).toFixed(3));
 
-      // 4) el subtítulo aparece abajo, ya con la foto en pantalla
-      const subtitleT = clamp01((t - 0.82) / 0.15);
-      el.style.setProperty('--dot-subtitle', subtitleT.toFixed(2));
+      // 4) el subtítulo aparece abajo; al colapsar se desvanece junto con la foto
+      const subtitleT = clamp01((t - 0.66) / 0.10) * (1 - collapseT);
+      el.style.setProperty('--dot-subtitle', subtitleT.toFixed(3));
     });
+
+    // 5) el cuerpo aparece con un fade una vez que la portada terminó de achicarse
+    if(introBlock){
+      const ir = introBlock.getBoundingClientRect();
+      const introFade = clamp01((vh - ir.top) / (vh * 0.35));
+      introBlock.style.setProperty('--intro-fade', introFade.toFixed(3));
+    }
   }
 
   let ticking = false;
