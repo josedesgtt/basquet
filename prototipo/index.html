@@ -45,18 +45,21 @@ body{
   display:block; font-family:'Martian Mono', monospace; font-size:0.8rem;
   letter-spacing:0.14em; text-transform:uppercase; color:var(--rojo); margin:0 0 1rem;
 }
-.ball-slide-title{ position:relative; display:inline-block; }
+.ball-slide-title{
+  position:relative; display:inline-block;
+  font-size:clamp(3rem, 11vw, 7.5rem);
+}
 .ball-slide-title .bst-text{
   display:block; margin:0;
   font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-  font-size:clamp(3rem, 11vw, 7.5rem); line-height:1.22; text-transform:uppercase;
+  font-size:1em; line-height:1.22; text-transform:uppercase;
   letter-spacing:-0.01em; color:var(--naranja); -webkit-text-stroke:1.5px var(--azul);
   max-width:16ch;
-  clip-path: inset(0 calc(100% - (var(--bst-progress, 0) * 100%)) 0 0);
 }
+.ball-slide-title .bst-text .ch{ opacity:0; }
 .ball-slide-title .bst-ball{
-  position:absolute; top:52%; left:calc(var(--bst-progress, 0) * 100%);
-  width:0.5em; height:0.5em; transform:translate(-50%, -50%);
+  position:absolute; top:0; left:0;
+  width:0.85em; height:0.85em; transform:translate(-50%, -50%);
   background-image:url('../inspo_datos/pelota_vector.png');
   background-size:contain; background-repeat:no-repeat; background-position:center;
   opacity:var(--bst-ball-opacity, 0);
@@ -447,13 +450,9 @@ svg{ width:100%; height:auto; overflow:visible; }
   position:relative; z-index:1; text-align:center; padding:0 1.5rem;
   opacity:var(--dot-label, 0);
 }
-.dot-transition-label .eyebrow{
-  display:block; font-family:'Martian Mono', monospace; font-size:0.8rem;
-  letter-spacing:0.14em; text-transform:uppercase; color:var(--azul); margin:0 0 0.9rem;
-}
 .dot-transition-title{
   display:block; font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-  font-size:clamp(2.8rem, 8.5vw, 6rem); line-height:1.18; text-transform:uppercase;
+  font-size:clamp(3.6rem, 16vw, 12rem); line-height:1.22; text-transform:uppercase;
   color:#0c0c0c; max-width:16ch; margin:0 auto;
 }
 .dot-transition-subtitle{
@@ -462,11 +461,11 @@ svg{ width:100%; height:auto; overflow:visible; }
   opacity:var(--dot-subtitle, 0);
 }
 .dot-transition-subtitle p{
-  font-family:'Public Sans', sans-serif; font-weight:600; font-style:italic;
-  font-size:clamp(1.4rem, 4.2vw, 2.3rem); line-height:1.35;
-  color:var(--naranja); max-width:20ch; margin:0 auto;
+  font-family:'Martian Mono', monospace; font-weight:700;
+  font-size:clamp(1.3rem, 3.6vw, 2.1rem); line-height:1.35; letter-spacing:0.01em;
+  text-transform:uppercase;
+  color:var(--naranja); max-width:22ch; margin:0 auto;
 }
-.dot-transition-subtitle p::before, .dot-transition-subtitle p::after{ content:'"'; }
 
 #sec-t3-line{ --muted:#8a97a8; }
 
@@ -892,14 +891,13 @@ svg{ width:100%; height:auto; overflow:visible; }
     </svg>
     <div class="dot-transition-circle"></div>
     <div class="dot-transition-photo">
-      <img src="../inspo_datos/chrisford.webp" alt="Chris Ford, de los Boston Celtics, en el instante de tirar el primer triple de la historia de la NBA">
+      <img src="../inspo_datos/tiro_al_arco.jpg" alt="Jugador saltando hacia el aro con la pelota en alto, en el instante previo al tiro">
     </div>
     <div class="dot-transition-label">
-      <span class="eyebrow">Cómo el triple reescribió el básquet</span>
       <span class="dot-transition-title">De la anécdota al arma letal</span>
     </div>
     <div class="dot-transition-subtitle">
-      <p>En 1980 era un tiro de desesperación. Hoy define quién gana.</p>
+      <p>Cómo el triple reescribió el básquet</p>
     </div>
   </div>
 </div>
@@ -1356,7 +1354,28 @@ svg{ width:100%; height:auto; overflow:visible; }
   function clamp01(v){ return Math.max(0, Math.min(1, v)); }
 
   const dotTransitions = Array.from(document.querySelectorAll('.dot-transition'));
-  const ballSlideTitles = Array.from(document.querySelectorAll('.ball-slide-title'));
+
+  // pelota-cursor que revela el título letra a letra: cada carácter se envuelve en su
+  // propio span para poder medir su posición y mover la pelota de forma fluida entre letras
+  const ballSlideTitles = Array.from(document.querySelectorAll('.ball-slide-title')).map(el => {
+    const textEl = el.querySelector('.bst-text');
+    const ball = el.querySelector('.bst-ball');
+    const raw = textEl.textContent;
+    textEl.textContent = '';
+    const chars = [];
+    Array.from(raw).forEach(c => {
+      if(/\s/.test(c)){
+        textEl.appendChild(document.createTextNode(c));
+      } else {
+        const span = document.createElement('span');
+        span.className = 'ch';
+        span.textContent = c;
+        textEl.appendChild(span);
+        chars.push(span);
+      }
+    });
+    return { el, ball, chars };
+  });
 
   const scrubParagraphs = Array.from(document.querySelectorAll('.scrub-text')).map(p => {
     const words = p.textContent.split(/(\s+)/);
@@ -1367,16 +1386,40 @@ svg{ width:100%; height:auto; overflow:visible; }
   function update(){
     const vh = window.innerHeight;
 
-    ballSlideTitles.forEach(el => {
+    ballSlideTitles.forEach(({ el, ball, chars }) => {
       const section = el.closest('.ball-slide-section');
       const r = section.getBoundingClientRect();
       const scrollable = r.height - vh;                // recorrido real mientras el título queda "pegado"
       const raw = clamp01(scrollable > 0 ? -r.top / scrollable : 0);
       const t = clamp01(raw / 0.72);                    // la pelota termina de revelar el texto al 72% del recorrido, el resto es una pausa antes de soltar el scroll
-      el.style.setProperty('--bst-progress', t.toFixed(3));
       // la pelota se desvanece justo antes de arrancar y justo al terminar, para no quedar pegada en los bordes
       const ballOpacity = clamp01(Math.min(t, 1 - t) * 14);
       el.style.setProperty('--bst-ball-opacity', ballOpacity.toFixed(2));
+
+      const n = chars.length;
+      if(n === 0) return;
+      const floatIdx = clamp01(t) * n;
+      chars.forEach((ch, i) => { ch.style.opacity = i < floatIdx ? 1 : 0; });
+
+      // posición del "cursor" justo después del último carácter revelado: interpolada
+      // entre letra y letra para que la pelota se mueva fluida en vez de saltar
+      const containerRect = el.getBoundingClientRect();
+      const cursorAt = idx => {
+        if(idx <= 0){
+          const cr = chars[0].getBoundingClientRect();
+          return { x: cr.left, y: cr.top + cr.height / 2 };
+        }
+        const cr = chars[Math.min(idx, n) - 1].getBoundingClientRect();
+        return { x: cr.right, y: cr.top + cr.height / 2 };
+      };
+      const lo = Math.floor(floatIdx);
+      const frac = floatIdx - lo;
+      const a = cursorAt(lo);
+      const b = cursorAt(Math.min(lo + 1, n));
+      const ballX = a.x + (b.x - a.x) * frac - containerRect.left;
+      const ballY = a.y + (b.y - a.y) * frac - containerRect.top;
+      ball.style.left = ballX.toFixed(1) + 'px';
+      ball.style.top = ballY.toFixed(1) + 'px';
     });
 
     scrubParagraphs.forEach(({ el, spans }) => {
