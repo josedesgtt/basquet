@@ -205,7 +205,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .axis{ opacity:0; transition:opacity 0.9s ease; }
 #sec-t1t2 .axis.revealed{ opacity:1; }
 #sec-t1t2 .axis path, #sec-t1t2 .axis line{ stroke: rgba(27,54,84,0.25); }
-#sec-t1t2 .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+#sec-t1t2 .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 14px; transition: fill 0.4s ease; }
+#sec-t1t2 .axis .tick.axis-year-active text{ fill: var(--gold); font-weight:700; font-size:16px; }
+#sec-t1t2 .year-hl{ color:var(--gold); font-family:'Martian Mono', monospace; font-weight:500; }
 #sec-t1t2 #gridlines{ opacity:0; transition:opacity 0.9s ease; }
 #sec-t1t2 #gridlines.revealed{ opacity:1; }
 #sec-t1t2 .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
@@ -276,8 +278,11 @@ svg{ width:100%; height:auto; overflow:visible; }
     display:flex;
     align-items:flex-start;
     gap:0.9rem;
-    border-top:2px dashed rgba(27,54,84,0.35);
-    padding-top:1rem;
+    background:var(--papel);
+    border:2px solid var(--ink);
+    border-left:5px solid var(--red);
+    box-shadow:5px 5px 0 rgba(27,54,84,0.18);
+    padding:0.9rem 1.1rem;
     opacity:0;
     transform:translateY(8px);
     transition: opacity 0.5s ease, transform 0.5s ease;
@@ -608,7 +613,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 @media (max-width: 860px){#sec-t3-line .sticky-graphic{ flex-direction:column; gap:1rem; }#sec-t3-line .chart-wrap{ width:min(92vw, 720px); }#sec-t3-line .side-panel{ width:140px; height:170px; }}
 
 #sec-t3-line .axis path, #sec-t3-line .axis line{ stroke: rgba(27,54,84,0.25); }
-#sec-t3-line .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 11px; }
+#sec-t3-line .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 13px; transition: fill 0.4s ease; }
+#sec-t3-line .axis .tick.axis-year-active text{ fill: var(--gold); font-weight:700; font-size:15px; }
+#sec-t3-line .year-hl{ color:var(--gold); font-family:'Martian Mono', monospace; font-weight:500; }
 #sec-t3-line .gridline{ stroke:rgba(27,54,84,0.09); stroke-width:1; }
 #sec-t3-line .bg-line{ fill:none; stroke:var(--muted); stroke-width:2; opacity:0.55; }
 #sec-t3-line .bg-name{ font-family:'Martian Mono', monospace; font-size:10px; fill:var(--muted); opacity:0.7; }
@@ -1003,14 +1010,14 @@ svg{ width:100%; height:auto; overflow:visible; }
 
   <div class="steps">
     <div class="step" data-step="0">
-      <div class="step-card">1979-80: la NBA introduce la línea de triple. Los equipos la usan apenas <strong>2.8 veces</strong> por partido.</div>
+      <div class="step-card"><span class="year-hl">1979-80</span>: la NBA introduce la línea de triple. Los equipos la usan apenas <strong>2.8 veces</strong> por partido.</div>
     </div>
     <div class="step" data-step="1">
       <div class="step-card">Durante 15 años el triple crece, pero muy despacio: de 2.8 a <strong>9.9</strong> intentos por partido. Sigue siendo terreno de especialistas, no una estrategia de equipo.</div>
     </div>
     <div class="step" data-step="2">
       <div class="step-col">
-        <div class="step-card">En 1994, la liga se impacienta. Acerca físicamente la línea de triple — de 23'9" a 22 pies parejos — para obligar a tirar más de afuera.</div>
+        <div class="step-card">En <span class="year-hl">1994</span>, la liga se impacienta. Acerca físicamente la línea de triple — de 23'9" a 22 pies parejos — para obligar a tirar más de afuera.</div>
         <div class="miller-aside">
           <div class="miller-photo">
             <img src="../inspo_datos/reggie.png" alt="Reggie Miller">
@@ -1029,7 +1036,7 @@ svg{ width:100%; height:auto; overflow:visible; }
       </div>
     </div>
     <div class="step" data-step="3">
-      <div class="step-card">En 1997, devuelven la línea a su lugar. Los intentos caen — pero no vuelven al punto de partida.</div>
+      <div class="step-card">En <span class="year-hl">1997</span>, devuelven la línea a su lugar. Los intentos caen — pero no vuelven al punto de partida.</div>
     </div>
     <div class="step" data-step="4">
       <div class="step-card reflective">La liga movió la canasta para cambiar el juego, y funcionó solo mientras duró la regla. Lo que en serio lo cambió para siempre, unos años después, no fue una línea distinta. Fue una idea.</div>
@@ -1155,10 +1162,10 @@ svg{ width:100%; height:auto; overflow:visible; }
 
   <div class="steps">
     <div class="step" data-step="0">
-      <div class="step-card">Temporada 2012-13: Curry bate el récord de triples en una temporada con <strong>272</strong>. Es un buen tirador entre varios buenos tiradores — todavía nadie sospecha lo que viene.</div>
+      <div class="step-card">Temporada <span class="year-hl">2012-13</span>: Curry bate el récord de triples en una temporada con <strong>272</strong>. Es un buen tirador entre varios buenos tiradores — todavía nadie sospecha lo que viene.</div>
     </div>
     <div class="step" data-step="1">
-      <div class="step-card">Temporada 2015-16: Curry no solo vuelve a romper su propio récord. Lo destroza. Termina con <strong>402</strong> triples — más de 100 por encima de cualquier marca anterior en la historia de la liga.</div>
+      <div class="step-card">Temporada <span class="year-hl">2015-16</span>: Curry no solo vuelve a romper su propio récord. Lo destroza. Termina con <strong>402</strong> triples — más de 100 por encima de cualquier marca anterior en la historia de la liga.</div>
     </div>
     <div class="step" data-step="2">
       <div class="step-card">Ese mismo año los Warriors terminan <strong>73-9</strong>, el mejor récord regular de la historia de la NBA, y Curry es el primer <strong>MVP unánime</strong>.</div>
@@ -1447,13 +1454,14 @@ const data = [
 ];
 
 // Config de cada step: hasta qué índice de datos dibujar,
-// si se muestra la franja de "línea acortada", y color del punto líder.
+// si se muestra la franja de "línea acortada", el color del punto líder,
+// y el año que nombra el texto de ese paso (para resaltarlo en el eje X).
 const steps = [
-  { to: 0,  band:false, color:"var(--gold)" },
-  { to: 14, band:false, color:"var(--gold)" },
-  { to: 17, band:true,  color:"var(--red)"  },
-  { to: 20, band:true,  color:"var(--gold)" },
-  { to: 20, band:true,  color:"var(--gold)" }
+  { to: 0,  band:false, color:"var(--gold)", namedSeason:"1979-80" },
+  { to: 14, band:false, color:"var(--gold)", namedSeason:null      },
+  { to: 17, band:true,  color:"var(--red)",  namedSeason:"1994-95" },
+  { to: 20, band:true,  color:"var(--gold)", namedSeason:"1997-98" },
+  { to: 20, band:true,  color:"var(--gold)", namedSeason:null      }
 ];
 
 const svg = d3.select("#chart");
@@ -1484,7 +1492,7 @@ d3.select("#gridlines")
   .attr("y1", d => y(d)).attr("y2", d => y(d));
 
 // Ejes
-const tickSeasons = ["1979-80","1984-85","1989-90","1994-95","1999-2000"];
+const tickSeasons = ["1979-80","1984-85","1989-90","1994-95","1997-98","1999-2000"];
 svg.select("#x-axis")
   .attr("transform", `translate(0,${height - margin.bottom})`)
   .call(d3.axisBottom(x).tickValues(tickSeasons));
@@ -1557,6 +1565,10 @@ function render(stepConf, animate){
 
   svg.select("#rule-band").classed("visible", stepConf.band);
   svg.select("#rule-label").classed("visible", stepConf.band);
+
+  // resalta en el eje X el año que nombra el texto de este paso
+  svg.select("#x-axis").selectAll(".tick")
+    .classed("axis-year-active", function(){ return d3.select(this).select("text").text() === stepConf.namedSeason; });
 }
 
 // Estado inicial (antes de scrollear)
@@ -1995,6 +2007,11 @@ function renderAt(t, yMax, colorT){
   curryPath.attr("stroke", col);
   curryDot.attr("fill", col);
   valueTag.attr("fill", col);
+
+  // resalta en el eje X la temporada más cercana a la posición actual de la línea
+  const targetSeason = seasons[Math.min(seasons.length - 1, Math.round(t))];
+  xAxisG.selectAll(".tick")
+    .classed("axis-year-active", function(){ return d3.select(this).select("text").text() === targetSeason; });
 }
 
 renderAt(3, 300, 0);
