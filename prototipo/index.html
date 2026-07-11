@@ -34,19 +34,33 @@ body{
 .scrub-text span{ color:var(--muted); opacity:0.4; transition:color 0.2s ease, opacity 0.2s ease; }
 .scrub-text span.lit{ color:inherit; opacity:1; }
 
-/* ---------- título menor: una pelota se desliza a la derecha y revela el texto ---------- */
+/* ---------- título menor: pantalla completa, una pelota se desliza a la derecha y revela el texto ---------- */
+.ball-slide-section{ position:relative; height:200vh; }
+.ball-slide-sticky{
+  position:sticky; top:0; height:100vh; width:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:hidden; text-align:center; padding:0 1.5rem;
+}
+.ball-slide-eyebrow{
+  display:block; font-family:'Martian Mono', monospace; font-size:0.8rem;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--rojo); margin:0 0 1rem;
+}
 .ball-slide-title{ position:relative; display:inline-block; }
 .ball-slide-title .bst-text{
-  display:block;
+  display:block; margin:0;
+  font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+  font-size:clamp(3rem, 11vw, 7.5rem); line-height:1.22; text-transform:uppercase;
+  letter-spacing:-0.01em; color:var(--naranja); -webkit-text-stroke:1.5px var(--azul);
+  max-width:16ch;
   clip-path: inset(0 calc(100% - (var(--bst-progress, 0) * 100%)) 0 0);
 }
 .ball-slide-title .bst-ball{
   position:absolute; top:52%; left:calc(var(--bst-progress, 0) * 100%);
-  width:0.75em; height:0.75em; transform:translate(-50%, -50%);
+  width:0.5em; height:0.5em; transform:translate(-50%, -50%);
   background-image:url('../inspo_datos/pelota_vector.png');
   background-size:contain; background-repeat:no-repeat; background-position:center;
   opacity:var(--bst-ball-opacity, 0);
-  filter:drop-shadow(0 2px 3px rgba(27,54,84,0.25));
+  filter:drop-shadow(0 3px 5px rgba(27,54,84,0.25));
   pointer-events:none;
 }
 
@@ -89,17 +103,6 @@ body{
     -webkit-text-stroke: 1.5px var(--azul);
     max-width:15ch;
   }
-#sec-t1t2 .bajada{
-    font-family:'Public Sans', sans-serif;
-    font-weight:500;
-    font-style:italic;
-    font-size:clamp(1.05rem, 2.4vw, 1.3rem);
-    max-width:32ch;
-    line-height:1.5;
-    margin:0;
-    opacity:0.85;
-  }
-#sec-t1t2 .bajada::before, #sec-t1t2 .bajada::after{ content:'"'; }
 #sec-t1t2 .intro-block{
     max-width:1040px;
     margin:0 auto;
@@ -414,8 +417,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .t2-court.visible{ opacity:1; }
 #sec-t1t2 .spacer{ height:30vh; }
 
-/* ---------- transición entre tramos: una pelota que crece hasta tapar la pantalla ---------- */
-.dot-transition{ position:relative; height:220vh; }
+/* ---------- portada: la pelota crece hasta tapar la pantalla, revela el título y después
+   se convierte -con un fade- en el marco de una foto, con el subtítulo abajo ---------- */
+.dot-transition{ position:relative; height:340vh; }
 .dot-transition-sticky{
   position:sticky; top:0; height:100vh; width:100%;
   display:flex; align-items:center; justify-content:center;
@@ -426,8 +430,16 @@ svg{ width:100%; height:auto; overflow:visible; }
   background-image:url('../inspo_datos/pelota_vector.png');
   background-size:contain; background-repeat:no-repeat; background-position:center;
   filter:drop-shadow(0 4px 6px rgba(27,54,84,0.25));
+  opacity:var(--dot-ball-opacity, 1);
   transform:scale(var(--dot-scale, 0));
 }
+.dot-transition-photo{
+  position:absolute; width:110px; height:110px; border-radius:50%; overflow:hidden;
+  box-shadow:0 4px 16px rgba(27,54,84,0.3);
+  opacity:var(--dot-photo, 0);
+  transform:scale(var(--dot-scale, 0));
+}
+.dot-transition-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
 .dot-transition-label{
   position:relative; z-index:1; text-align:center; padding:0 1.5rem;
   opacity:var(--dot-label, 0);
@@ -441,6 +453,17 @@ svg{ width:100%; height:auto; overflow:visible; }
   font-size:clamp(2.8rem, 8.5vw, 6rem); line-height:1.18; text-transform:uppercase;
   color:#0c0c0c; max-width:16ch; margin:0 auto;
 }
+.dot-transition-subtitle{
+  position:absolute; left:0; right:0; bottom:7%; z-index:2;
+  text-align:center; padding:0 1.5rem;
+  opacity:var(--dot-subtitle, 0);
+}
+.dot-transition-subtitle p{
+  font-family:'Public Sans', sans-serif; font-weight:600; font-style:italic;
+  font-size:clamp(1.4rem, 4.2vw, 2.3rem); line-height:1.35;
+  color:var(--naranja); max-width:20ch; margin:0 auto;
+}
+.dot-transition-subtitle p::before, .dot-transition-subtitle p::after{ content:'"'; }
 
 #sec-t3-line{ --muted:#8a97a8; }
 
@@ -684,23 +707,11 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t3-line .step-card strong{ font-family:'Martian Mono', monospace; color:var(--gold); font-weight:500; }
 #sec-t3-line .spacer{ height:25vh; }
 
-#sec-t4 .tramo-header, #sec-t5 .tramo-header{
-  padding: 5rem 1.5rem 3.5rem; max-width: 1000px; margin: 0 auto; text-align:center;
-}
 #sec-t4 .halftone{
     background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
     background-size: 9px 9px;
   }
-#sec-t4 .tramo-header{ padding: 4rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
-#sec-t4 .tramo-header .eyebrow{
-    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
-    text-transform:uppercase; color:var(--red); margin-bottom:0.75rem;
-  }
-#sec-t4 .tramo-header h1{
-    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.22; text-transform:uppercase;
-    letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
-  }
+#sec-t4 .tramo-header{ padding: 3rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
 #sec-t4 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
 #sec-t4 .scrolly{ position:relative; }
 #sec-t4 .sticky-graphic{
@@ -776,16 +787,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     background-image: radial-gradient(circle, rgba(27,54,84,0.13) 1.3px, transparent 1.3px);
     background-size: 9px 9px;
   }
-#sec-t5 .tramo-header{ padding: 4rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
-#sec-t5 .tramo-header .eyebrow{
-    font-family:'Martian Mono', monospace; font-size:0.75rem; letter-spacing:0.14em;
-    text-transform:uppercase; color:var(--red); margin-bottom:0.75rem;
-  }
-#sec-t5 .tramo-header h1{
-    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
-    font-size:clamp(3.4rem, 14vw, 9rem); line-height:1.22; text-transform:uppercase;
-    letter-spacing:-0.01em; margin:0 0 1rem; color:var(--gold); -webkit-text-stroke:1.3px var(--ink);
-  }
+#sec-t5 .tramo-header{ padding: 3rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
 #sec-t5 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
 #sec-t5 .scrolly{ position:relative; }
 #sec-t5 .sticky-graphic{
@@ -884,15 +886,18 @@ svg{ width:100%; height:auto; overflow:visible; }
       <path d="M 500 0 L 500 500" />
     </svg>
     <div class="dot-transition-circle"></div>
+    <div class="dot-transition-photo">
+      <img src="../inspo_datos/chrisford.webp" alt="Chris Ford, de los Boston Celtics, en el instante de tirar el primer triple de la historia de la NBA">
+    </div>
     <div class="dot-transition-label">
       <span class="eyebrow">Cómo el triple reescribió el básquet</span>
       <span class="dot-transition-title">De la anécdota al arma letal</span>
     </div>
+    <div class="dot-transition-subtitle">
+      <p>En 1980 era un tiro de desesperación. Hoy define quién gana.</p>
+    </div>
   </div>
 </div>
-<section class="masthead-tail halftone">
-  <p class="bajada">En 1980 era un tiro de desesperación. Hoy define quién gana.</p>
-</section>
 
 <section class="intro-block">
   <div class="text-col">
@@ -986,7 +991,7 @@ svg{ width:100%; height:auto; overflow:visible; }
         </g>
 
         <circle id="pulse-ring" class="pulse-ring" r="10"></circle>
-        <image id="lead-ball" class="lead-ball" width="42" height="42" href="../inspo_datos/ball.png"></image>
+        <image id="lead-ball" class="lead-ball" width="42" height="42" href="../inspo_datos/pelota_vector.png"></image>
         <text id="value-tag" class="value-tag"></text>
       </svg>
       <div class="chart-caption t1-remnants" id="chart-caption">
@@ -1058,13 +1063,13 @@ svg{ width:100%; height:auto; overflow:visible; }
 </div>
 
 
-<div class="dot-transition halftone">
-  <div class="dot-transition-sticky">
-    <div class="dot-transition-circle"></div>
-    <div class="dot-transition-label">
-      <span class="eyebrow">Tramo 3</span>
-      <span class="dot-transition-title">Curry rompe la escala</span>
-    </div>
+<div class="ball-slide-section halftone">
+  <div class="ball-slide-sticky">
+    <span class="ball-slide-eyebrow">Tramo 3</span>
+    <h1 class="ball-slide-title">
+      <span class="bst-text">Curry rompe la escala</span>
+      <span class="bst-ball"></span>
+    </h1>
   </div>
 </div>
 
@@ -1190,13 +1195,13 @@ svg{ width:100%; height:auto; overflow:visible; }
 </div>
 
 
-<div class="dot-transition halftone">
-  <div class="dot-transition-sticky">
-    <div class="dot-transition-circle"></div>
-    <div class="dot-transition-label">
-      <span class="eyebrow">Tramo 4</span>
-      <span class="dot-transition-title">Hasta los pívots tiran de afuera</span>
-    </div>
+<div class="ball-slide-section halftone">
+  <div class="ball-slide-sticky">
+    <span class="ball-slide-eyebrow">Tramo 4</span>
+    <h1 class="ball-slide-title">
+      <span class="bst-text">Hasta los pívots tiran de afuera</span>
+      <span class="bst-ball"></span>
+    </h1>
   </div>
 </div>
 
@@ -1205,11 +1210,6 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 
 <div class="tramo-header halftone">
-  <div class="eyebrow">Prototipo — Tramo 4</div>
-  <h1 class="ball-slide-title">
-    <span class="bst-text">Hasta los pívots tiran de afuera</span>
-    <span class="bst-ball"></span>
-  </h1>
   <p class="scrub-text">Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
 </div>
 
@@ -1263,13 +1263,13 @@ svg{ width:100%; height:auto; overflow:visible; }
 </div>
 
 
-<div class="dot-transition halftone">
-  <div class="dot-transition-sticky">
-    <div class="dot-transition-circle"></div>
-    <div class="dot-transition-label">
-      <span class="eyebrow">Tramo 5</span>
-      <span class="dot-transition-title">¿Se rompió el juego?</span>
-    </div>
+<div class="ball-slide-section halftone">
+  <div class="ball-slide-sticky">
+    <span class="ball-slide-eyebrow">Tramo 5</span>
+    <h1 class="ball-slide-title">
+      <span class="bst-text">¿Se rompió el juego?</span>
+      <span class="bst-ball"></span>
+    </h1>
   </div>
 </div>
 
@@ -1278,11 +1278,6 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 
 <div class="tramo-header halftone">
-  <div class="eyebrow">Prototipo — Tramo 5</div>
-  <h1 class="ball-slide-title">
-    <span class="bst-text">¿Se rompió el juego?</span>
-    <span class="bst-ball"></span>
-  </h1>
   <p class="scrub-text">El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
 </div>
 
@@ -1366,10 +1361,11 @@ svg{ width:100%; height:auto; overflow:visible; }
     const vh = window.innerHeight;
 
     ballSlideTitles.forEach(el => {
-      const r = el.getBoundingClientRect();
-      const start = vh * 0.8;   // la pelota arranca a deslizarse cuando el título entra por abajo
-      const end = vh * 0.45;    // termina de revelarlo del todo acá
-      const t = clamp01((start - r.top) / (start - end));
+      const section = el.closest('.ball-slide-section');
+      const r = section.getBoundingClientRect();
+      const scrollable = r.height - vh;                // recorrido real mientras el título queda "pegado"
+      const raw = clamp01(scrollable > 0 ? -r.top / scrollable : 0);
+      const t = clamp01(raw / 0.72);                    // la pelota termina de revelar el texto al 72% del recorrido, el resto es una pausa antes de soltar el scroll
       el.style.setProperty('--bst-progress', t.toFixed(3));
       // la pelota se desvanece justo antes de arrancar y justo al terminar, para no quedar pegada en los bordes
       const ballOpacity = clamp01(Math.min(t, 1 - t) * 14);
@@ -1385,15 +1381,36 @@ svg{ width:100%; height:auto; overflow:visible; }
       spans.forEach((s, i) => s.classList.toggle('lit', i < litCount));
     });
 
+    // sube de 0 a 1 entre [inStart,inEnd], se mantiene en 1, y si se pasan outStart/outEnd baja de nuevo a 0
+    function rampUpDown(t, inStart, inEnd, outStart, outEnd){
+      const rising = clamp01((t - inStart) / (inEnd - inStart));
+      if(outStart === undefined) return rising;
+      const falling = 1 - clamp01((t - outStart) / (outEnd - outStart));
+      return Math.min(rising, falling);
+    }
+
     dotTransitions.forEach(el => {
       const r = el.getBoundingClientRect();
-      const scrollable = r.height - vh;               // recorrido real mientras el punto queda "pegado"
+      const scrollable = r.height - vh;               // recorrido real mientras la pelota queda "pegada"
       const t = clamp01(scrollable > 0 ? -r.top / scrollable : 0);
-      const growT = clamp01(t / 0.7);                  // el punto termina de crecer al 70% del recorrido
+
+      // 1) la pelota crece hasta tapar la pantalla
+      const growT = clamp01(t / 0.4);
       const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 110 * 0.85;
       el.style.setProperty('--dot-scale', (growT * maxScale).toFixed(2));
-      const labelT = clamp01((t - 0.55) / 0.35);       // el título del tramo siguiente aparece al final
+
+      // 2) título + epígrafe aparecen y vuelven a desaparecer
+      const labelT = rampUpDown(t, 0.35, 0.5, 0.62, 0.72);
       el.style.setProperty('--dot-label', labelT.toFixed(2));
+
+      // 3) la pelota se convierte, con un fade, en el marco de la foto del triple
+      const photoT = clamp01((t - 0.68) / 0.17);
+      el.style.setProperty('--dot-photo', photoT.toFixed(2));
+      el.style.setProperty('--dot-ball-opacity', (1 - photoT).toFixed(2));
+
+      // 4) el subtítulo aparece abajo, ya con la foto en pantalla
+      const subtitleT = clamp01((t - 0.82) / 0.15);
+      el.style.setProperty('--dot-subtitle', subtitleT.toFixed(2));
     });
   }
 
