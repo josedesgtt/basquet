@@ -1728,9 +1728,11 @@ const t2ColorScale = d3.scaleLinear()
   .range(["#F2E8D5", "#CC5C29", "#5C3D12"])
   .interpolate(d3.interpolateRgb);
 
-// Un patrón de puntitos por zona: el fondo del patrón lleva el color de la zona
-// (heatmap) y encima una trama de puntos onyx chiquitos. Las zonas no destacadas
-// se rellenan con este patrón; la destacada, con color plano.
+// Un patrón de puntitos por zona: fondo vacío (color papel, = lo que hay detrás
+// en la página) y los puntos del propio color de la zona. Las zonas no destacadas
+// se rellenan con este patrón (área "liviana", solo puntos de color); la destacada,
+// con color plano. El fondo papel evita que los puntos de una zona de atrás se
+// cuelen por los huecos de las de adelante (las áreas se superponen).
 const t2Defs = d3.select("#chart defs");
 Object.keys(zoneData).forEach(key => {
   const p = t2Defs.append("pattern")
@@ -1738,7 +1740,7 @@ Object.keys(zoneData).forEach(key => {
     .attr("width", 8).attr("height", 8)
     .attr("patternUnits", "userSpaceOnUse");
   p.append("rect").attr("class", "ptn-bg").attr("width", 8).attr("height", 8).attr("fill", "#F2E8D5");
-  p.append("circle").attr("cx", 4).attr("cy", 4).attr("r", 1.15).attr("fill", "#121212").attr("opacity", 0.34);
+  p.append("circle").attr("class", "ptn-dot").attr("cx", 4).attr("cy", 4).attr("r", 1.6).attr("fill", "#CC5C29");
 });
 
 // cada step nombra UNA zona (o ninguna) para destacar con textura plana —
@@ -1762,9 +1764,8 @@ function renderT2(stepConf, animate){
     const shapes = zone.shapeSel.map(s => d3.select(s));
     const color = t2ColorScale(value);
 
-    // el fondo del patrón sigue al color de la zona, así los puntos quedan
-    // sobre el mismo tono que tendría en plano
-    d3.select("#ptn-" + key + " .ptn-bg").attr("fill", color);
+    // los puntos del patrón llevan el color de la zona (el fondo queda vacío/papel)
+    d3.select("#ptn-" + key + " .ptn-dot").attr("fill", color);
 
     shapes.forEach(sel => {
       if(dimmed){
