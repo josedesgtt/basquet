@@ -398,22 +398,20 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .t1-remnants.hidden{ opacity:0; }
 #sec-t1t2 .t2-steps{ counter-reset: stepnum; }
 #sec-t1t2 .zone-shape{ stroke:var(--ink); stroke-width:1; transition: stroke 0.4s ease, stroke-width 0.4s ease, opacity 0.4s ease, filter 0.4s ease; }
-#sec-t1t2 .zone-shape.highlighted{ stroke: var(--gold); stroke-width:3; }
-#sec-t1t2 .zone-shape.dimmed{ opacity:0.25; filter:grayscale(0.7); }
+#sec-t1t2 .zone-shape.highlighted{ stroke: var(--gold); stroke-width:9; }
+#sec-t1t2 .zone-shape.dimmed{ opacity:0.35; filter:grayscale(0.7); }
 #sec-t1t2 .zone-label{
     font-family:'Martian Mono', monospace; font-weight:500; font-size:15px;
     fill:var(--ink); text-anchor:middle; dominant-baseline:central;
     paint-order: stroke; stroke: var(--papel); stroke-width:4px; stroke-linejoin:round;
     transition: opacity 0.4s ease;
   }
-#sec-t1t2 .zone-sub{
-    font-family:'Martian Mono', monospace; font-size:9px;
-    fill:var(--ink); text-anchor:middle; opacity:0.8;
-    paint-order: stroke; stroke: var(--papel); stroke-width:3px; stroke-linejoin:round;
-    transition: opacity 0.4s ease;
+#sec-t1t2 .zone-label.dimmed{ opacity:0.4; }
+#sec-t1t2 .zone-hl{ color:var(--gold); }
+#sec-t1t2 .year-counter{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:38px;
+    fill:var(--red); opacity:0;
   }
-#sec-t1t2 .zone-label.dimmed{ opacity:0.3; }
-#sec-t1t2 .zone-sub.dimmed{ opacity:0.3; }
 #sec-t1t2 #court-lines-t2 line, #sec-t1t2 #court-lines-t2 circle{ stroke:var(--ink); stroke-width:1.5; opacity:0.3; }
 #sec-t1t2 .hook-dot{ fill: var(--gold); opacity:0; transition: opacity 0.6s ease; }
 #sec-t1t2 .hook-dot.visible{ opacity:1; animation: hookpulse 1.4s ease-in-out infinite; }
@@ -986,15 +984,11 @@ svg{ width:100%; height:auto; overflow:visible; }
           <circle id="hook-dot" class="hook-dot" cx="340" cy="276" r="7"></circle>
 
           <text class="zone-label" id="label-ra" x="340" y="450"></text>
-          <text class="zone-sub" x="340" y="462">restringida</text>
           <text class="zone-label" id="label-paint" x="340" y="400"></text>
-          <text class="zone-sub" x="340" y="413">pintura</text>
           <text class="zone-label" id="label-mid" x="215" y="440"></text>
-          <text class="zone-sub" x="215" y="453">media dist.</text>
           <text class="zone-label" id="label-corner" x="152" y="440"></text>
-          <text class="zone-sub" x="152" y="453">corner 3</text>
           <text class="zone-label" id="label-above" x="340" y="130"></text>
-          <text class="zone-sub" x="340" y="143">arriba del arco</text>
+          <text id="year-counter" class="year-counter" x="340" y="30" text-anchor="middle"></text>
         </g>
 
         <circle id="pulse-ring" class="pulse-ring" r="10"></circle>
@@ -1044,15 +1038,21 @@ svg{ width:100%; height:auto; overflow:visible; }
 
     <div class="t2-steps">
       <div class="step" data-t2step="0">
-        <div class="step-card">2003. Daryl Morey, un ingeniero informático del MIT sin haber jugado nunca profesionalmente, entra a los Celtics. Tres años después ya es asistente de gerente general en los Rockets. Ese año, <strong>35.7%</strong> de todos los tiros de la liga salían de media distancia — la zona más usada de toda la cancha.</div>
+        <div class="step-card">2003. Daryl Morey, un ingeniero informático del MIT sin haber jugado nunca profesionalmente, entra a los Celtics. Tres años después ya es asistente de gerente general en los Rockets. Ese año, <strong>35.7%</strong> de todos los tiros de la liga salían de <strong class="zone-hl">media distancia</strong> — la zona más usada de toda la cancha.</div>
       </div>
       <div class="step" data-t2step="1">
-        <div class="step-card">Morey hizo una cuenta simple: un triple al 35% vale lo mismo, en promedio, que un doble al 70%. Casi nadie tira 70% desde media distancia. El mid-range era, en los papeles, <strong>el peor tiro del básquet</strong>.</div>
+        <div class="step-card">Morey hizo una cuenta simple: un triple vale un 50% más que un doble, así que ni hace falta acertarlo tan seguido para que rinda lo mismo. Casi nadie tira tan bien desde la <strong class="zone-hl">media distancia</strong>. En los papeles, era <strong>el peor tiro del básquet</strong>: ni tan cerca del aro como para entrar fácil, ni vale tanto como el triple.</div>
       </div>
       <div class="step" data-t2step="2">
-        <div class="step-card">Veinte años después, la media distancia pasó de 35.7% a apenas <strong>10.05%</strong> de los tiros de la liga — una caída de casi 26 puntos. El triple de arriba del arco casi se triplicó, y hasta el corner 3 se duplicó.</div>
+        <div class="step-card">Veinte años después, la <strong class="zone-hl">media distancia</strong> pasó de 35.7% a apenas <strong>10.05%</strong> de los tiros de la liga — una caída de casi 26 puntos.</div>
       </div>
       <div class="step" data-t2step="3">
+        <div class="step-card">El triple de <strong class="zone-hl">arriba del arco</strong> casi se triplicó en el mismo período.</div>
+      </div>
+      <div class="step" data-t2step="4">
+        <div class="step-card">Y hasta el <strong class="zone-hl">corner 3</strong> — el triple más corto de la cancha — se duplicó.</div>
+      </div>
+      <div class="step" data-t2step="5">
         <div class="step-card">El cambio de reglas del juego ya estaba escrito. Solo faltaba alguien que llevara esa lógica al extremo.</div>
       </div>
     </div>
@@ -1673,11 +1673,11 @@ window.addEventListener("resize", scroller.resize);
 // ============ TRAMO 2: Moreyball (shot chart) ============
 
 const zoneData = {
-  ra:     { before: 31.32, after: 28.41, shapeSel: "#zone-ra",     labelSel: "#label-ra"     },
-  paint:  { before: 14.42, after: 20.04, shapeSel: "#zone-paint",  labelSel: "#label-paint"  },
-  mid:    { before: 35.70, after: 10.05, shapeSel: "#zone-mid",    labelSel: "#label-mid"    },
+  ra:     { before: 31.32, after: 28.41, shapeSel: ["#zone-ra"],     labelSel: "#label-ra"     },
+  paint:  { before: 14.42, after: 20.04, shapeSel: ["#zone-paint"],  labelSel: "#label-paint"  },
+  mid:    { before: 35.70, after: 10.05, shapeSel: ["#zone-mid"],    labelSel: "#label-mid"    },
   corner: { before: 5.07,  after: 10.76, shapeSel: ["#zone-corner-l", "#zone-corner-r"], labelSel: "#label-corner" },
-  above:  { before: 13.49, after: 30.74, shapeSel: "#zone-above",  labelSel: "#label-above"  }
+  above:  { before: 13.49, after: 30.74, shapeSel: ["#zone-above"],  labelSel: "#label-above"  }
 };
 
 const t2ColorScale = d3.scaleLinear()
@@ -1685,27 +1685,33 @@ const t2ColorScale = d3.scaleLinear()
   .range(["#F2E8D5", "#D9642E", "#B23B32"])
   .interpolate(d3.interpolateRgb);
 
+// cada step nombra UNA zona (o ninguna) para destacar con borde grueso —
+// así el recuadro de texto y el gráfico siempre están señalando lo mismo.
 const t2Steps = [
-  { state: "before", highlight: false, hook: false },
-  { state: "before", highlight: true,  hook: false },
-  { state: "after",  highlight: false, hook: false },
-  { state: "after",  highlight: false, hook: true  }
+  { state: "before", emphasize: ["mid"],    hook: false, yearJump: false },
+  { state: "before", emphasize: ["mid"],    hook: false, yearJump: false },
+  { state: "after",  emphasize: ["mid"],    hook: false, yearJump: true  },
+  { state: "after",  emphasize: ["above"],  hook: false, yearJump: false },
+  { state: "after",  emphasize: ["corner"], hook: false, yearJump: false },
+  { state: "after",  emphasize: [],         hook: true,  yearJump: false }
 ];
 
 function renderT2(stepConf, animate){
   const duration = animate ? 900 : 0;
 
-  Object.values(zoneData).forEach(zone => {
+  Object.entries(zoneData).forEach(([key, zone]) => {
     const value = zone[stepConf.state];
-    const shapes = Array.isArray(zone.shapeSel)
-      ? zone.shapeSel.map(s => d3.select(s))
-      : [d3.select(zone.shapeSel)];
+    const emphasized = stepConf.emphasize.includes(key);
+    const dimmed = stepConf.emphasize.length > 0 && !emphasized;
+    const shapes = zone.shapeSel.map(s => d3.select(s));
 
     shapes.forEach(sel => {
       sel.transition().duration(duration).attr("fill", t2ColorScale(value));
+      sel.classed("highlighted", emphasized).classed("dimmed", dimmed);
     });
 
     const labelSel = d3.select(zone.labelSel);
+    labelSel.classed("dimmed", dimmed);
     const currentText = labelSel.text();
     const startVal = currentText ? parseFloat(currentText) : value;
     labelSel.transition().duration(duration).tween("text", function(){
@@ -1714,15 +1720,24 @@ function renderT2(stepConf, animate){
     });
   });
 
-  d3.select("#zone-ra").classed("highlighted", stepConf.highlight);
-  d3.select("#zone-corner-l").classed("highlighted", stepConf.highlight);
-  d3.select("#zone-corner-r").classed("highlighted", stepConf.highlight);
-  d3.select("#zone-above").classed("highlighted", stepConf.highlight);
-  d3.select("#zone-mid").classed("dimmed", stepConf.highlight);
-  d3.select("#label-mid").classed("dimmed", stepConf.highlight);
-  d3.select("#label-mid").node().nextElementSibling.classList.toggle("dimmed", stepConf.highlight);
-
   d3.select("#hook-dot").classed("visible", stepConf.hook);
+
+  if(stepConf.yearJump) playYearJump();
+}
+
+// pequeña animación de "20 años" para marcar el salto entre el antes y el después
+function playYearJump(){
+  const counter = d3.select("#year-counter");
+  counter.interrupt();
+  counter.style("opacity", 0).text("2003");
+  counter.transition().duration(250).style("opacity", 1)
+    .transition().duration(1100).ease(d3.easeCubicInOut)
+      .tween("year", function(){
+        const interp = d3.interpolateNumber(2003, 2023);
+        return function(tt){ this.textContent = Math.round(interp(tt)); };
+      })
+    .transition().delay(500).duration(500)
+      .style("opacity", 0);
 }
 
 renderT2(t2Steps[0], false);
