@@ -13,13 +13,14 @@
     --bg: var(--papel);
     --panel: #EDEDED;
     --naranja: #CC5C29;
-    --marron: #5C3D12;
+    --verde: #22a851;
     --azul: #1F4B99;
     --onyx: #121212;
     --ink: var(--onyx);
-    --muted: var(--marron);
+    --muted: var(--verde);          /* verde: cuerpo de gráficos y texto secundario destacable */
+    --muted-ink: rgba(18,18,18,0.62); /* negro atenuado: texto de cuerpo secundario, legible */
     --gold: var(--naranja);
-    --line-cold: var(--marron);
+    --line-cold: var(--verde);
   }
 *{ box-sizing:border-box; }
 html,body{ margin:0; }
@@ -28,10 +29,6 @@ body{
     color:var(--ink);
     font-family:'Bricolage Grotesque', sans-serif;
   }
-
-/* ---------- texto que se ilumina palabra por palabra a medida que se lee ---------- */
-.scrub-text span{ color:var(--muted); opacity:0.4; transition:color 0.2s ease, opacity 0.2s ease; }
-.scrub-text span.lit{ color:inherit; opacity:1; }
 
 /* ---------- título menor: pantalla completa, una pelota se desliza a la derecha y revela el texto ---------- */
 .ball-slide-section{ position:relative; height:200vh; }
@@ -42,7 +39,7 @@ body{
 }
 .ball-slide-eyebrow{
   display:block; font-family:'Slackey', cursive; font-size:0.8rem;
-  letter-spacing:0.14em; text-transform:uppercase; color:var(--marron); margin:0 0 1rem;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--verde); margin:0 0 1rem;
 }
 .ball-slide-title{
   position:relative; display:inline-block;
@@ -90,7 +87,7 @@ body{
     font-size:0.75rem;
     letter-spacing:0.14em;
     text-transform:uppercase;
-    color:var(--marron);
+    color:var(--verde);
     margin:0 0 1.1rem;
   }
 #sec-t1t2 .title{
@@ -105,6 +102,8 @@ body{
     -webkit-text-stroke: 1.5px var(--ink);
     max-width:15ch;
   }
+/* El cuerpo aparece SIN desplazarse: queda pineado mientras hace el fade-in */
+#sec-t1t2 .intro-reveal{ position:relative; }
 #sec-t1t2 .intro-block{
     max-width:1040px;
     margin:0 auto;
@@ -112,14 +111,18 @@ body{
     display:grid;
     grid-template-columns: 1.3fr 0.9fr;
     gap: 3.5rem;
-    align-items:start;
+    align-items:center;
     opacity: var(--intro-fade, 1);   /* aparece con un fade cuando la portada se achicó */
   }
-#sec-t1t2 .text-col p.body{ font-size:1.15rem; line-height:1.75; margin:0 0 1.6rem; }
+@media (min-width: 721px){
+  #sec-t1t2 .intro-reveal{ height:175vh; }
+  #sec-t1t2 .intro-block{ position:sticky; top:0; min-height:100vh; }
+}
+#sec-t1t2 .text-col p.body{ font-size:1.35rem; line-height:1.7; margin:0 0 1.6rem; }
 #sec-t1t2 .text-col p.question{
     font-family:'Slackey', cursive;
-    font-size:clamp(1.5rem, 3.2vw, 2rem);
-    line-height:1.4;
+    font-size:clamp(1.3rem, 2.3vw, 1.55rem);
+    line-height:1.5;
     color:var(--ink);
     margin: 2rem 0 0;
     border-left: 4px solid var(--naranja);
@@ -321,7 +324,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     font-size:0.72rem;
     letter-spacing:0.04em;
     text-transform:uppercase;
-    color:var(--marron);
+    color:var(--verde);
     margin:0 0 0.4rem;
   }
 #sec-t1t2 .miller-stats{
@@ -336,6 +339,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .miller-stats strong{ color:var(--ink); font-weight:500; }
 #sec-t1t2 .miller-stats em{ font-style:normal; color:var(--gold); }
 #sec-t1t2 .miller-note{
+    color:var(--muted-ink);
     font-family:'Slackey', cursive;
     font-size:0.82rem;
     line-height:1.4;
@@ -352,7 +356,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     box-shadow: 7px 7px 0 rgba(18,18,18,0.22);
     padding:1.5rem 1.7rem;
     font-size:1.05rem; line-height:1.6;
-    color:var(--muted);
+    color:var(--muted-ink);
     transition: color 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
   }
 #sec-t1t2 .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
@@ -389,7 +393,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .step:nth-child(3).is-active .step-card strong, #sec-t1t2 .step:nth-child(4).is-active .step-card strong{ color:var(--azul); }
 #sec-t1t2 .step-card.reflective{
     font-family:'Slackey', cursive;
-    font-size:1.7rem; line-height:1.4;
+    font-size:1.45rem; line-height:1.5;
     text-transform:none; color:var(--ink);
     border-left-color: var(--gold);
     transform:rotate(0deg);
@@ -410,6 +414,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t1t2 .zone-label.dimmed{ opacity:0.4; }
 #sec-t1t2 .zone-hl{ color:var(--gold); }
+.word-hl{ color:var(--verde); }
 #sec-t1t2 .year-counter{
     font-family:'Slackey', cursive; font-size:38px;
     fill:var(--azul); opacity:0;
@@ -467,7 +472,6 @@ svg{ width:100%; height:auto; overflow:visible; }
   color:var(--naranja); max-width:22ch; margin:0 auto;
 }
 
-#sec-t3-line{ --muted:#A39A8C; }
 
 #sec-t3-draft .halftone{
     background-image: radial-gradient(circle, rgba(18,18,18,0.13) 1.3px, transparent 1.3px);
@@ -484,9 +488,9 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-draft .draft-block .eyebrow{
     font-family:'Slackey', cursive; font-size:0.75rem; letter-spacing:0.14em;
-    text-transform:uppercase; color:var(--marron); margin:0 0 1rem;
+    text-transform:uppercase; color:var(--verde); margin:0 0 1rem;
   }
-#sec-t3-draft .draft-block p.body{ font-size:1.15rem; line-height:1.75; margin:0 0 1.4rem; }
+#sec-t3-draft .draft-block p.body{ font-size:1.35rem; line-height:1.7; margin:0 0 1.4rem; }
 #sec-t3-draft .photo-insert{ margin:0; transform: rotate(-2deg); }
 #sec-t3-draft .photo-frame{
     position:relative; border:3px solid var(--ink); background:var(--ink);
@@ -521,7 +525,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t3-draft .bars-header{ text-align:center; margin-bottom:2.5rem; }
 #sec-t3-draft .bars-header .eyebrow{
     font-family:'Slackey', cursive; font-size:0.75rem; letter-spacing:0.14em;
-    text-transform:uppercase; color:var(--marron); margin:0 0 0.8rem;
+    text-transform:uppercase; color:var(--verde); margin:0 0 0.8rem;
   }
 #sec-t3-draft .bars-header h2{
     font-family:'Bowlby One SC', sans-serif; font-weight:400;
@@ -572,7 +576,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t3-draft .bars-footer{
     margin-top:2rem; padding-top:1.3rem; border-top:2px dashed rgba(18,18,18,0.3);
     font-family:'Slackey', cursive;
-    font-size:clamp(1.2rem, 2.6vw, 1.5rem); line-height:1.45; color:var(--ink);
+    font-size:clamp(1.15rem, 2vw, 1.4rem); line-height:1.5; color:var(--ink);
   }
 #sec-t3-draft .bars-footer strong{ color:var(--naranja); }
 #sec-t3-draft .hook-section{
@@ -580,7 +584,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-draft .hook-text{
     font-family:'Slackey', cursive;
-    font-size:clamp(1.4rem, 3.2vw, 1.9rem); line-height:1.45; color:var(--ink);
+    font-size:clamp(1.25rem, 2.2vw, 1.5rem); line-height:1.5; color:var(--ink);
     max-width:36ch; margin:0 auto;
   }
 #sec-t3-draft .group-divider{
@@ -681,7 +685,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-line .payoff-quote{
     font-family:'Slackey', cursive;
-    font-size:clamp(1.5rem, 3.6vw, 2.1rem); line-height:1.45;
+    font-size:clamp(1.3rem, 2.4vw, 1.6rem); line-height:1.5;
     color:var(--ink); max-width:34ch; margin:0 auto 3rem;
   }
 #sec-t3-line .pie-row{
@@ -716,7 +720,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     background-size: 9px 9px;
   }
 #sec-t4 .tramo-header{ padding: 3rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
-#sec-t4 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
+#sec-t4 .tramo-header p{ color:var(--muted-ink); font-size:1rem; line-height:1.6; margin:0; }
 #sec-t4 .scrolly{ position:relative; }
 #sec-t4 .sticky-graphic{
     position:sticky; top:0; height:100vh; width:100%;
@@ -763,14 +767,14 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t4 .lopez-card .num.small{ color:var(--muted); font-size:1.1rem; }
 #sec-t4 .lopez-card .num.big{ color:var(--gold); }
 #sec-t4 .lopez-card .lbl{ font-family:'Slackey', cursive; font-size:0.6rem; color:var(--muted); text-transform:uppercase; }
-#sec-t4 .lopez-card .title{ font-family:'Slackey', cursive; font-size:0.65rem; color:var(--marron); text-transform:uppercase; letter-spacing:0.04em; }
+#sec-t4 .lopez-card .title{ font-family:'Slackey', cursive; font-size:0.65rem; color:var(--verde); text-transform:uppercase; letter-spacing:0.04em; }
 #sec-t4 .steps{ position:relative; z-index:2; margin-top:-100vh; counter-reset: stepnum; }
 #sec-t4 .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
 #sec-t4 .step-card{
     position:relative; counter-increment: stepnum;
     max-width:410px; background:var(--panel); border:2px solid var(--ink);
     border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(18,18,18,0.22);
-    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted-ink);
     transition: color 0.4s ease, border-color 0.4s ease;
   }
 #sec-t4 .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
@@ -792,7 +796,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     background-size: 9px 9px;
   }
 #sec-t5 .tramo-header{ padding: 3rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
-#sec-t5 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
+#sec-t5 .tramo-header p{ color:var(--muted-ink); font-size:1rem; line-height:1.6; margin:0; }
 #sec-t5 .scrolly{ position:relative; }
 #sec-t5 .sticky-graphic{
     position:sticky; top:0; height:100vh; width:100%;
@@ -827,7 +831,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     position:relative; counter-increment: stepnum;
     max-width:420px; background:var(--panel); border:2px solid var(--ink);
     border-left:7px solid var(--ink); box-shadow:7px 7px 0 rgba(18,18,18,0.22);
-    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted);
+    padding:1.5rem 1.7rem; font-size:1.05rem; line-height:1.6; color:var(--muted-ink);
     transition: color 0.4s ease, border-color 0.4s ease;
   }
 #sec-t5 .step:nth-child(odd) .step-card{ transform: rotate(-1.1deg); }
@@ -871,7 +875,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t5 .closing-text q{ font-style:italic; }
 #sec-t5 .closing-text .closing-line{
     font-family:'Slackey', cursive;
-    font-size:clamp(1.3rem, 2.8vw, 1.7rem); line-height:1.45; color:var(--ink);
+    font-size:clamp(1.2rem, 2.1vw, 1.45rem); line-height:1.5; color:var(--ink);
   }
 #sec-t5 .closing-text .closing-line strong{ font-family:inherit; color:var(--gold); }
 </style>
@@ -902,11 +906,12 @@ svg{ width:100%; height:auto; overflow:visible; }
   </div>
 </div>
 
+<div class="intro-reveal">
 <section class="intro-block">
   <div class="text-col">
-    <p class="body scrub-text">Noviembre de 1979. Chris Ford, escolta de los Boston Celtics, convierte el primer triple de la historia de la NBA. Nadie en el estadio lo festeja demasiado: es una curiosidad reglamentaria, un tiro que casi nadie se anima a intentar.</p>
-    <p class="body scrub-text">Cuarenta y cinco años después, la liga tira más de 35 triples por partido — casi trece veces más que en aquella primera temporada. Lo que empezó como un experimento al margen terminó reescribiendo por completo la forma en que se juega al básquet.</p>
-    <p class="question">¿Cómo un tiro despreciado se convirtió en el arma más poderosa del deporte?</p>
+    <p class="body">Noviembre de 1979. Chris Ford, escolta de los Boston Celtics, convierte el primer triple de la historia de la NBA. Nadie en el estadio lo festeja demasiado: es una curiosidad reglamentaria, un tiro que casi nadie se anima a intentar.</p>
+    <p class="body">Cuarenta y cinco años después, la liga tira más de 35 triples por partido — casi trece veces más que en aquella primera temporada. Lo que empezó como un experimento al margen terminó reescribiendo por completo la forma en que se juega al básquet.</p>
+    <p class="question">¿Cómo un tiro despreciado se convirtió en el <span class="word-hl">arma más poderosa</span> del deporte?</p>
   </div>
 
   <figure class="photo-insert">
@@ -919,6 +924,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     <figcaption>Chris Ford, Boston Celtics.<br>El primer triple convertido en la historia de la NBA.</figcaption>
   </figure>
 </section>
+</div>
 
 
 <div class="scrolly">
@@ -1218,7 +1224,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 
 <div class="tramo-header halftone">
-  <p class="scrub-text">Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
+  <p>Doce pívots, de 1969 a hoy, y cuántos triples intentaban por partido en promedio a lo largo de toda su carrera.</p>
 </div>
 
 <div class="scrolly">
@@ -1286,7 +1292,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 
 
 <div class="tramo-header halftone">
-  <p class="scrub-text">El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
+  <p>El true shooting % de la liga, temporada por temporada, desde 1979-80 hasta hoy.</p>
 </div>
 
 <div class="scrolly">
@@ -1358,6 +1364,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 
   const dotTransitions = Array.from(document.querySelectorAll('.dot-transition'));
   const introBlock = document.querySelector('#sec-t1t2 .intro-block');
+  const introReveal = document.querySelector('#sec-t1t2 .intro-reveal');
 
   // pelota-cursor que revela el título letra a letra: cada carácter se envuelve en su
   // propio span para poder medir su posición y mover la pelota de forma fluida entre letras
@@ -1379,12 +1386,6 @@ svg{ width:100%; height:auto; overflow:visible; }
       }
     });
     return { el, ball, chars };
-  });
-
-  const scrubParagraphs = Array.from(document.querySelectorAll('.scrub-text')).map(p => {
-    const words = p.textContent.split(/(\s+)/);
-    p.innerHTML = words.map(w => w.trim() ? `<span>${w}</span>` : w).join('');
-    return { el: p, spans: Array.from(p.querySelectorAll('span')) };
   });
 
   function update(){
@@ -1426,15 +1427,6 @@ svg{ width:100%; height:auto; overflow:visible; }
       ball.style.top = ballY.toFixed(1) + 'px';
     });
 
-    scrubParagraphs.forEach(({ el, spans }) => {
-      const r = el.getBoundingClientRect();
-      const start = vh * 0.85;
-      const end = vh * 0.35;
-      const progress = clamp01((start - r.top) / ((start - end) + r.height));
-      const litCount = Math.round(progress * spans.length);
-      spans.forEach((s, i) => s.classList.toggle('lit', i < litCount));
-    });
-
     // sube de 0 a 1 entre [inStart,inEnd], se mantiene en 1, y si se pasan outStart/outEnd baja de nuevo a 0
     function rampUpDown(t, inStart, inEnd, outStart, outEnd){
       const rising = clamp01((t - inStart) / (inEnd - inStart));
@@ -1470,10 +1462,14 @@ svg{ width:100%; height:auto; overflow:visible; }
       el.style.setProperty('--dot-subtitle', subtitleT.toFixed(3));
     });
 
-    // 5) el cuerpo aparece con un fade una vez que la portada terminó de achicarse
-    if(introBlock){
-      const ir = introBlock.getBoundingClientRect();
-      const introFade = clamp01((vh - ir.top) / (vh * 0.35));
+    // 5) el cuerpo aparece con un fade — pineado, sin desplazarse — cuando la portada ya
+    //    se achicó. El progreso se mide sobre el wrapper .intro-reveal, así el bloque queda
+    //    quieto (position:sticky) mientras sube su opacidad de 0 a 1.
+    if(introReveal && introBlock){
+      const wr = introReveal.getBoundingClientRect();
+      const scr = wr.height - vh;
+      const wt = clamp01(scr > 0 ? -wr.top / scr : 0);
+      const introFade = clamp01(wt / 0.30);
       introBlock.style.setProperty('--intro-fade', introFade.toFixed(3));
     }
   }
