@@ -6,7 +6,7 @@
 <title>De la anécdota al arma letal — Prototipo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Bricolage+Grotesque:wght@400;500;600;700&family=Slackey&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Bricolage+Grotesque:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
     --papel: #F2E8D5;
@@ -38,7 +38,7 @@ body{
   overflow:hidden; text-align:center; padding:0 1.5rem;
 }
 .ball-slide-eyebrow{
-  display:block; font-family:'Slackey', cursive; font-size:0.8rem;
+  display:block; font-family:'Oswald', sans-serif; font-size:0.8rem;
   letter-spacing:0.14em; text-transform:uppercase; color:var(--verde); margin:0 0 1rem;
 }
 .ball-slide-title{
@@ -56,7 +56,7 @@ body{
 .ball-slide-title .bst-ball{
   position:absolute; top:0; left:0;
   width:0.85em; height:0.85em; transform:translate(-50%, -50%);
-  background-image:url('../inspo_datos/pelota_vector.png');
+  background-image:url('basketball_nba.svg');
   background-size:contain; background-repeat:no-repeat; background-position:center;
   opacity:var(--bst-ball-opacity, 0);
   filter:drop-shadow(0 3px 5px rgba(18,18,18,0.25));
@@ -83,7 +83,7 @@ body{
 #sec-t1t2 .court-lines circle{ fill:none; stroke:var(--ink); stroke-width:2; opacity:0.07; }
 #sec-t1t2 .masthead > *{ position:relative; z-index:1; }
 #sec-t1t2 .eyebrow{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.75rem;
     letter-spacing:0.14em;
     text-transform:uppercase;
@@ -120,7 +120,7 @@ body{
 }
 #sec-t1t2 .text-col p.body{ font-size:1.35rem; line-height:1.7; margin:0 0 1.6rem; }
 #sec-t1t2 .text-col p.question{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:clamp(1.3rem, 2.3vw, 1.55rem);
     line-height:1.5;
     color:var(--ink);
@@ -157,12 +157,12 @@ body{
 #sec-t1t2 .photo-tag{
     position:absolute; top:12px; left:-8px;
     background:var(--naranja); color:var(--papel);
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.72rem; letter-spacing:0.06em;
     padding:5px 12px 5px 16px; z-index:2;
   }
 #sec-t1t2 figcaption{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.82rem; line-height:1.55;
     color:var(--ink); opacity:0.85;
     margin-top:0.7rem; text-align:left;
@@ -174,7 +174,7 @@ body{
     transform:translateX(-50%);
     z-index:2;
     text-align:center;
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.75rem;
     letter-spacing:0.1em;
     text-transform:uppercase;
@@ -197,7 +197,7 @@ body{
   }
 #sec-t1t2 .chart-wrap{ width:min(92vw, 980px); }
 #sec-t1t2 .chart-caption{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.7rem; color:var(--muted);
     letter-spacing:0.03em; margin-top:0.6rem;
     display:flex; justify-content:space-between;
@@ -210,9 +210,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .axis{ opacity:0; transition:opacity 0.9s ease; }
 #sec-t1t2 .axis.revealed{ opacity:1; }
 #sec-t1t2 .axis path, #sec-t1t2 .axis line{ stroke: rgba(18,18,18,0.25); }
-#sec-t1t2 .axis text{ fill: var(--muted); font-family:'Slackey', cursive; font-size: 14px; transition: fill 0.4s ease; }
+#sec-t1t2 .axis text{ fill: var(--muted); font-family:'Oswald', sans-serif; font-size: 14px; transition: fill 0.4s ease; }
 #sec-t1t2 .axis .tick.axis-year-active text{ fill: var(--azul); font-weight:700; font-size:16px; }
-#sec-t1t2 .year-hl{ color:var(--azul); font-family:'Slackey', cursive; font-weight:500; }
+#sec-t1t2 .year-hl{ color:var(--azul); font-family:'Oswald', sans-serif; font-weight:500; }
 #sec-t1t2 #gridlines{ opacity:0; transition:opacity 0.9s ease; }
 #sec-t1t2 #gridlines.revealed{ opacity:1; }
 #sec-t1t2 .gridline{ stroke:rgba(18,18,18,0.09); stroke-width:1; }
@@ -230,7 +230,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .rule-band.visible{ opacity:1; }
 #sec-t1t2 .rule-label{
     fill:var(--azul);
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:11px; opacity:0;
     transition: opacity 0.6s ease;
   }
@@ -258,7 +258,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     100% { transform: scale(3.4); opacity:0; }
   }
 #sec-t1t2 .value-tag{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-weight:500; font-size:13px;
     fill:var(--ink);
     opacity:1;
@@ -320,7 +320,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t1t2 .miller-text{ flex:1; }
 #sec-t1t2 .miller-name{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.72rem;
     letter-spacing:0.04em;
     text-transform:uppercase;
@@ -331,7 +331,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     display:flex;
     flex-direction:column;
     gap:0.2rem;
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.78rem;
     color:var(--muted);
     margin-bottom:0.5rem;
@@ -340,7 +340,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .miller-stats em{ font-style:normal; color:var(--gold); }
 #sec-t1t2 .miller-note{
     color:var(--muted-ink);
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:0.82rem;
     line-height:1.4;
     color:var(--muted);
@@ -368,12 +368,12 @@ svg{ width:100%; height:auto; overflow:visible; }
     background:var(--line-cold); color:var(--papel);
     border:2px solid var(--panel);
     box-shadow:0 0 0 1.5px var(--ink);
-    font-family:'Slackey', cursive; font-size:0.72rem;
+    font-family:'Oswald', sans-serif; font-size:0.72rem;
     display:flex; align-items:center; justify-content:center;
     transition: background 0.4s ease;
   }
 #sec-t1t2 .step-card strong{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-weight:500; color:var(--line-cold);
     transition: color 0.4s ease;
   }
@@ -392,7 +392,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .step:nth-child(3).is-active .step-card::before, #sec-t1t2 .step:nth-child(4).is-active .step-card::before{ background:var(--azul); }
 #sec-t1t2 .step:nth-child(3).is-active .step-card strong, #sec-t1t2 .step:nth-child(4).is-active .step-card strong{ color:var(--azul); }
 #sec-t1t2 .step-card.reflective{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:1.45rem; line-height:1.5;
     text-transform:none; color:var(--ink);
     border-left-color: var(--gold);
@@ -407,7 +407,7 @@ svg{ width:100%; height:auto; overflow:visible; }
    con color plano y las demás con una trama de puntitos (mismo color + puntos onyx). */
 #sec-t1t2 .zone-shape{ stroke:var(--ink); stroke-width:1; }
 #sec-t1t2 .zone-label{
-    font-family:'Slackey', cursive; font-weight:500; font-size:15px;
+    font-family:'Oswald', sans-serif; font-weight:500; font-size:15px;
     fill:var(--ink); text-anchor:middle; dominant-baseline:central;
     paint-order: stroke; stroke: var(--papel); stroke-width:4px; stroke-linejoin:round;
     transition: opacity 0.4s ease;
@@ -416,7 +416,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t1t2 .zone-hl{ color:var(--gold); }
 .word-hl{ color:var(--verde); }
 #sec-t1t2 .year-counter{
-    font-family:'Slackey', cursive; font-size:38px;
+    font-family:'Oswald', sans-serif; font-size:38px;
     fill:var(--azul); opacity:0;
   }
 #sec-t1t2 #court-lines-t2 line, #sec-t1t2 #court-lines-t2 circle{ stroke:var(--ink); stroke-width:1.5; opacity:0.3; }
@@ -438,7 +438,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 }
 .dot-transition-circle{
   position:absolute; width:110px; height:110px;
-  background-image:url('../inspo_datos/pelota_vector.png');
+  background-image:url('basketball_nba.svg');
   background-size:contain; background-repeat:no-repeat; background-position:center;
   filter:drop-shadow(0 4px 6px rgba(18,18,18,0.25));
   opacity:var(--dot-ball-opacity, 1);
@@ -467,7 +467,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   opacity:var(--dot-subtitle, 0);
 }
 .dot-transition-subtitle p{
-  font-family:'Slackey', cursive;
+  font-family:'Oswald', sans-serif;
   font-size:clamp(1.3rem, 3.6vw, 2.1rem); line-height:1.4; letter-spacing:0.01em;
   color:var(--naranja); max-width:22ch; margin:0 auto;
 }
@@ -479,7 +479,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-draft .note{
     max-width:640px; margin:0 auto; padding:2rem 1.5rem 0.5rem; text-align:center;
-    font-family:'Slackey', cursive; font-size:0.7rem; letter-spacing:0.05em;
+    font-family:'Oswald', sans-serif; font-size:0.7rem; letter-spacing:0.05em;
     color:var(--muted); text-transform:uppercase;
   }
 #sec-t3-draft .draft-block{
@@ -487,7 +487,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     display:grid; grid-template-columns: 1.3fr 0.9fr; gap: 3.5rem; align-items:start;
   }
 #sec-t3-draft .draft-block .eyebrow{
-    font-family:'Slackey', cursive; font-size:0.75rem; letter-spacing:0.14em;
+    font-family:'Oswald', sans-serif; font-size:0.75rem; letter-spacing:0.14em;
     text-transform:uppercase; color:var(--verde); margin:0 0 1rem;
   }
 #sec-t3-draft .draft-block p.body{ font-size:1.35rem; line-height:1.7; margin:0 0 1.4rem; }
@@ -513,18 +513,18 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-draft .photo-tag{
     position:absolute; top:12px; left:-8px; background:var(--naranja); color:var(--papel);
-    font-family:'Slackey', cursive; font-size:0.72rem; letter-spacing:0.06em;
+    font-family:'Oswald', sans-serif; font-size:0.72rem; letter-spacing:0.06em;
     padding:5px 12px 5px 16px; z-index:2;
   }
 #sec-t3-draft figcaption{
-    font-family:'Slackey', cursive; font-size:0.82rem; line-height:1.55;
+    font-family:'Oswald', sans-serif; font-size:0.82rem; line-height:1.55;
     color:var(--ink); opacity:0.85; margin-top:0.7rem; text-align:left;
   }
 @media (max-width: 720px){#sec-t3-draft .draft-block{ grid-template-columns: 1fr; }#sec-t3-draft .photo-insert{ order:-1; max-width:320px; margin: 0 auto 1rem; }}
 #sec-t3-draft .bars-section{ max-width:980px; margin:0 auto; padding: 1rem 1.5rem 6rem; }
 #sec-t3-draft .bars-header{ text-align:center; margin-bottom:2.5rem; }
 #sec-t3-draft .bars-header .eyebrow{
-    font-family:'Slackey', cursive; font-size:0.75rem; letter-spacing:0.14em;
+    font-family:'Oswald', sans-serif; font-size:0.75rem; letter-spacing:0.14em;
     text-transform:uppercase; color:var(--verde); margin:0 0 0.8rem;
   }
 #sec-t3-draft .bars-header h2{
@@ -564,18 +564,18 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t3-draft .col.is-curry .col-bar{ background:var(--naranja); }
 #sec-t3-draft .col.visible .col-bar{ height: var(--bar-height); }
 #sec-t3-draft .col-value{
-    font-family:'Slackey', cursive; font-size:0.82rem; color:var(--muted);
+    font-family:'Oswald', sans-serif; font-size:0.82rem; color:var(--muted);
     margin-top:0.6rem;
   }
 #sec-t3-draft .col.is-curry .col-value{ color:var(--naranja); font-weight:500; }
 #sec-t3-draft .col-name{
-    font-family:'Slackey', cursive; font-size:0.68rem;
+    font-family:'Oswald', sans-serif; font-size:0.68rem;
     text-align:center; color:var(--ink); line-height:1.2; margin-top:0.15rem;
   }
 #sec-t3-draft .col.is-curry .col-name{ font-weight:600; color:var(--naranja); }
 #sec-t3-draft .bars-footer{
     margin-top:2rem; padding-top:1.3rem; border-top:2px dashed rgba(18,18,18,0.3);
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:clamp(1.15rem, 2vw, 1.4rem); line-height:1.5; color:var(--ink);
   }
 #sec-t3-draft .bars-footer strong{ color:var(--naranja); }
@@ -583,7 +583,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     max-width:640px; margin:0 auto; padding:4rem 1.5rem 5rem; text-align:center;
   }
 #sec-t3-draft .hook-text{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:clamp(1.25rem, 2.2vw, 1.5rem); line-height:1.5; color:var(--ink);
     max-width:36ch; margin:0 auto;
   }
@@ -599,7 +599,7 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-line .note{
     max-width:640px; margin:0 auto; padding:2rem 1.5rem 0.5rem; text-align:center;
-    font-family:'Slackey', cursive; font-size:0.7rem; letter-spacing:0.05em;
+    font-family:'Oswald', sans-serif; font-size:0.7rem; letter-spacing:0.05em;
     color:var(--muted); text-transform:uppercase;
   }
 #sec-t3-line .scrolly{ position:relative; }
@@ -614,16 +614,16 @@ svg{ width:100%; height:auto; overflow:visible; }
 @media (max-width: 860px){#sec-t3-line .sticky-graphic{ flex-direction:column; gap:1rem; }#sec-t3-line .chart-wrap{ width:min(92vw, 720px); }#sec-t3-line .side-panel{ width:140px; height:170px; }}
 
 #sec-t3-line .axis path, #sec-t3-line .axis line{ stroke: rgba(18,18,18,0.25); }
-#sec-t3-line .axis text{ fill: var(--muted); font-family:'Slackey', cursive; font-size: 13px; transition: fill 0.4s ease; }
+#sec-t3-line .axis text{ fill: var(--muted); font-family:'Oswald', sans-serif; font-size: 13px; transition: fill 0.4s ease; }
 #sec-t3-line .axis .tick.axis-year-active text{ fill: var(--azul); font-weight:700; font-size:15px; }
-#sec-t3-line .year-hl{ color:var(--azul); font-family:'Slackey', cursive; font-weight:500; }
+#sec-t3-line .year-hl{ color:var(--azul); font-family:'Oswald', sans-serif; font-weight:500; }
 #sec-t3-line .gridline{ stroke:rgba(18,18,18,0.09); stroke-width:1; }
 #sec-t3-line .bg-line{ fill:none; stroke:var(--muted); stroke-width:2; opacity:0.55; }
-#sec-t3-line .bg-name{ font-family:'Slackey', cursive; font-size:10px; fill:var(--muted); opacity:0.7; }
+#sec-t3-line .bg-name{ font-family:'Oswald', sans-serif; font-size:10px; fill:var(--muted); opacity:0.7; }
 #sec-t3-line .curry-line{ fill:none; stroke-width:3.5; stroke-linecap:round; stroke:var(--ink); }
 #sec-t3-line .curry-dot{ fill:var(--ink); }
 #sec-t3-line .value-tag{
-    font-family:'Slackey', cursive; font-weight:600; font-size:15px;
+    font-family:'Oswald', sans-serif; font-weight:600; font-size:15px;
     fill:var(--ink); opacity:0; transition: opacity 0.4s ease;
   }
 #sec-t3-line .value-tag.visible{ opacity:1; }
@@ -650,11 +650,11 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-line .photo-tag{
     position:absolute; top:8px; left:-6px; background:var(--gold); color:var(--papel);
-    font-family:'Slackey', cursive; font-size:0.6rem; letter-spacing:0.04em;
+    font-family:'Oswald', sans-serif; font-size:0.6rem; letter-spacing:0.04em;
     padding:3px 8px 3px 12px; z-index:2;
   }
 #sec-t3-line .photo-cap{
-    font-family:'Slackey', cursive; font-size:0.72rem; color:var(--ink);
+    font-family:'Oswald', sans-serif; font-size:0.72rem; color:var(--ink);
     opacity:0.88; margin-top:0.4rem; line-height:1.35;
   }
 #sec-t3-line .attach-card{
@@ -684,7 +684,7 @@ svg{ width:100%; height:auto; overflow:visible; }
     text-align:center;
   }
 #sec-t3-line .payoff-quote{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:clamp(1.3rem, 2.4vw, 1.6rem); line-height:1.5;
     color:var(--ink); max-width:34ch; margin:0 auto 3rem;
   }
@@ -699,20 +699,20 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t3-line .pie-svg.visible{ opacity:1; transform:scale(1); }
 #sec-t3-line .pie-cap{
-    font-family:'Slackey', cursive; font-size:0.75rem; color:var(--muted);
+    font-family:'Oswald', sans-serif; font-size:0.75rem; color:var(--muted);
     line-height:1.3; margin:0.6rem 0 0;
   }
 #sec-t3-line .pie-wedge-label{
-    font-family:'Slackey', cursive; font-size:11px; fill:var(--papel);
+    font-family:'Oswald', sans-serif; font-size:11px; fill:var(--papel);
     text-anchor:middle; dominant-baseline:central; font-weight:600;
   }
 #sec-t3-line .pie-legend{
     display:flex; justify-content:center; gap:1.3rem; margin-top:1.3rem;
-    font-family:'Slackey', cursive; font-size:0.72rem; color:var(--muted);
+    font-family:'Oswald', sans-serif; font-size:0.72rem; color:var(--muted);
   }
 #sec-t3-line .pie-legend span{ display:flex; align-items:center; gap:0.35rem; }
 #sec-t3-line .pie-legend i{ width:9px; height:9px; display:inline-block; border-radius:50%; }
-#sec-t3-line .step-card strong{ font-family:'Slackey', cursive; color:var(--gold); font-weight:500; }
+#sec-t3-line .step-card strong{ font-family:'Oswald', sans-serif; color:var(--gold); font-weight:500; }
 #sec-t3-line .spacer{ height:25vh; }
 
 #sec-t4 .halftone{
@@ -729,9 +729,9 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t4 .chart-wrap{ width:min(92vw, 960px); position:relative; }
 
 #sec-t4 .axis path, #sec-t4 .axis line{ stroke: rgba(18,18,18,0.25); }
-#sec-t4 .axis text{ fill: var(--muted); font-family:'Slackey', cursive; font-size: 11px; }
+#sec-t4 .axis text{ fill: var(--muted); font-family:'Oswald', sans-serif; font-size: 11px; }
 #sec-t4 .gridline{ stroke:rgba(18,18,18,0.09); stroke-width:1; }
-#sec-t4 .axis-label{ font-family:'Slackey', cursive; font-size:11px; fill:var(--muted); }
+#sec-t4 .axis-label{ font-family:'Oswald', sans-serif; font-size:11px; fill:var(--muted); }
 #sec-t4 .player-dot{
     opacity:0;
     transition: opacity 0.7s ease;
@@ -748,7 +748,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t4 .player-ring{ fill:none; stroke:var(--ink); stroke-width:2; opacity:0.5; }
 #sec-t4 .player-dot.highlighted .player-ring{ stroke:var(--gold); stroke-width:3; opacity:1; }
 #sec-t4 .player-name{
-    font-family:'Slackey', cursive; font-size:9px; fill:var(--muted);
+    font-family:'Oswald', sans-serif; font-size:9px; fill:var(--muted);
     text-anchor:middle; opacity:0; transition:opacity 0.5s ease;
   }
 #sec-t4 .player-name.revealed{ opacity:0.85; }
@@ -763,11 +763,11 @@ svg{ width:100%; height:auto; overflow:visible; }
   }
 #sec-t4 .lopez-card.visible{ opacity:1; transform:translateY(0) rotate(-2deg); }
 #sec-t4 .lopez-card .compare{ display:flex; justify-content:space-between; align-items:baseline; margin-top:0.4rem; }
-#sec-t4 .lopez-card .num{ font-family:'Slackey', cursive; font-size:1.6rem; }
+#sec-t4 .lopez-card .num{ font-family:'Oswald', sans-serif; font-size:1.6rem; }
 #sec-t4 .lopez-card .num.small{ color:var(--muted); font-size:1.1rem; }
 #sec-t4 .lopez-card .num.big{ color:var(--gold); }
-#sec-t4 .lopez-card .lbl{ font-family:'Slackey', cursive; font-size:0.6rem; color:var(--muted); text-transform:uppercase; }
-#sec-t4 .lopez-card .title{ font-family:'Slackey', cursive; font-size:0.65rem; color:var(--verde); text-transform:uppercase; letter-spacing:0.04em; }
+#sec-t4 .lopez-card .lbl{ font-family:'Oswald', sans-serif; font-size:0.6rem; color:var(--muted); text-transform:uppercase; }
+#sec-t4 .lopez-card .title{ font-family:'Oswald', sans-serif; font-size:0.65rem; color:var(--verde); text-transform:uppercase; letter-spacing:0.04em; }
 #sec-t4 .steps{ position:relative; z-index:2; margin-top:-100vh; counter-reset: stepnum; }
 #sec-t4 .step{ min-height:100vh; display:flex; align-items:center; padding:2rem 1.5rem; }
 #sec-t4 .step-card{
@@ -783,12 +783,12 @@ svg{ width:100%; height:auto; overflow:visible; }
     content: counter(stepnum, decimal-leading-zero);
     position:absolute; top:-16px; left:-16px; width:32px; height:32px; border-radius:50%;
     background:var(--ink); color:var(--papel); border:2px solid var(--panel);
-    box-shadow:0 0 0 1.5px var(--ink); font-family:'Slackey', cursive; font-size:0.72rem;
+    box-shadow:0 0 0 1.5px var(--ink); font-family:'Oswald', sans-serif; font-size:0.72rem;
     display:flex; align-items:center; justify-content:center;
   }
 #sec-t4 .step.is-active .step-card{ color:var(--ink); border-left-color:var(--gold); transform:rotate(0deg); }
 #sec-t4 .step.is-active .step-card::before{ background:var(--gold); }
-#sec-t4 .step-card strong{ font-family:'Slackey', cursive; color:var(--gold); font-weight:500; }
+#sec-t4 .step-card strong{ font-family:'Oswald', sans-serif; color:var(--gold); font-weight:500; }
 #sec-t4 .spacer{ height:25vh; }
 
 #sec-t5 .halftone{
@@ -805,7 +805,7 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t5 .chart-wrap{ width:min(92vw, 920px); }
 
 #sec-t5 .axis path, #sec-t5 .axis line{ stroke: rgba(18,18,18,0.3); }
-#sec-t5 .axis text{ fill: var(--muted); font-family:'Slackey', cursive; font-size: 11px; }
+#sec-t5 .axis text{ fill: var(--muted); font-family:'Oswald', sans-serif; font-size: 11px; }
 #sec-t5 .gridline{ stroke:rgba(18,18,18,0.09); stroke-width:1; }
 #sec-t5 .ts-line{
     fill:none; stroke:var(--muted); stroke-width:2.5; stroke-linecap:round;
@@ -816,12 +816,12 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t5 .ts-dot.visible{ opacity:1; }
 #sec-t5 .ts-dot.highlighted{ fill:var(--gold); }
 #sec-t5 .value-tag{
-    font-family:'Slackey', cursive; font-weight:600; font-size:15px;
+    font-family:'Oswald', sans-serif; font-weight:600; font-size:15px;
     fill:var(--gold); opacity:0; transition:opacity 0.5s ease;
   }
 #sec-t5 .value-tag.visible{ opacity:1; }
 #sec-t5 .peak-label{
-    font-family:'Slackey', cursive; font-size:10px; fill:var(--muted);
+    font-family:'Oswald', sans-serif; font-size:10px; fill:var(--muted);
     opacity:0; transition:opacity 0.5s ease;
   }
 #sec-t5 .peak-label.visible{ opacity:1; }
@@ -840,12 +840,12 @@ svg{ width:100%; height:auto; overflow:visible; }
     content: counter(stepnum, decimal-leading-zero);
     position:absolute; top:-16px; left:-16px; width:32px; height:32px; border-radius:50%;
     background:var(--ink); color:var(--papel); border:2px solid var(--panel);
-    box-shadow:0 0 0 1.5px var(--ink); font-family:'Slackey', cursive; font-size:0.72rem;
+    box-shadow:0 0 0 1.5px var(--ink); font-family:'Oswald', sans-serif; font-size:0.72rem;
     display:flex; align-items:center; justify-content:center;
   }
 #sec-t5 .step.is-active .step-card{ color:var(--ink); border-left-color:var(--gold); transform:rotate(0deg); }
 #sec-t5 .step.is-active .step-card::before{ background:var(--gold); }
-#sec-t5 .step-card strong{ font-family:'Slackey', cursive; color:var(--gold); font-weight:500; }
+#sec-t5 .step-card strong{ font-family:'Oswald', sans-serif; color:var(--gold); font-weight:500; }
 #sec-t5 .step-card q{ font-style:italic; }
 #sec-t5 .spacer{ height:25vh; }
 #sec-t5 .fade-step .step-card{ opacity:0; box-shadow:none; border:none; pointer-events:none; }
@@ -863,18 +863,18 @@ svg{ width:100%; height:auto; overflow:visible; }
 #sec-t5 .milestone-tick{ stroke:var(--ink); stroke-width:1; opacity:0.3; }
 #sec-t5 .milestone-dot{ fill:var(--papel); stroke:var(--gold); stroke-width:2.5; }
 #sec-t5 .milestone-year{
-    font-family:'Slackey', cursive; font-size:11px; fill:var(--muted);
+    font-family:'Oswald', sans-serif; font-size:11px; fill:var(--muted);
     text-anchor:middle;
   }
 #sec-t5 .milestone-label{
-    font-family:'Slackey', cursive; font-size:11px; fill:var(--ink);
+    font-family:'Oswald', sans-serif; font-size:11px; fill:var(--ink);
     text-anchor:middle; font-weight:500;
   }
 #sec-t5 .closing-text{ max-width:640px; margin:0 auto; text-align:center; }
 #sec-t5 .closing-text p{ font-size:1.15rem; line-height:1.75; color:var(--ink); margin:0 0 1.6rem; }
 #sec-t5 .closing-text q{ font-style:italic; }
 #sec-t5 .closing-text .closing-line{
-    font-family:'Slackey', cursive;
+    font-family:'Oswald', sans-serif;
     font-size:clamp(1.2rem, 2.1vw, 1.45rem); line-height:1.5; color:var(--ink);
   }
 #sec-t5 .closing-text .closing-line strong{ font-family:inherit; color:var(--gold); }
@@ -996,7 +996,7 @@ svg{ width:100%; height:auto; overflow:visible; }
         </g>
 
         <circle id="pulse-ring" class="pulse-ring" r="10"></circle>
-        <image id="lead-ball" class="lead-ball" width="42" height="42" href="../inspo_datos/pelota_vector.png"></image>
+        <image id="lead-ball" class="lead-ball" width="42" height="42" href="basketball_nba.svg"></image>
         <text id="value-tag" class="value-tag"></text>
       </svg>
       <div class="chart-caption t1-remnants" id="chart-caption">

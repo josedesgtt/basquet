@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Pelota de baloncesto NBA">
+  <defs>
+    <radialGradient id="nbaLeather" cx="37%" cy="32%" r="78%">
+      <stop offset="0%" stop-color="#F0A15A"/>
+      <stop offset="34%" stop-color="#E27F35"/>
+      <stop offset="68%" stop-color="#C15D1D"/>
+      <stop offset="100%" stop-color="#853910"/>
+    </radialGradient>
+    <radialGradient id="nbaRim" cx="50%" cy="50%" r="50%">
+      <stop offset="80%" stop-color="#3a1607" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#33150a" stop-opacity="0.6"/>
+    </radialGradient>
+    <radialGradient id="nbaShine" cx="34%" cy="29%" r="34%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="nbaPebble" width="2.1" height="2.1" patternUnits="userSpaceOnUse" patternTransform="rotate(12)">
+      <circle cx="1.05" cy="1.05" r="0.4" fill="#5f2a0c" opacity="0.15"/>
+    </pattern>
+    <clipPath id="nbaClip"><circle cx="50" cy="50" r="49"/></clipPath>
+  </defs>
+  <g clip-path="url(#nbaClip)">
+    <circle cx="50" cy="50" r="49" fill="url(#nbaLeather)"/>
+    <circle cx="50" cy="50" r="49" fill="url(#nbaPebble)"/>
+    <circle cx="50" cy="50" r="49" fill="url(#nbaRim)"/>
+    <g fill="none" stroke="#160d06" stroke-width="1.9" stroke-linecap="round">
+      <path d="M50 1 V99"/>
+      <path d="M1 50 H99"/>
+      <path d="M50 1 C 21.5 25, 21.5 75, 50 99"/>
+      <path d="M50 1 C 78.5 25, 78.5 75, 50 99"/>
+    </g>
+    <circle cx="50" cy="50" r="49" fill="url(#nbaShine)"/>
+  </g>
+  <circle cx="50" cy="50" r="48.5" fill="none" stroke="#6b2f10" stroke-width="1" opacity="0.5"/>
+</svg>
