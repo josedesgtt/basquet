@@ -841,7 +841,7 @@
     #sec-t4 .general-dot.revealed{ opacity:0.85; }
     #sec-t4 .pivot-dot.dimmed{ r:4; opacity:0.7; }
     #sec-t4 .t4g-legend{
-      position:relative; margin:-2.6rem auto 0; width:max-content; max-width:100%;
+      position:relative; margin:-1.2rem auto 0; width:max-content; max-width:100%;
       display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem 2.4rem;
       font-family:'Martian Mono', monospace; font-size:0.7rem; color:var(--muted);
       background:var(--papel); padding:0.5rem 1.1rem; border:1px solid rgba(18,18,18,0.15);
@@ -852,6 +852,7 @@
     #sec-t4 .t4g-legend i{ width:10px; height:10px; border-radius:50%; display:inline-block; }
     #sec-t4 .t4g-legend i.dot-pivot{ background:var(--rosa); }
     #sec-t4 .t4g-legend i.dot-general{ background:var(--verde); }
+    #sec-t4 .t4g-legend + .chart-caption{ margin-top:16px; }
 
     #sec-t5 .tramo-header{ padding: 3rem 1.5rem 3rem; max-width: 720px; margin: 0 auto; text-align:center; }
     #sec-t5 .tramo-header p{ color:var(--muted); font-size:1rem; line-height:1.6; margin:0; }
@@ -908,11 +909,6 @@
     #sec-t5 .spacer{ height:25vh; }
     #sec-t5 .step-card.fade-step{ opacity:0; box-shadow:none; border:none; pointer-events:none; }
     #sec-t5 .step-card.fade-step::before{ display:none; }
-    #sec-t5 .ts-projection{
-      fill:none; stroke:var(--muted); stroke-width:2; stroke-dasharray:4 5;
-      opacity:0; transition: opacity 1.2s ease;
-    }
-    #sec-t5 .ts-projection.visible{ opacity:0.55; }
     #sec-t5 .fading-out{ transition: opacity 1s ease; }
     #sec-t5 .fading-out.faded{ opacity:0.15; }
     #sec-t5 .closing{ max-width:960px; margin:0 auto; padding:5rem 1.5rem 6rem; }
@@ -1048,9 +1044,7 @@
             <rect x="50" y="40" width="870" height="400"/>
           </clipPath>
           <g clip-path="url(#plot-area-clip)" class="t1-remnants">
-            <image href="../inspo_datos/maderapiso.jpg" x="50" y="40" width="870" height="400"
-                   preserveAspectRatio="xMidYMid slice" style="opacity: 50%;" />
-            <rect x="50" y="40" width="870" height="400" fill="#1c1206" opacity="0.25"/>
+            <rect x="50" y="40" width="870" height="400" fill="var(--papel)"/>
           </g>
           <g id="court-motif">
             <path id="court-arc" d="M -80 560 Q 460 260 1000 560"/>
@@ -1227,9 +1221,7 @@
             <rect x="50" y="40" width="870" height="400"/>
           </clipPath>
           <g clip-path="url(#plot-area-clip-t3)">
-            <image href="../inspo_datos/maderapiso.jpg" x="50" y="40" width="870" height="400"
-                   preserveAspectRatio="xMidYMid slice" style="opacity: 50%;" />
-            <rect x="50" y="40" width="870" height="400" fill="#1c1206" opacity="0.25"/>
+            <rect x="50" y="40" width="870" height="400" fill="var(--papel)"/>
           </g>
           <g id="gridlines-t3"></g>
           <g id="x-axis-t3" class="axis"></g>
@@ -1351,14 +1343,12 @@
             <clipPath id="plot-area-clip-t4"><rect x="50" y="50" width="810" height="420"/></clipPath>
           </defs>
           <g clip-path="url(#plot-area-clip-t4)">
-            <image href="../inspo_datos/maderapiso.jpg" x="50" y="50" width="810" height="420"
-                   preserveAspectRatio="xMidYMid slice" style="opacity: 50%;" />
-            <rect x="50" y="50" width="810" height="420" fill="#1c1206" opacity="0.25"/>
+            <rect x="50" y="50" width="810" height="420" fill="var(--papel)"/>
           </g>
           <g id="gridlines-t4"></g>
           <g id="x-axis-t4" class="axis"></g>
           <g id="y-axis-t4" class="axis"></g>
-          <text class="axis-label" x="860" y="475" text-anchor="end">debut</text>
+          <text class="axis-label" x="860" y="500" text-anchor="end">debut</text>
           <text class="axis-label" x="40" y="45" text-anchor="end">3PA/partido</text>
           <g id="general-dots-t4"></g>
           <g id="players"></g>
@@ -1436,15 +1426,12 @@
             <rect x="50" y="40" width="870" height="400"/>
           </clipPath>
           <g clip-path="url(#plot-area-clip-t5)">
-            <image href="../inspo_datos/maderapiso.jpg" x="50" y="40" width="870" height="400"
-                   preserveAspectRatio="xMidYMid slice" style="opacity: 50%;" />
-            <rect x="50" y="40" width="870" height="400" fill="#1c1206" opacity="0.25"/>
+            <rect x="50" y="40" width="870" height="400" fill="var(--papel)"/>
           </g>
           <g id="gridlines-t5" class="fading-out"></g>
           <g id="x-axis-t5" class="axis fading-out"></g>
           <g id="y-axis-t5" class="axis fading-out"></g>
           <path id="ts-line" class="ts-line"></path>
-          <path id="ts-projection" class="ts-projection"></path>
           <circle id="ts-dot" class="ts-dot" r="6"></circle>
           <text id="value-tag-t5" class="value-tag"></text>
           <text id="peak-label" class="peak-label"></text>
@@ -1704,7 +1691,7 @@
     svg.select("#x-axis")
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .call(d3.axisBottom(x).tickValues(tickSeasons)
-              .tickFormat(d => d === "1999-2000" ? "1999-00" : d));
+                    .tickFormat(d => d === "1999-2000" ? "1999-00" : d));
 
     svg.select("#y-axis")
             .attr("transform", `translate(${margin.left},0)`)
@@ -2327,7 +2314,7 @@
 
     const svg = d3.select("#chart-t4");
     const x = d3.scaleLinear().domain([1966, 2026]).range([margin.left, width-margin.right]);
-    const y = d3.scaleLinear().domain([-0.6, 9]).range([height-margin.bottom, margin.top]);
+    const y = d3.scaleLinear().domain([-1.8, 9]).range([height-margin.bottom, margin.top]);
     const yTicks = [0,2,4,6,8];
 
     svg.select("#x-axis-t4")
@@ -2629,15 +2616,9 @@
         dot.classed("visible", true).classed("highlighted", true);
         tag.classed("visible", true);
         peakLabel.classed("visible", true);
-        svg.select("#ts-projection").classed("visible", false);
         d3.selectAll(".fading-out").classed("faded", false);
       }
       if(i === 4){
-        const projX2 = width - margin.right + 60;
-        const projY2 = y(last.v) - 8;
-        svg.select("#ts-projection")
-                .attr("d", `M${x(last.s)},${y(last.v)} L${projX2},${projY2}`)
-                .classed("visible", true);
         d3.selectAll(".fading-out").classed("faded", true);
         dot.classed("visible", false);
         tag.classed("visible", false);
