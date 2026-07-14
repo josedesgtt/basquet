@@ -191,12 +191,18 @@
       background:var(--bg);
     }
     #sec-t1t2 .chart-wrap{ width:min(92vw, 980px); }
-    #sec-t1t2 .chart-caption{
+    #sec-t1t2 .chart-caption,
+    #sec-t3-line .chart-caption,
+    #sec-t4 .chart-caption,
+    #sec-t5 .chart-caption{
       font-family:'Martian Mono', monospace;
       font-size:0.7rem; color:var(--muted);
       letter-spacing:0.03em; margin-top:0.6rem;
-      display:flex; justify-content:space-between;
+      display:flex; justify-content:space-between; gap:0.5rem 1rem; flex-wrap:wrap;
     }
+    #sec-t3-line .chart-caption span:last-child,
+    #sec-t4 .chart-caption span:last-child,
+    #sec-t5 .chart-caption span:last-child{ white-space:nowrap; }
     svg{ width:100%; height:auto; overflow:visible; }
     #sec-t1t2 #court-motif{ opacity:0; transition: opacity 0.9s ease; }
     #sec-t1t2 #court-motif path, #sec-t1t2 #court-motif circle, #sec-t1t2 #court-motif line{
@@ -205,7 +211,7 @@
     #sec-t1t2 .axis{ opacity:0; transition:opacity 0.9s ease; }
     #sec-t1t2 .axis.revealed{ opacity:1; }
     #sec-t1t2 .axis path, #sec-t1t2 .axis line{ stroke: rgba(18,18,18,0.25); }
-    #sec-t1t2 .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 14px; transition: fill 0.4s ease; }
+    #sec-t1t2 .axis text{ fill: var(--muted); font-family:'Martian Mono', monospace; font-size: 12px; transition: fill 0.4s ease; }
     #sec-t1t2 .axis .tick.axis-year-active text{ fill: var(--azul); font-weight:700; font-size:16px; }
     #sec-t1t2 .year-hl{ color:var(--azul); font-family:'Martian Mono', monospace; font-weight:500; }
     #sec-t1t2 #gridlines{ opacity:0; transition:opacity 0.9s ease; }
@@ -450,16 +456,16 @@
       color:#fff; -webkit-text-stroke:0.09em var(--ink); paint-order:stroke fill;
       max-width:13ch; margin:0 auto;
     }
+    /* el subtítulo queda DEBAJO del título (que se conserva), no al pie de la pantalla */
     .dot-transition-subtitle{
-      position:absolute; left:0; right:0; bottom:7%; z-index:2;
-      text-align:center; padding:0 1.5rem;
+      margin-top:1.4rem; text-align:center;
       opacity:var(--dot-subtitle, 0);
     }
     .dot-transition-subtitle p{
       font-family:'Martian Mono', monospace; font-weight:700;
-      font-size:clamp(1.3rem, 3.6vw, 2.1rem); line-height:1.35; letter-spacing:0.01em;
+      font-size:clamp(1rem, 2.6vw, 1.5rem); line-height:1.35; letter-spacing:0.01em;
       text-transform:uppercase;
-      color:var(--naranja); max-width:22ch; margin:0 auto;
+      color:var(--naranja); max-width:26ch; margin:0 auto;
     }
 
     #sec-t3-line{ --muted:#A39A8C; }
@@ -835,8 +841,8 @@
     #sec-t4 .general-dot.revealed{ opacity:0.85; }
     #sec-t4 .pivot-dot.dimmed{ r:4; opacity:0.7; }
     #sec-t4 .t4g-legend{
-      position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
-      display:flex; gap:2.4rem;
+      position:relative; margin:-2.6rem auto 0; width:max-content; max-width:100%;
+      display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem 2.4rem;
       font-family:'Martian Mono', monospace; font-size:0.7rem; color:var(--muted);
       background:var(--papel); padding:0.5rem 1.1rem; border:1px solid rgba(18,18,18,0.15);
       opacity:0; transition:opacity 0.6s ease; pointer-events:none;
@@ -911,11 +917,20 @@
     #sec-t5 .fading-out.faded{ opacity:0.15; }
     #sec-t5 .closing{ max-width:960px; margin:0 auto; padding:5rem 1.5rem 6rem; }
     #sec-t5 .closing-frame{
-      background:var(--papel); border:3px solid var(--ink);
-      box-shadow:8px 8px 0 rgba(18,18,18,0.16);
-      padding:3rem 2.5rem 2.5rem;
+      background:transparent; border:none; box-shadow:none;
+      padding:2.5rem 1.5rem 0;
     }
     #sec-t5 .timeline-wrap{ margin-bottom:3.5rem; }
+
+    /* ---------- cierre: la conclusión "llega" de a poco (recap del recorrido) en vez de aparecer de golpe ---------- */
+    #sec-t5 #timeline-axis{ stroke-dasharray:840; stroke-dashoffset:840; transition:stroke-dashoffset 1.5s cubic-bezier(0.22,1,0.36,1); }
+    #sec-t5 .closing.revealed #timeline-axis{ stroke-dashoffset:0; }
+    #sec-t5 .ms-item{ opacity:0; transition:opacity 0.6s ease; }
+    #sec-t5 .closing.revealed .ms-item{ opacity:1; }
+    #sec-t5 .closing-text p{ opacity:0; transform:translateY(20px); transition:opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+    #sec-t5 .closing.revealed .closing-text p{ opacity:1; transform:translateY(0); }
+    #sec-t5 .closing.revealed .closing-text p:nth-of-type(1){ transition-delay:0.55s; }
+    #sec-t5 .closing.revealed .closing-text .closing-line{ transition-delay:1.15s; }
     #sec-t5 #timeline{ width:100%; height:auto; overflow:visible; }
     #sec-t5 #timeline-axis{ stroke:var(--ink); stroke-width:2; opacity:0.3; }
     #sec-t5 .milestone-tick{ stroke:var(--ink); stroke-width:1; opacity:0.3; }
@@ -937,10 +952,13 @@
     }
     #sec-t5 .closing-text .closing-line strong{ font-family:inherit; color:var(--gold); font-weight:700; }
     .site-footer{
-      border-top:2px solid var(--ink);
-      padding:2.5rem 1.5rem 3rem;
+      border-top:none;
+      padding:3rem 1.5rem 3.5rem;
       background:var(--papel);
+      opacity:0; transform:translateY(16px);
+      transition:opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
     }
+    .site-footer.revealed{ opacity:1; transform:translateY(0); }
     .footer-inner{
       max-width:680px; margin:0 auto; text-align:center;
     }
@@ -981,9 +999,9 @@
       </div>
       <div class="dot-transition-label">
         <span class="dot-transition-title">De la anécdota al arma letal</span>
-      </div>
-      <div class="dot-transition-subtitle">
-        <p>Cómo el triple reescribió el básquet</p>
+        <div class="dot-transition-subtitle">
+          <p>Cómo el triple reescribió el básquet</p>
+        </div>
       </div>
     </div>
   </div>
@@ -1031,9 +1049,8 @@
           </clipPath>
           <g clip-path="url(#plot-area-clip)" class="t1-remnants">
             <image href="../inspo_datos/maderapiso.jpg" x="50" y="40" width="870" height="400"
-                   preserveAspectRatio="xMidYMid slice"
-            />
-            <rect x="50" y="40" width="870" height="400" fill="#F2E8D5" opacity="0.42"/>
+                   preserveAspectRatio="xMidYMid slice" style="filter:brightness(0.42) saturate(1.0) contrast(1.08);" />
+            <rect x="50" y="40" width="870" height="400" fill="#1c1206" opacity="0.25"/>
           </g>
           <g id="court-motif">
             <path id="court-arc" d="M -80 560 Q 460 260 1000 560"/>
@@ -1211,9 +1228,8 @@
           </clipPath>
           <g clip-path="url(#plot-area-clip-t3)">
             <image href="../inspo_datos/maderapiso.jpg" x="50" y="40" width="870" height="400"
-                   preserveAspectRatio="xMidYMid slice"
-            />
-            <rect x="50" y="40" width="870" height="400" fill="#F2E8D5" opacity="0.42"/>
+                   preserveAspectRatio="xMidYMid slice" style="filter:brightness(0.42) saturate(1.0) contrast(1.08);" />
+            <rect x="50" y="40" width="870" height="400" fill="#1c1206" opacity="0.25"/>
           </g>
           <g id="gridlines-t3"></g>
           <g id="x-axis-t3" class="axis"></g>
@@ -1223,6 +1239,10 @@
           <circle id="curry-dot" class="curry-dot" r="6"></circle>
           <text id="value-tag-t3" class="value-tag"></text>
         </svg>
+        <div class="chart-caption">
+          <span>Triples anotados por temporada · Curry frente a otros tiradores de elite</span>
+          <span>Fuente: Basketball-Reference</span>
+        </div>
       </div>
 
       <div class="side-panel">
@@ -1328,13 +1348,12 @@
         <svg id="chart-t4" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet">
           <defs>
             <clipPath id="photo-clip"><circle cx="0" cy="0" r="22"/></clipPath>
-            <clipPath id="plot-area-clip-t4"><rect x="50" y="50" width="850" height="420"/></clipPath>
+            <clipPath id="plot-area-clip-t4"><rect x="50" y="50" width="810" height="420"/></clipPath>
           </defs>
           <g clip-path="url(#plot-area-clip-t4)">
-            <image href="../inspo_datos/maderapiso.jpg" x="50" y="50" width="850" height="420"
-                   preserveAspectRatio="xMidYMid slice"
-            />
-            <rect x="50" y="50" width="850" height="420" fill="#F2E8D5" opacity="0.42"/>
+            <image href="../inspo_datos/maderapiso.jpg" x="50" y="50" width="810" height="420"
+                   preserveAspectRatio="xMidYMid slice" style="filter:brightness(0.42) saturate(1.0) contrast(1.08);" />
+            <rect x="50" y="50" width="810" height="420" fill="#1c1206" opacity="0.25"/>
           </g>
           <g id="gridlines-t4"></g>
           <g id="x-axis-t4" class="axis"></g>
@@ -1352,11 +1371,15 @@
             <div><div class="num big">387</div><div class="lbl">una sola temporada</div></div>
           </div>
         </div>
-      </div>
 
-      <div class="t4g-legend" id="t4g-legend">
-        <span><i class="dot-pivot"></i> Pívots (los que ya vimos)</span>
-        <span><i class="dot-general"></i> Resto de la liga</span>
+        <div class="t4g-legend" id="t4g-legend">
+          <span><i class="dot-pivot"></i> Pívots (los que ya vimos)</span>
+          <span><i class="dot-general"></i> Resto de la liga</span>
+        </div>
+        <div class="chart-caption">
+          <span>Triples intentados por partido · pívots, según año de debut</span>
+          <span>Fuente: Basketball-Reference</span>
+        </div>
       </div>
     </div>
 
@@ -1414,9 +1437,8 @@
           </clipPath>
           <g clip-path="url(#plot-area-clip-t5)">
             <image href="../inspo_datos/maderapiso.jpg" x="50" y="40" width="870" height="400"
-                   preserveAspectRatio="xMidYMid slice"
-            />
-            <rect x="50" y="40" width="870" height="400" fill="#F2E8D5" opacity="0.42"/>
+                   preserveAspectRatio="xMidYMid slice" style="filter:brightness(0.42) saturate(1.0) contrast(1.08);" />
+            <rect x="50" y="40" width="870" height="400" fill="#1c1206" opacity="0.25"/>
           </g>
           <g id="gridlines-t5" class="fading-out"></g>
           <g id="x-axis-t5" class="axis fading-out"></g>
@@ -1427,6 +1449,10 @@
           <text id="value-tag-t5" class="value-tag"></text>
           <text id="peak-label" class="peak-label"></text>
         </svg>
+        <div class="chart-caption">
+          <span>True shooting % de la liga · por temporada</span>
+          <span>Fuente: Basketball-Reference</span>
+        </div>
       </div>
     </div>
 
@@ -1588,17 +1614,17 @@
         const maxScale = Math.hypot(window.innerWidth, window.innerHeight) / 110 * 0.85;
         el.style.setProperty('--dot-scale', (growT * maxScale).toFixed(2));
 
-        // 2) título + epígrafe aparecen y vuelven a desaparecer
-        const labelT = rampUpDown(t, 0.35, 0.5, 0.62, 0.72);
+        // 2) el título aparece y SE CONSERVA (ya no vuelve a desaparecer)
+        const labelT = clamp01((t - 0.35) / 0.15);
         el.style.setProperty('--dot-label', labelT.toFixed(2));
 
         // 3) la pelota se convierte, con un fade, en el marco de la foto del triple
-        const photoT = clamp01((t - 0.68) / 0.17);
+        const photoT = clamp01((t - 0.6) / 0.17);
         el.style.setProperty('--dot-photo', photoT.toFixed(2));
         el.style.setProperty('--dot-ball-opacity', (1 - photoT).toFixed(2));
 
-        // 4) el subtítulo aparece abajo, ya con la foto en pantalla
-        const subtitleT = clamp01((t - 0.82) / 0.15);
+        // 4) el subtítulo aparece debajo del título, ya con la foto en pantalla
+        const subtitleT = clamp01((t - 0.78) / 0.15);
         el.style.setProperty('--dot-subtitle', subtitleT.toFixed(2));
       });
     }
@@ -1677,7 +1703,8 @@
     const tickSeasons = ["1979-80","1984-85","1989-90","1994-95","1997-98","1999-2000"];
     svg.select("#x-axis")
             .attr("transform", `translate(0,${height - margin.bottom})`)
-            .call(d3.axisBottom(x).tickValues(tickSeasons));
+            .call(d3.axisBottom(x).tickValues(tickSeasons)
+              .tickFormat(d => d === "1999-2000" ? "1999-00" : d));
 
     svg.select("#y-axis")
             .attr("transform", `translate(${margin.left},0)`)
@@ -2652,16 +2679,39 @@
       const labelY1 = stagger ? 128 : 100;
       const labelY2 = stagger ? 144 : 116;
 
-      milestonesG.append("circle").attr("class","milestone-dot").attr("cx", mx).attr("cy", 70).attr("r", 7);
-      milestonesG.append("text").attr("class","milestone-year").attr("x", mx).attr("y", yearY).text(m.year);
+      // cada hito en su propio grupo, que aparece escalonado (recap del recorrido)
+      const g = milestonesG.append("g").attr("class","ms-item")
+              .style("transition-delay", (0.35 + i * 0.16).toFixed(2) + "s");
+
+      g.append("circle").attr("class","milestone-dot").attr("cx", mx).attr("cy", 70).attr("r", 7);
+      g.append("text").attr("class","milestone-year").attr("x", mx).attr("y", yearY).text(m.year);
       if(stagger){
-        milestonesG.append("line").attr("class","milestone-tick")
+        g.append("line").attr("class","milestone-tick")
                 .attr("x1", mx).attr("y1", 78).attr("x2", mx).attr("y2", labelY1 - 10);
       }
-      milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", labelY1).text(m.label);
-      milestonesG.append("text").attr("class","milestone-label").attr("x", mx).attr("y", labelY2)
+      g.append("text").attr("class","milestone-label").attr("x", mx).attr("y", labelY1).text(m.label);
+      g.append("text").attr("class","milestone-label").attr("x", mx).attr("y", labelY2)
               .style("font-size","9px").style("opacity",0.65).text(m.sub);
     });
+
+    // Revelar el cierre y el footer de forma progresiva al entrar en pantalla (reversible)
+    (function(){
+      const targets = [
+        { el: document.querySelector('#sec-t5 .closing'), threshold: 0.2 },
+        { el: document.querySelector('.site-footer'),     threshold: 0.3 }
+      ];
+      if(!('IntersectionObserver' in window)){
+        targets.forEach(t => t.el && t.el.classList.add('revealed'));
+        return;
+      }
+      targets.forEach(t => {
+        if(!t.el) return;
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(e => e.target.classList.toggle('revealed', e.isIntersecting));
+        }, { threshold: t.threshold });
+        io.observe(t.el);
+      });
+    })();
 
   })();
 
